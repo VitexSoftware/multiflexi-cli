@@ -1,0 +1,51 @@
+{
+    "name": "vitexsoftware/multiflexi-cli",
+    "description": "Manage MultiFlexi command line interface",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Vitexsoftware\\MultiflexiCli\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Vítězslav Dvořák",
+            "email": "info@vitexsoftware.cz"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "MultiFlexi\\": "src/MultiFlexi/",
+            "MultiFlexi\\Ui\\": "src/MultiFlexi/Ui",
+            "MultiFlexi\\Api\\": "src/MultiFlexi/Api",
+            "MultiFlexi\\Env\\": "src/MultiFlexi/Env",
+            "MultiFlexi\\Action\\": "src/MultiFlexi/Action",
+            "MultiFlexi\\Zabbix\\": "src/MultiFlexi/Zabbix",
+            "MultiFlexi\\Command\\": "src/MultiFlexi/Command",
+            "MultiFlexi\\Ui\\Form\\": "src/MultiFlexi/Ui/Form",
+            "MultiFlexi\\Executor\\": "src/MultiFlexi/Executor",
+            "MultiFlexi\\Api\\Auth\\": "src/MultiFlexi/Api/Auth",
+            "MultiFlexi\\Api\\Server\\": "src/MultiFlexi/Api/Server",
+            "MultiFlexi\\Cli\\Command\\": "cli/Command",
+            "MultiFlexi\\CredentialType\\": "src/MultiFlexi/CredentialType"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Test\\AbraFlexi\\": "vendor/spoje.net/abraflexi/testing/src/AbraFlexi/",
+            "Test\\AbraFlexi\\MultiFlexi\\": "tests/AbraFlexi/MultiFlexi/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*",
+        "phpstan/phpstan": "*",
+        "friendsofphp/php-cs-fixer": "^3.75",
+        "ergebnis/composer-normalize": "^2.47",
+        "ergebnis/php-cs-fixer-config": "^6.46",
+        "phpstan/phpstan-phpunit": "2.0.x-dev",
+        "rector/rector": "dev-main"
+    },
+    "bin": ["src/multiflexi-cli"]
+}
