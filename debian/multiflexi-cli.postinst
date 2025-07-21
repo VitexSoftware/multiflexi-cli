@@ -35,6 +35,11 @@ configure)
 
     # Sane defaults:
 
+    [ -z "$SERVER_HOME" ] && SERVER_HOME=/var/lib/multiflexi
+    [ -z "$SERVER_USER" ] && SERVER_USER=multiflexi
+    [ -z "$SERVER_NAME" ] && SERVER_NAME="MultiFlexi"
+    [ -z "$SERVER_GROUP" ] && SERVER_GROUP=multiflexi
+
     # Groups that the user will be added to, if undefined, then none.
     ADDGROUP="multiflexi"
 
