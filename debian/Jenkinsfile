@@ -70,6 +70,7 @@ distributions.each {
                             sh 'sudo DEBIAN_FRONTEND=noninteractive DEBCONF_DEBUG=' + debconf_debug + ' apt-get -y install $WORKSPACE/dist/debian/' + deb_file
                         }
                     }
+                    sh 'exec ./tests/test-cli.sh'
                 }
             }
             stage('Copy artifacts ' + distribution ) {

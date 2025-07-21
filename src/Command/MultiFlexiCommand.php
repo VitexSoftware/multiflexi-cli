@@ -34,7 +34,7 @@ abstract class MultiFlexiCommand extends \Symfony\Component\Console\Command\Comm
         if ($data) {
             $table = new \LucidFrame\Console\ConsoleTable();
 
-            foreach (array_keys(current($data))as $column) {
+            foreach (array_keys(current($data)) as $column) {
                 $table->addHeader($column);
             }
 
