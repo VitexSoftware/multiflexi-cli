@@ -3,4 +3,4 @@ args=()
 for arg in "$@"; do
     args+=("$arg")
 done
-php -q -f /usr/lib/multiflexi/cli.php -- "${args[@]}"
+php -q -f /usr/lib/multiflexi/multiflexi-cli.php -- "${args[@]}"
