@@ -3,11 +3,6 @@
     "description": "Manage MultiFlexi command line interface",
     "type": "project",
     "license": "MIT",
-    "autoload": {
-        "psr-4": {
-            "Vitexsoftware\\MultiflexiCli\\": "src/"
-        }
-    },
     "authors": [
         {
             "name": "Vítězslav Dvořák",
@@ -15,27 +10,28 @@
         }
     ],
     "minimum-stability": "dev",
+    "require": {
+        "ext-yaml": "*",
+        "ext-simplexml": "*",
+        "vitexsoftware/ease-fluentpdo": "dev-main",
+        "symfony/process": "^5.4",
+        "vitexsoftware/ease-core": "^1.48",
+        "phplucidframe/console-table": "^1.4",
+        "confirm-it-solutions/php-zabbix-api": "^3.0",
+        "vitexsoftware/ease-html": "^1.40",
+        "symfony/console": "^6.4",
+        "justinrainbow/json-schema": "^6.0@dev"
+    },
     "autoload": {
         "psr-4": {
-            "MultiFlexi\\": "src/MultiFlexi/",
-            "MultiFlexi\\Ui\\": "src/MultiFlexi/Ui",
-            "MultiFlexi\\Api\\": "src/MultiFlexi/Api",
-            "MultiFlexi\\Env\\": "src/MultiFlexi/Env",
-            "MultiFlexi\\Action\\": "src/MultiFlexi/Action",
-            "MultiFlexi\\Zabbix\\": "src/MultiFlexi/Zabbix",
-            "MultiFlexi\\Command\\": "src/MultiFlexi/Command",
-            "MultiFlexi\\Ui\\Form\\": "src/MultiFlexi/Ui/Form",
-            "MultiFlexi\\Executor\\": "src/MultiFlexi/Executor",
-            "MultiFlexi\\Api\\Auth\\": "src/MultiFlexi/Api/Auth",
-            "MultiFlexi\\Api\\Server\\": "src/MultiFlexi/Api/Server",
-            "MultiFlexi\\Cli\\Command\\": "cli/Command",
-            "MultiFlexi\\CredentialType\\": "src/MultiFlexi/CredentialType"
+            "MultiFlexi\\Cli\\": "src",
+            "MultiFlexi\\Cli\\Command\\": "src/Command"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Test\\AbraFlexi\\": "vendor/spoje.net/abraflexi/testing/src/AbraFlexi/",
-            "Test\\AbraFlexi\\MultiFlexi\\": "tests/AbraFlexi/MultiFlexi/"
+            "MultiFlexi\\Cli\\Tests\\": "tests/src",
+            "MultiFlexi\\Cli\\Tests\\Command\\": "tests/src/Command"
         }
     },
     "require-dev": {
@@ -44,8 +40,12 @@
         "friendsofphp/php-cs-fixer": "^3.75",
         "ergebnis/composer-normalize": "^2.47",
         "ergebnis/php-cs-fixer-config": "^6.46",
-        "phpstan/phpstan-phpunit": "2.0.x-dev",
-        "rector/rector": "dev-main"
+        "phpstan/phpstan-phpunit": "2.0.x-dev"
     },
-    "bin": ["src/multiflexi-cli"]
+    "bin": ["src/multiflexi-cli"],
+    "config": {
+        "allow-plugins": {
+            "ergebnis/composer-normalize": true
+        }
+    }
 }

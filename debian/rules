@@ -1,0 +1,32 @@
+#!/usr/bin/make -f
+# You must remove unused comment lines for the released package.
+#export DH_VERBOSE = 1
+#export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+#export DEB_CFLAGS_MAINT_APPEND  = -Wall -pedantic
+#export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
+export DB_CONNECTION = dummy
+export DB_HOST = dummy
+export DB_PORT = dummy
+export DB_DATABASE = dummy
+export DB_USERNAME = dummy
+export DB_PASSWORD = dummy
+
+%:
+	dh $@
+
+#override_dh_auto_install:
+#       dh_auto_install -- prefix=/usr
+
+override_dh_install:
+	mkdir -p debian/tmp/
+	jq '.version = "'`dpkg-parsechangelog | sed -n 's/^Version: //p'| sed 's/~.*//'`'"'  debian/conf/composer.json |sponge debian/tmp/composer.json
+	dh_install
+	sed -i "s|require_once __DIR__.'/../vendor/autoload.php';|require_once '/var/lib/composer/multiflexi/autoload.php';|" debian/multiflexi-cli/usr/share/multiflexi-cli/multiflexi-cli.php
+	sed -i -e '/dirname(__DIR__)/c\    "\/etc\/multiflexi\/multiflexi\.env"' debian/multiflexi-cli/usr/share/multiflexi-cli/*.php
+	sed -i "20i require_once '/usr/share/php/Symfony/Component/Console/autoload.php';" debian/multiflexi-cli/usr/share/multiflexi-cli/multiflexi-cli.php
+	composer update
+	# Fix autoload include for multiflexi-cli.php only (precise replacement)
+	mkdir -p debian/multiflexi-cli/usr/share/bash-completion/completions
+	cd src; ./multiflexi-cli completion bash > ../debian/multiflexi-cli/usr/share/bash-completion/completions/multiflexi-cli ; cd ..
+	mkdir -p debian/multiflexi-cli/usr/share/zsh-completion/completions
+	cd src; ./multiflexi-cli completion zsh > ../debian/multiflexi-cli/usr/share/zsh-completion/completions/multiflexi-cli ; cd ..

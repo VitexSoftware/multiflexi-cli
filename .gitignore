@@ -1,1 +1,7 @@
 /vendor/
+.env
+debian/multiflexi-cli/
+debian/debhelper-build-stamp
+debian/multiflexi-cli.debhelper.log
+debian/.debhelper/
+debian/multiflexi-cli.substvars

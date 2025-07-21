@@ -1,0 +1,24 @@
+Source: multiflexi-cli
+Section: web
+Priority: optional
+Maintainer: "Vítězslav Dvořák" <info@vitexsoftware.cz>
+Build-Depends: debhelper-compat (= 12), jq, moreutils, composer, php-yaml, php-intl, php-simplexml
+Standards-Version: 4.1.4
+Homepage: https://github.com/VitexSoftware/multiflexi-cli
+
+Package: multiflexi-cli
+Multi-Arch: foreign
+Depends: ${misc:Depends},
+ php-vitexsoftware-multiflexi-core,
+ php-cli,
+ locales-all,
+ adduser (>= 3.11),
+ php-symfony-console,
+ php-json-schema
+Suggests: multiflexi-all
+#Pre-Depends: php-robmorgan-phinx|php-cakephp-phinx
+Architecture: all
+Description: commandline interface for MultiFlexi
+ Run jobs as you need
+
+#TODO: multiflexi-sqlite|multiflexi-mysql|multiflexi-pgsql,

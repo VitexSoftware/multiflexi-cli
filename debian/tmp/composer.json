@@ -1,0 +1,45 @@
+{
+  "name": "vitexsoftware/multiflexi",
+  "description": "Tool used to setup AbraFlexi multiinstance",
+  "type": "project",
+  "require": {
+    "deb/ease-fluentpdo": "*",
+    "symfony/process": "*",
+    "sensiolabs/ansi-to-html": "*",
+    "zarplata/zabbix-sender": "dev-master",
+    "rcubitto/json-pretty": "dev-master",
+    "phplucidframe/console-table": "dev-master"
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Vítězslav Dvořák",
+      "email": "info@vitexsoftware.cz"
+    }
+  ],
+  "config": {
+    "vendor-dir": "/var/lib/composer/multiflexi-cli"
+  },
+  "minimum-stability": "dev",
+  "autoload": {
+    "psr-4": {
+      "MultiFlexi\\Cli\\": ".",
+      "MultiFlexi\\Cli\\Command\\": "./Command"
+    }
+  },
+  "repositories": [
+    {
+      "type": "path",
+      "url": "/usr/share/php/EaseCore/"
+    },
+    {
+      "type": "path",
+      "url": "/usr/share/php/MultiFlexi"
+    },
+    {
+      "type": "path",
+      "url": "/usr/share/php/EaseFluentPDO/"
+    }
+  ],
+  "version": "0.1.0"
+}
