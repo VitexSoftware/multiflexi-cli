@@ -1265,12 +1265,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "f987f3c37dfe7e0b8103bc5f4d5f94e874efa7f1"
+                "reference": "795dd192e797631c54b78952843aacdbe9b4445e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/f987f3c37dfe7e0b8103bc5f4d5f94e874efa7f1",
-                "reference": "f987f3c37dfe7e0b8103bc5f4d5f94e874efa7f1",
+                "url": "https://api.github.com/repos/symfony/console/zipball/795dd192e797631c54b78952843aacdbe9b4445e",
+                "reference": "795dd192e797631c54b78952843aacdbe9b4445e",
                 "shasum": ""
             },
             "require": {
@@ -1351,7 +1351,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-07-16T13:38:06+00:00"
+            "time": "2025-07-22T12:33:39+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
@@ -1893,12 +1893,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/service-contracts.git",
-                "reference": "f021b05a130d35510bd6b25fe9053c2a8a15d5d4"
+                "reference": "45112560a3ba2d715666a509a0bc9521d10b6c43"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/service-contracts/zipball/f021b05a130d35510bd6b25fe9053c2a8a15d5d4",
-                "reference": "f021b05a130d35510bd6b25fe9053c2a8a15d5d4",
+                "url": "https://api.github.com/repos/symfony/service-contracts/zipball/45112560a3ba2d715666a509a0bc9521d10b6c43",
+                "reference": "45112560a3ba2d715666a509a0bc9521d10b6c43",
                 "shasum": ""
             },
             "require": {
@@ -1953,7 +1953,7 @@
                 "standards"
             ],
             "support": {
-                "source": "https://github.com/symfony/service-contracts/tree/v3.6.0"
+                "source": "https://github.com/symfony/service-contracts/tree/main"
             },
             "funding": [
                 {
@@ -1969,7 +1969,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-04-25T09:37:31+00:00"
+            "time": "2025-07-15T11:30:57+00:00"
         },
         {
             "name": "symfony/string",
@@ -1977,12 +1977,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/string.git",
-                "reference": "89ecb57ea26d588329e0ac38a7bbd652afce90bd"
+                "reference": "f253dec477bea2a6cc728f6abae56d9de99756d7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/string/zipball/89ecb57ea26d588329e0ac38a7bbd652afce90bd",
-                "reference": "89ecb57ea26d588329e0ac38a7bbd652afce90bd",
+                "url": "https://api.github.com/repos/symfony/string/zipball/f253dec477bea2a6cc728f6abae56d9de99756d7",
+                "reference": "f253dec477bea2a6cc728f6abae56d9de99756d7",
                 "shasum": ""
             },
             "require": {
@@ -2056,7 +2056,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-07-15T09:40:20+00:00"
+            "time": "2025-07-24T13:09:19+00:00"
         },
         {
             "name": "vitexsoftware/ease-core",
@@ -3702,12 +3702,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "ca613115e3da316c5b3fb21b3c696cceb745fa6a"
+                "reference": "80833f9382344d8830c8db60651bd466a57e693b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/ca613115e3da316c5b3fb21b3c696cceb745fa6a",
-                "reference": "ca613115e3da316c5b3fb21b3c696cceb745fa6a",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/80833f9382344d8830c8db60651bd466a57e693b",
+                "reference": "80833f9382344d8830c8db60651bd466a57e693b",
                 "shasum": ""
             },
             "require": {
@@ -3753,7 +3753,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-07-17T17:26:58+00:00"
+            "time": "2025-07-23T18:30:15+00:00"
         },
         {
             "name": "phpstan/phpstan-phpunit",
@@ -3805,7 +3805,7 @@
             "description": "PHPUnit extensions and rules for PHPStan",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan-phpunit/issues",
-                "source": "https://github.com/phpstan/phpstan-phpunit/tree/2.0.x"
+                "source": "https://github.com/phpstan/phpstan-phpunit/tree/2.0.7"
             },
             "time": "2025-07-13T11:31:46+00:00"
         },
@@ -6132,12 +6132,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
-                "reference": "a4244535ea1f85b3d0aae49f1aef49903f876334"
+                "reference": "7df39720b1634375cb474089f34342589bbeda21"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/filesystem/zipball/a4244535ea1f85b3d0aae49f1aef49903f876334",
-                "reference": "a4244535ea1f85b3d0aae49f1aef49903f876334",
+                "url": "https://api.github.com/repos/symfony/filesystem/zipball/7df39720b1634375cb474089f34342589bbeda21",
+                "reference": "7df39720b1634375cb474089f34342589bbeda21",
                 "shasum": ""
             },
             "require": {
@@ -6190,7 +6190,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-07-07T08:24:36+00:00"
+            "time": "2025-07-24T13:09:19+00:00"
         },
         {
             "name": "symfony/finder",
@@ -6516,9 +6516,9 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "vitexsoftware/ease-fluentpdo": 20,
         "justinrainbow/json-schema": 20,
-        "phpstan/phpstan-phpunit": 20
+        "phpstan/phpstan-phpunit": 20,
+        "vitexsoftware/ease-fluentpdo": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
@@ -6526,6 +6526,6 @@
         "ext-yaml": "*",
         "ext-simplexml": "*"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "plugin-api-version": "2.6.0"
 }
