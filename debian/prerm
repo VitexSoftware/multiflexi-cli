@@ -2,7 +2,8 @@
 set -e
 
 case "$1" in
-    remove|upgrade|deconfigure)
+    remove|deconfigure)
+	rm -f /usr/lib/multiflexi-cli/composer.lock
     ;;
 
     failed-upgrade)
