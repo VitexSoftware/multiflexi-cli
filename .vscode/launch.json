@@ -1,0 +1,35 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Prune logs (keep 1000)",
+            "type": "php",
+            "request": "launch",
+            "program": "${workspaceFolder}/cli/multiflexi-cli.php",
+            "args": ["prune", "--logs"],
+            "cwd": "${workspaceFolder}/cli",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Prune jobs (keep 1000)",
+            "type": "php",
+            "request": "launch",
+            "program": "${workspaceFolder}/cli/multiflexi-cli.php",
+            "args": ["prune", "--jobs"],
+            "cwd": "${workspaceFolder}/cli",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Prune logs and jobs (keep 500)",
+            "type": "php",
+            "request": "launch",
+            "program": "${workspaceFolder}/cli/multiflexi-cli.php",
+            "args": ["prune", "--logs", "--jobs", "--keep=500"],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal"
+        }
+    ]
+}

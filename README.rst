@@ -59,9 +59,16 @@ Examples
    multiflexi-cli delete app 456
    multiflexi-cli describe
 
-Internationalization
---------------------
-All user-facing messages support translation using the i18n library. Use the ``_()`` function for translatable strings in code.
+
+
+.. code-block:: bash
+   EASE_LOGGER=console multiflexi-cli remove app 15
+   02/20/2024 23:48:51 🌼 ❲MultiFlexi cli⦒(15)AbraFlexi send@MultiFlexi\Application❳ Unassigned from 3 companys
+   02/20/2024 23:48:53 🌼 ❲MultiFlexi cli⦒(15)AbraFlexi send@MultiFlexi\Application❳ 2 RunTemplate removal
+   02/20/2024 23:48:56 🌼 ❲MultiFlexi cli⦒(15)AbraFlexi send@MultiFlexi\Application❳ 2 Config fields removed
+   02/20/2024 23:48:57 🌼 ❲MultiFlexi cli⦒(15)AbraFlexi send@MultiFlexi\Application❳ 881 Jobs removed
+   Done.
+
 
 Documentation
 -------------

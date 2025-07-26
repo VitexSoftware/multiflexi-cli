@@ -15,11 +15,10 @@ Depends: ${misc:Depends},
  adduser (>= 3.11),
  php-symfony-console,
  php-json-schema,
- multiflexi-sqlite|multiflexi-mysql|multiflexi-pgsql
+ multiflexi-database
 Suggests: multiflexi-all
 #Pre-Depends: php-robmorgan-phinx|php-cakephp-phinx
 Architecture: all
 Description: commandline interface for MultiFlexi
  Run jobs as you need
 
-#TODO: multiflexi-sqlite|multiflexi-mysql|multiflexi-pgsql,
