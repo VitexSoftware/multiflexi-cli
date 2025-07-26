@@ -22,7 +22,7 @@ override_dh_install:
 	jq '.version = "'`dpkg-parsechangelog | sed -n 's/^Version: //p'| sed 's/~.*//'`'"'  debian/conf/composer.json |sponge debian/tmp/composer.json
 	dh_install
 	sed -i "s|require_once __DIR__.'/../vendor/autoload.php';|require_once '/var/lib/composer/multiflexi-cli/autoload.php';|" debian/multiflexi-cli/usr/share/multiflexi-cli/multiflexi-cli.php
-	sed -i -e '/require_once __DIR__\/\.\.\/vendor\/autoload.php/c\require_once \'/var/lib/composer/multiflexi-cli/autoload.php\';' debian/multiflexi-cli/usr/share/multiflexi-cli/*.php
+	sed -i -e "/require_once __DIR__\/\.\.\/vendor\/autoload.php/c\require_once '/var/lib/composer/multiflexi-cli/autoload.php';" debian/multiflexi-cli/usr/share/multiflexi-cli/*.php
 	sed -i "20i require_once '/usr/share/php/Symfony/Component/Console/autoload.php';" debian/multiflexi-cli/usr/share/multiflexi-cli/multiflexi-cli.php
 	composer update
 	# Fix autoload include for multiflexi-cli.php only (precise replacement)
