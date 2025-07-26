@@ -20,4 +20,8 @@ Suggests: multiflexi-all
 Pre-Depends:  multiflexi-database
 Architecture: all
 Description: commandline interface for MultiFlexi
- Run jobs as you need
+ MultiFlexi CLI is a command-line interface tool for managing and interacting with the MultiFlexi system.
+ It allows administrators and users to list, create, get, and delete MultiFlexi resources directly
+ from the terminal. The CLI supports JSON output for easy integration with other tools and
+ scripts, and provides internationalization support. This package is intended for users who prefer
+ or require command-line access to MultiFlexi's features.
