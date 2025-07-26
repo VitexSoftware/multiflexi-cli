@@ -9,6 +9,7 @@ Homepage: https://github.com/VitexSoftware/multiflexi-cli
 Package: multiflexi-cli
 Multi-Arch: foreign
 Depends: ${misc:Depends},
+ multiflexi-common,
  php-vitexsoftware-multiflexi-core,
  php-cli,
  locales-all,
