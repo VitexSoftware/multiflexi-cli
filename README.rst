@@ -1,13 +1,3 @@
-MultiFlexi
-----------
-
-MultiFlexi CLI is part of a `MultiFlexi <https://multiflexi.eu>`_ suite.
-
-.. image:: https://github.com/VitexSoftware/MultiFlexi/blob/main/doc/multiflexi-app.svg
-   :target: https://www.multiflexi.eu/
-   :alt: MultiFlexi Logo
-
-
 MultiFlexi CLI
 ==============
 
@@ -73,6 +63,16 @@ Examples
 Documentation
 -------------
 For detailed documentation, see ``doc/multiflexi-cli.rst`` and the man page ``multiflexi-cli.1``.
+
+MultiFlexi
+----------
+
+MultiFlexi CLI is part of a `MultiFlexi <https://multiflexi.eu>`_ suite.
+
+.. image:: https://github.com/VitexSoftware/MultiFlexi/blob/main/doc/multiflexi-app.svg
+   :target: https://www.multiflexi.eu/
+   :alt: MultiFlexi Logo
+
 
 License
 -------
