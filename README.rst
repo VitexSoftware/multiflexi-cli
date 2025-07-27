@@ -1,5 +1,9 @@
-MultiFlexi CLI
 ==============
+.. image:: https://img.shields.io/coderabbit/prs/github/VitexSoftware/multiflexi-cli?utm_source=oss&utm_medium=github&utm_campaign=VitexSoftware%2Fmultiflexi-cli&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews
+   :target: https://coderabbit.ai
+   :alt: CodeRabbit Pull Request Reviews
+
+MultiFlexi CLI
 
 MultiFlexi CLI (`multiflexi-cli`) is a command-line tool for managing MultiFlexi applications, jobs, users, companies, and more. It is designed to provide flexible automation and integration for MultiFlexi server environments.
 
