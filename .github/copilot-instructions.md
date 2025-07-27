@@ -12,6 +12,8 @@ When writing code, always include a docblock for functions and classes, describi
 
 When writing tests, use PHPUnit and follow the PSR-12 coding standard.
 
+When writing README, use markdown format.
+
 When writing documentation, use reStructuredText (reST) format.
 
 When writing commit messages, use the imperative mood and keep them concise.
