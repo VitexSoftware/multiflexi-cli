@@ -4,6 +4,7 @@
   "type": "project",
   "require": {
     "deb/ease-fluentpdo": "*",
+    "deb/multiflexi-core": "*",
     "symfony/process": "*",
     "sensiolabs/ansi-to-html": "*",
     "zarplata/zabbix-sender": "dev-master",
