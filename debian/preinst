@@ -3,6 +3,7 @@ set -e
 
 case "$1" in
     install|upgrade)
+	update-multiflexi-env
     ;;
 
     abort-upgrade)
