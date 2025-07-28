@@ -70,6 +70,11 @@ distributions.each {
                             sh 'sudo DEBIAN_FRONTEND=noninteractive DEBCONF_DEBUG=' + debconf_debug + ' apt-get -y install $WORKSPACE/dist/debian/' + deb_file
                         }
                     }
+
+                    // Fix permissions for SQLite database before running tests
+                    sh 'sudo chown -R $(id -u):$(id -g) /var/lib/dbconfig-common/sqlite3/multiflexi || true'
+                    sh 'sudo chmod 750 /var/lib/dbconfig-common/sqlite3/multiflexi || true'
+                    sh 'sudo chmod 640 /var/lib/dbconfig-common/sqlite3/multiflexi/multiflexi || true'
                     sh 'exec ./tests/test-cli.sh'
                 }
             }
