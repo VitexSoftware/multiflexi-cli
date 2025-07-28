@@ -8,3 +8,4 @@ debian/multiflexi-cli.substvars
 tests/bootstrap.php
 .gitignore
 .build/php-cs-fixer/.php-cs-fixer.cache
+/nbproject/
