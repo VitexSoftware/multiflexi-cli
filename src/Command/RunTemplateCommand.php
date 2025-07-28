@@ -47,8 +47,9 @@ class RunTemplateCommand extends MultiFlexiCommand
             ->addOption('id', null, InputOption::VALUE_REQUIRED, 'RunTemplate ID')
             ->addOption('name', null, InputOption::VALUE_REQUIRED, 'Name')
             ->addOption('app_id', null, InputOption::VALUE_REQUIRED, 'App ID')
+            ->addOption('app_uuid', null, InputOption::VALUE_REQUIRED, 'App UUID')
             ->addOption('company_id', null, InputOption::VALUE_REQUIRED, 'Company ID')
-            ->addOption('company', null, InputOption::VALUE_REQUIRED, 'Company name for filtering list')
+            ->addOption('company', null, InputOption::VALUE_REQUIRED, 'Company slug (string) or ID (integer)')
             ->addOption('interv', null, InputOption::VALUE_REQUIRED, 'Interval code')
             ->addOption('active', null, InputOption::VALUE_REQUIRED, 'Active')
             ->addOption('config', null, InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Application config key=value (repeatable)')
@@ -78,6 +79,27 @@ class RunTemplateCommand extends MultiFlexiCommand
     {
         $format = strtolower($input->getOption('format'));
         $action = strtolower($input->getArgument('action'));
+
+        // Resolve company_id from --company if provided
+        $companyOption = $input->getOption('company');
+        if ($companyOption !== null) {
+            $companyId = null;
+            if (is_numeric($companyOption)) {
+                $companyId = (int)$companyOption;
+            } else {
+                // Lookup company by slug
+                $companyObj = new \MultiFlexi\Company();
+                $found = $companyObj->listingQuery()->where(['slug' => $companyOption])->fetch();
+                if ($found && isset($found['id'])) {
+                    $companyId = (int)$found['id'];
+                } else {
+                    $output->writeln('<error>Company not found for slug: ' . $companyOption . '</error>');
+                    return \MultiFlexi\Cli\Command\MultiFlexiCommand::FAILURE;
+                }
+            }
+            // Override company_id option for downstream logic
+            $input->setOption('company_id', $companyId);
+        }
 
         switch ($action) {
             case 'list':
@@ -154,19 +176,52 @@ class RunTemplateCommand extends MultiFlexiCommand
 
                 return MultiFlexiCommand::SUCCESS;
             case 'create':
-                $data = [];
 
+                $data = [];
                 foreach (['name', 'app_id', 'company_id', 'interv', 'active'] as $field) {
                     $val = $input->getOption($field);
-
                     if ($val !== null) {
                         $data[$field] = $val;
                     }
                 }
+                // Set default interv if not provided
+                if (empty($data['interv'])) {
+                    $data['interv'] = 'n';
+                }
+
+                // If app_uuid is provided, resolve app_id by uuid
+                $appUuid = $input->getOption('app_uuid');
+                if ($appUuid !== null) {
+                    // Try to resolve app_id from uuid
+                    $pdo = (new \MultiFlexi\RunTemplate())->getFluentPDO()->getPdo();
+                    $stmt = $pdo->prepare('SELECT id FROM apps WHERE uuid = :uuid');
+                    $stmt->execute(['uuid' => $appUuid]);
+                    $row = $stmt->fetch();
+                    if ($row && isset($row['id'])) {
+                        $data['app_id'] = $row['id'];
+                    } else {
+                        if ($format === 'json') {
+                            $output->writeln(json_encode([
+                                'status' => 'error',
+                                'message' => 'Application with given UUID not found: ' . $appUuid,
+                                'uuid' => $appUuid
+                            ], \JSON_PRETTY_PRINT));
+                        } else {
+                            $output->writeln('<error>Application with given UUID not found: ' . $appUuid . '</error>');
+                        }
+                        return MultiFlexiCommand::FAILURE;
+                    }
+                }
 
                 if (empty($data['name']) || empty($data['app_id']) || empty($data['company_id'])) {
-                    $output->writeln('<error>Missing --name, --app_id or --company_id for runtemplate create</error>');
-
+                    if ($format === 'json') {
+                        $output->writeln(json_encode([
+                            'status' => 'error',
+                            'message' => 'Missing --name, --app_id or --company_id for runtemplate create',
+                        ], \JSON_PRETTY_PRINT));
+                    } else {
+                        $output->writeln('<error>Missing --name, --app_id or --company_id for runtemplate create</error>');
+                    }
                     return MultiFlexiCommand::FAILURE;
                 }
 
@@ -176,7 +231,6 @@ class RunTemplateCommand extends MultiFlexiCommand
 
                 if ($output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
                     $full = (new \MultiFlexi\RunTemplate((int) $rtId))->getData();
-
                     if ($format === 'json') {
                         $output->writeln(json_encode($full, \JSON_PRETTY_PRINT));
                     } else {
@@ -194,7 +248,6 @@ class RunTemplateCommand extends MultiFlexiCommand
 
                 if (empty($id)) {
                     $output->writeln('<error>Missing --id for runtemplate update</error>');
-
                     return MultiFlexiCommand::FAILURE;
                 }
 
@@ -202,9 +255,23 @@ class RunTemplateCommand extends MultiFlexiCommand
 
                 foreach (['name', 'app_id', 'company_id', 'interv', 'active'] as $field) {
                     $val = $input->getOption($field);
-
                     if ($val !== null) {
                         $data[$field] = $val;
+                    }
+                }
+
+                // If app_uuid is provided, resolve app_id by uuid
+                $appUuid = $input->getOption('app_uuid');
+                if ($appUuid !== null) {
+                    $pdo = (new \MultiFlexi\RunTemplate())->getFluentPDO()->getPdo();
+                    $stmt = $pdo->prepare('SELECT id FROM apps WHERE uuid = :uuid');
+                    $stmt->execute(['uuid' => $appUuid]);
+                    $row = $stmt->fetch();
+                    if ($row && isset($row['id'])) {
+                        $data['app_id'] = $row['id'];
+                    } else {
+                        $output->writeln('<error>Application with given UUID not found</error>');
+                        return MultiFlexiCommand::FAILURE;
                     }
                 }
 
@@ -217,7 +284,6 @@ class RunTemplateCommand extends MultiFlexiCommand
                 if ($output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
                     $rt->loadFromSQL(['id' => $id]);
                     $full = $rt->getData();
-
                     if ($format === 'json') {
                         $output->writeln(json_encode($full, \JSON_PRETTY_PRINT));
                     } else {
@@ -289,7 +355,7 @@ class RunTemplateCommand extends MultiFlexiCommand
                     }
 
                     $when = $scheduleTime;
-                    $prepared = $jobber->prepareJob($rt->getMyKey(), $uploadEnv, new DateTime($when), $executor);
+                    $prepared = $jobber->prepareJob($rt->getMyKey(), $uploadEnv, new \DateTime($when), $executor);
                     $scheduleId = $jobber->scheduleJobRun(new \DateTime($when));
                     $output->writeln(json_encode([
                         'runtemplate_id' => $id,

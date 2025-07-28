@@ -189,7 +189,6 @@ class CompanyCommand extends MultiFlexiCommand
                     'name', 'customer', 'enabled', 'settings', 'logo', 'ic', 'slug', 'DatCreate', 'DatUpdate', 'email',
                 ] as $field) {
                     $val = $input->getOption($field);
-
                     if ($val !== null) {
                         if (\in_array($field, ['enabled'], true)) {
                             $data[$field] = $this->parseBoolOption($val);
@@ -206,7 +205,21 @@ class CompanyCommand extends MultiFlexiCommand
 
                 if (empty($data['name'])) {
                     $output->writeln('<error>Missing --name for company create</error>');
+                    return MultiFlexiCommand::FAILURE;
+                }
 
+                // Check for duplicate company name
+                $companyCheck = new Company();
+                $exists = $companyCheck->listingQuery()->where(['name' => $data['name']])->fetch();
+                if ($exists) {
+                    if ($format === 'json') {
+                        $output->writeln(json_encode([
+                            'status' => 'error',
+                            'message' => 'Company with this name already exists',
+                        ], \JSON_PRETTY_PRINT));
+                    } else {
+                        $output->writeln('<error>Company with this name already exists</error>');
+                    }
                     return MultiFlexiCommand::FAILURE;
                 }
 
@@ -216,7 +229,6 @@ class CompanyCommand extends MultiFlexiCommand
 
                 if ($output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
                     $full = (new Company((int) $companyId))->getData();
-
                     if ($format === 'json') {
                         $output->writeln(json_encode($full, \JSON_PRETTY_PRINT));
                     } else {
