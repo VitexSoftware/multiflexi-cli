@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "529088c10e4d1fd4ac41c119aa804391",
+    "content-hash": "7128b4d5bb475c928e71fed7c7476006",
     "packages": [
         {
             "name": "confirm-it-solutions/php-zabbix-api",
@@ -2237,6 +2237,60 @@
                 }
             ],
             "time": "2024-11-27T11:04:45+00:00"
+        },
+        {
+            "name": "vitexsoftware/multiflexi-core",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/VitexSoftware/php-vitexsoftware-multiflexi-core.git",
+                "reference": "4c48d56197253e036f182a4794d82c52ea3d5a72"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/VitexSoftware/php-vitexsoftware-multiflexi-core/zipball/4c48d56197253e036f182a4794d82c52ea3d5a72",
+                "reference": "4c48d56197253e036f182a4794d82c52ea3d5a72",
+                "shasum": ""
+            },
+            "require": {
+                "justinrainbow/json-schema": "^6.0@dev",
+                "vitexsoftware/ease-fluentpdo": "dev-main"
+            },
+            "require-dev": {
+                "ergebnis/composer-normalize": "^2.47",
+                "ergebnis/php-cs-fixer-config": "^6.50",
+                "friendsofphp/php-cs-fixer": "^3.84",
+                "phpstan/phpstan": "*",
+                "phpstan/phpstan-phpunit": "2.0.x-dev",
+                "phpunit/phpunit": "^12.3@dev",
+                "rector/rector": "dev-main"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MultiFlexi\\": "src/MultiFlexi/",
+                    "MultiFlexi\\Env\\": "src/MultiFlexi/Env",
+                    "MultiFlexi\\Action\\": "src/MultiFlexi/Action",
+                    "MultiFlexi\\Zabbix\\": "src/MultiFlexi/Zabbix",
+                    "MultiFlexi\\CredentialType\\": "src/MultiFlexi/CredentialType"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Vítězslav Dvořák",
+                    "email": "info@vitexsoftware.cz"
+                }
+            ],
+            "support": {
+                "issues": "https://github.com/VitexSoftware/php-vitexsoftware-multiflexi-core/issues",
+                "source": "https://github.com/VitexSoftware/php-vitexsoftware-multiflexi-core/tree/main"
+            },
+            "time": "2025-07-27T17:35:57+00:00"
         }
     ],
     "packages-dev": [
@@ -2852,12 +2906,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ergebnis/json-printer.git",
-                "reference": "202d7248ba62414ca503b7d1efa56415e32f21fb"
+                "reference": "6643644730339a8b6c0d802a82ffba77e5fd4554"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ergebnis/json-printer/zipball/202d7248ba62414ca503b7d1efa56415e32f21fb",
-                "reference": "202d7248ba62414ca503b7d1efa56415e32f21fb",
+                "url": "https://api.github.com/repos/ergebnis/json-printer/zipball/6643644730339a8b6c0d802a82ffba77e5fd4554",
+                "reference": "6643644730339a8b6c0d802a82ffba77e5fd4554",
                 "shasum": ""
             },
             "require": {
@@ -2920,7 +2974,7 @@
                 "security": "https://github.com/ergebnis/json-printer/blob/main/.github/SECURITY.md",
                 "source": "https://github.com/ergebnis/json-printer"
             },
-            "time": "2025-06-23T17:52:32+00:00"
+            "time": "2025-07-28T12:52:40+00:00"
         },
         {
             "name": "ergebnis/json-schema-validator",
@@ -3521,16 +3575,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v5.5.0",
+            "version": "v5.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "ae59794362fe85e051a58ad36b289443f57be7a9"
+                "reference": "221b0d0fdf1369c71047ad1d18bb5880017bbc56"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/ae59794362fe85e051a58ad36b289443f57be7a9",
-                "reference": "ae59794362fe85e051a58ad36b289443f57be7a9",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/221b0d0fdf1369c71047ad1d18bb5880017bbc56",
+                "reference": "221b0d0fdf1369c71047ad1d18bb5880017bbc56",
                 "shasum": ""
             },
             "require": {
@@ -3573,9 +3627,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
-                "source": "https://github.com/nikic/PHP-Parser/tree/v5.5.0"
+                "source": "https://github.com/nikic/PHP-Parser/tree/v5.6.0"
             },
-            "time": "2025-05-31T08:24:38+00:00"
+            "time": "2025-07-27T20:03:57+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -3702,12 +3756,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "80833f9382344d8830c8db60651bd466a57e693b"
+                "reference": "8ae740cba5d5fc58580377d7059ab8cff607637f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/80833f9382344d8830c8db60651bd466a57e693b",
-                "reference": "80833f9382344d8830c8db60651bd466a57e693b",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/8ae740cba5d5fc58580377d7059ab8cff607637f",
+                "reference": "8ae740cba5d5fc58580377d7059ab8cff607637f",
                 "shasum": ""
             },
             "require": {
@@ -3753,7 +3807,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-07-23T18:30:15+00:00"
+            "time": "2025-07-27T14:59:51+00:00"
         },
         {
             "name": "phpstan/phpstan-phpunit",
@@ -4202,12 +4256,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "8d195ce2922031c670c90d8286955946a992ef06"
+                "reference": "e0c9d4cb6c379f4e38eec390eacf9a074116c988"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/8d195ce2922031c670c90d8286955946a992ef06",
-                "reference": "8d195ce2922031c670c90d8286955946a992ef06",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/e0c9d4cb6c379f4e38eec390eacf9a074116c988",
+                "reference": "e0c9d4cb6c379f4e38eec390eacf9a074116c988",
                 "shasum": ""
             },
             "require": {
@@ -4300,7 +4354,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-07-18T08:44:00+00:00"
+            "time": "2025-07-28T07:02:11+00:00"
         },
         {
             "name": "psr/event-dispatcher",
@@ -6518,7 +6572,8 @@
     "stability-flags": {
         "justinrainbow/json-schema": 20,
         "phpstan/phpstan-phpunit": 20,
-        "vitexsoftware/ease-fluentpdo": 20
+        "vitexsoftware/ease-fluentpdo": 20,
+        "vitexsoftware/multiflexi-core": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

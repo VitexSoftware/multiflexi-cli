@@ -16,6 +16,9 @@ declare(strict_types=1);
 namespace MultiFlexi\Cli\Command;
 
 use MultiFlexi\RunTemplate;
+use MultiFlexi\Job;
+use MultiFlexi\ConfigFields;
+use MultiFlexi\ConfigField;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -45,6 +48,7 @@ class RunTemplateCommand extends MultiFlexiCommand
             ->addOption('name', null, InputOption::VALUE_REQUIRED, 'Name')
             ->addOption('app_id', null, InputOption::VALUE_REQUIRED, 'App ID')
             ->addOption('company_id', null, InputOption::VALUE_REQUIRED, 'Company ID')
+            ->addOption('company', null, InputOption::VALUE_REQUIRED, 'Company name for filtering list')
             ->addOption('interv', null, InputOption::VALUE_REQUIRED, 'Interval code')
             ->addOption('active', null, InputOption::VALUE_REQUIRED, 'Active')
             ->addOption('config', null, InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Application config key=value (repeatable)')
@@ -78,7 +82,18 @@ class RunTemplateCommand extends MultiFlexiCommand
         switch ($action) {
             case 'list':
                 $rt = new RunTemplate();
-                $rts = $rt->listingQuery()->fetchAll();
+                $query = $rt->listingQuery();
+                $companyOption = $input->getOption('company');
+                if ($companyOption) {
+                    // Join with company table and filter by id or slug
+                    $query->join('company ON company.id = runtemplate.company_id');
+                    if (is_numeric($companyOption)) {
+                        $query->where('company.id', (int)$companyOption);
+                    } else {
+                        $query->where('company.slug', $companyOption);
+                    }
+                }
+                $rts = $query->fetchAll();
 
                 if ($format === 'json') {
                     $output->writeln(json_encode($rts, \JSON_PRETTY_PRINT));
@@ -91,15 +106,25 @@ class RunTemplateCommand extends MultiFlexiCommand
                 return MultiFlexiCommand::SUCCESS;
             case 'get':
                 $id = $input->getOption('id');
+                $name = $input->getOption('name');
 
-                if (empty($id)) {
-                    $output->writeln('<error>Missing --id for runtemplate get</error>');
-
+                if (empty($id) && empty($name)) {
+                    $output->writeln('<error>Missing --id or --name for runtemplate get</error>');
                     return MultiFlexiCommand::FAILURE;
                 }
 
-                $runtemplate = new RunTemplate((int) $id);
-                $data = $runtemplate->getData();
+                if (!empty($id)) {
+                    $runtemplate = new RunTemplate((int) $id);
+                } else {
+                    // Lookup by name
+                    $rt = new RunTemplate();
+                    $row = $rt->listingQuery()->where('name', $name)->fetch();
+                    if (!$row) {
+                        $output->writeln('<error>RunTemplate not found by name</error>');
+                        return MultiFlexiCommand::FAILURE;
+                    }
+                    $runtemplate = new RunTemplate((int) $row['id']);
+                }
                 $fields = $input->getOption('fields');
 
                 if ($fields) {
@@ -183,7 +208,7 @@ class RunTemplateCommand extends MultiFlexiCommand
                     }
                 }
 
-                $rt = new \MultiFlexi\RunTemplate((int) $id);
+                $rt = new RunTemplate((int) $id);
 
                 if (!empty($data)) {
                     $rt->updateToSQL($data, ['id' => $id]);
@@ -252,19 +277,19 @@ class RunTemplateCommand extends MultiFlexiCommand
                         return MultiFlexiCommand::FAILURE;
                     }
 
-                    $jobber = new \MultiFlexi\Job();
+                    $jobber = new Job();
                     // Prepare environment overrides as ConfigFields
-                    $uploadEnv = new \MultiFlexi\ConfigFields('Overrides');
+                    $uploadEnv = new ConfigFields('Overrides');
 
                     foreach ($envOverrides as $item) {
                         if (str_contains($item, '=')) {
                             [$key, $value] = explode('=', $item, 2);
-                            $uploadEnv->addField(new \MultiFlexi\ConfigField($key, 'string', $key, '', '', $value));
+                            $uploadEnv->addField(new ConfigField($key, 'string', $key, '', '', $value));
                         }
                     }
 
                     $when = $scheduleTime;
-                    $prepared = $jobber->prepareJob($rt->getMyKey(), $uploadEnv, new \DateTime($when), $executor);
+                    $prepared = $jobber->prepareJob($rt->getMyKey(), $uploadEnv, new DateTime($when), $executor);
                     $scheduleId = $jobber->scheduleJobRun(new \DateTime($when));
                     $output->writeln(json_encode([
                         'runtemplate_id' => $id,

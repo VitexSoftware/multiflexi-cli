@@ -15,7 +15,7 @@
         "ext-simplexml": "*",
         "vitexsoftware/ease-fluentpdo": "dev-main",
         "symfony/process": "^5.4",
-        "vitexsoftware/ease-core": "^1.48",
+        "vitexsoftware/multiflexi-core": "dev-main",
         "phplucidframe/console-table": "^1.4",
         "confirm-it-solutions/php-zabbix-api": "^3.0",
         "vitexsoftware/ease-html": "^1.40",
