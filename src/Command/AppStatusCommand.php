@@ -62,7 +62,7 @@ class AppStatusCommand extends MultiFlexiCommand
                     $pdo->getAttribute(\PDO::ATTR_SERVER_VERSION);
         }
 
-        $databaseVersion = $engine->getFluentPDO()->from('phinxlog')->orderBy('start_time DESC')->limit(1)->fetch();
+        $databaseVersion = $engine->getFluentPDO()->from('phinxlog')->orderBy('version DESC')->limit(1)->fetch();
 
         $status = [
             'version-cli' => Shared::appVersion(),
