@@ -48,10 +48,11 @@ class AppStatusCommand extends MultiFlexiCommand
         if ($driver === 'sqlite') {
             $dbFile = Shared::cfg('DB_DATABASE');
             $database = $driver.' '.$dbFile;
+
             if (is_file($dbFile)) {
                 $stat = stat($dbFile);
-                $owner = function_exists('posix_getpwuid') ? (posix_getpwuid($stat['uid'])['name'] ?? $stat['uid']) : $stat['uid'];
-                $group = function_exists('posix_getgrgid') ? (posix_getgrgid($stat['gid'])['name'] ?? $stat['gid']) : $stat['gid'];
+                $owner = \function_exists('posix_getpwuid') ? (posix_getpwuid($stat['uid'])['name'] ?? $stat['uid']) : $stat['uid'];
+                $group = \function_exists('posix_getgrgid') ? (posix_getgrgid($stat['gid'])['name'] ?? $stat['gid']) : $stat['gid'];
                 $mode = substr(sprintf('%o', $stat['mode']), -4);
                 $database .= sprintf(' (owner: %s, group: %s, mode: %s)', $owner, $group, $mode);
             }
@@ -66,7 +67,7 @@ class AppStatusCommand extends MultiFlexiCommand
 
         $status = [
             'version-cli' => Shared::appVersion(),
-            'db-migration' => $databaseVersion['migration_name'] ?? 'unknown' . ' ('.($databaseVersion['version'] ?? 'unknown').')',
+            'db-migration' => $databaseVersion['migration_name'] ?? 'unknown ('.($databaseVersion['version'] ?? 'unknown').')',
             'php' => \PHP_VERSION,
             'os' => \PHP_OS,
             'memory' => memory_get_usage(),

@@ -2244,12 +2244,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/VitexSoftware/php-vitexsoftware-multiflexi-core.git",
-                "reference": "4c48d56197253e036f182a4794d82c52ea3d5a72"
+                "reference": "cd8985501b25365d3a8dc77b01cf137740967f31"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/VitexSoftware/php-vitexsoftware-multiflexi-core/zipball/4c48d56197253e036f182a4794d82c52ea3d5a72",
-                "reference": "4c48d56197253e036f182a4794d82c52ea3d5a72",
+                "url": "https://api.github.com/repos/VitexSoftware/php-vitexsoftware-multiflexi-core/zipball/cd8985501b25365d3a8dc77b01cf137740967f31",
+                "reference": "cd8985501b25365d3a8dc77b01cf137740967f31",
                 "shasum": ""
             },
             "require": {
@@ -2290,7 +2290,7 @@
                 "issues": "https://github.com/VitexSoftware/php-vitexsoftware-multiflexi-core/issues",
                 "source": "https://github.com/VitexSoftware/php-vitexsoftware-multiflexi-core/tree/main"
             },
-            "time": "2025-07-27T17:35:57+00:00"
+            "time": "2025-07-28T21:23:42+00:00"
         }
     ],
     "packages-dev": [
@@ -2832,12 +2832,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ergebnis/json-pointer.git",
-                "reference": "e01d7524e00f3e5d6e164bb74f57de2a6d810494"
+                "reference": "2cd8e9a908c2976968bbc1fe8e7140e6faffb933"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ergebnis/json-pointer/zipball/e01d7524e00f3e5d6e164bb74f57de2a6d810494",
-                "reference": "e01d7524e00f3e5d6e164bb74f57de2a6d810494",
+                "url": "https://api.github.com/repos/ergebnis/json-pointer/zipball/2cd8e9a908c2976968bbc1fe8e7140e6faffb933",
+                "reference": "2cd8e9a908c2976968bbc1fe8e7140e6faffb933",
                 "shasum": ""
             },
             "require": {
@@ -2898,7 +2898,7 @@
                 "security": "https://github.com/ergebnis/json-pointer/blob/main/.github/SECURITY.md",
                 "source": "https://github.com/ergebnis/json-pointer"
             },
-            "time": "2025-06-23T18:06:04+00:00"
+            "time": "2025-07-28T20:35:35+00:00"
         },
         {
             "name": "ergebnis/json-printer",
@@ -3756,12 +3756,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "8ae740cba5d5fc58580377d7059ab8cff607637f"
+                "reference": "469bbb8a83b8cc4b74767de39badca4cbda357ab"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/8ae740cba5d5fc58580377d7059ab8cff607637f",
-                "reference": "8ae740cba5d5fc58580377d7059ab8cff607637f",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/469bbb8a83b8cc4b74767de39badca4cbda357ab",
+                "reference": "469bbb8a83b8cc4b74767de39badca4cbda357ab",
                 "shasum": ""
             },
             "require": {
@@ -3807,7 +3807,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-07-27T14:59:51+00:00"
+            "time": "2025-07-29T08:22:47+00:00"
         },
         {
             "name": "phpstan/phpstan-phpunit",
@@ -3869,12 +3869,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "99d6bd19ae989a76586fdddc1ddce25279d35127"
+                "reference": "086553c5b2e0e1e20293d782d788ab768202b621"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/99d6bd19ae989a76586fdddc1ddce25279d35127",
-                "reference": "99d6bd19ae989a76586fdddc1ddce25279d35127",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/086553c5b2e0e1e20293d782d788ab768202b621",
+                "reference": "086553c5b2e0e1e20293d782d788ab768202b621",
                 "shasum": ""
             },
             "require": {
@@ -3931,7 +3931,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/php-code-coverage/issues",
                 "security": "https://github.com/sebastianbergmann/php-code-coverage/security/policy",
-                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/main"
+                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/12.3.2"
             },
             "funding": [
                 {
@@ -3951,7 +3951,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-07-02T06:40:52+00:00"
+            "time": "2025-07-29T06:19:24+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -4256,12 +4256,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "e0c9d4cb6c379f4e38eec390eacf9a074116c988"
+                "reference": "ba283ff2f90c75e4d597807d78526cc9d28982b9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/e0c9d4cb6c379f4e38eec390eacf9a074116c988",
-                "reference": "e0c9d4cb6c379f4e38eec390eacf9a074116c988",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/ba283ff2f90c75e4d597807d78526cc9d28982b9",
+                "reference": "ba283ff2f90c75e4d597807d78526cc9d28982b9",
                 "shasum": ""
             },
             "require": {
@@ -4275,7 +4275,7 @@
                 "phar-io/manifest": "^2.0.4",
                 "phar-io/version": "^3.2.1",
                 "php": ">=8.3",
-                "phpunit/php-code-coverage": "^12.3.1",
+                "phpunit/php-code-coverage": "^12.3.2",
                 "phpunit/php-file-iterator": "^6.0.0",
                 "phpunit/php-invoker": "^6.0.0",
                 "phpunit/php-text-template": "^5.0.0",
@@ -4354,7 +4354,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-07-28T07:02:11+00:00"
+            "time": "2025-07-29T06:43:31+00:00"
         },
         {
             "name": "psr/event-dispatcher",

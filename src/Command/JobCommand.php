@@ -182,21 +182,24 @@ EOD;
                 $scheduleType = $input->getOption('schedule_type') ?? 'adhoc';
                 $job = new Job();
                 $jobId = $job->newJob((int) $runtemplateId, $env, $scheduledDT, $executor, $scheduleType);
+
                 // Only proceed if jobId is a valid positive integer
-                if (!is_int($jobId) || $jobId <= 0) {
+                if (!\is_int($jobId) || $jobId <= 0) {
                     if ($format === 'json') {
                         $output->writeln(json_encode([
                             'status' => 'error',
-                            'message' => 'Failed to create job. Please check runtemplate_id and parameters.'
+                            'message' => 'Failed to create job. Please check runtemplate_id and parameters.',
                         ], \JSON_PRETTY_PRINT));
                     } else {
                         $output->writeln('<error>Failed to create job. Please check runtemplate_id and parameters.</error>');
                     }
+
                     return MultiFlexiCommand::FAILURE;
                 }
 
                 if ($output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
-                    $full = (new Job((int) $jobId))->getData();
+                    $full = $job->getData();
+                    $full['env'] = $job->getEnv();
 
                     if ($format === 'json') {
                         $output->writeln(json_encode($full, \JSON_PRETTY_PRINT));
