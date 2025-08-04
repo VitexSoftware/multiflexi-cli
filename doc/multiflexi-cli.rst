@@ -41,22 +41,25 @@ Use the ``-e`` or ``--environment`` option to specify a custom .env file:
 
     multiflexi-cli -e /path/to/custom/.env command action
 
+
 Commands Overview
 -----------------
 
 The MultiFlexi CLI provides the following main commands:
 
-- **application** - Manage applications (import, export, configuration)
-- **company** - Manage companies and their settings
-- **job** - Manage job execution and monitoring
-- **runtemplate** - Manage run templates and scheduling
-- **user** - User account management
-- **token** - API token management
-- **queue** - Job queue operations
-- **appstatus** - System status information
-- **describe** - List all available commands and their parameters
-- **prune** - Prune logs and jobs, keeping only the latest N records (default: 1000)
-- **completion** - Dump the shell completion script
+- **application**   - Manage applications (import/export/remove JSON, show configuration fields)
+- **company**       - Manage companies and their settings
+- **companyapp**    - Manage company-application relations
+- **job**           - Manage job execution and monitoring
+- **runtemplate**   - Manage run templates and scheduling
+- **user**          - User account management
+- **token**         - API token management
+- **credtype**      - Credential type operations
+- **queue**         - Job queue operations
+- **appstatus**     - System status information
+- **describe**      - List all available commands and their parameters
+- **prune**         - Prune logs and jobs, keeping only the latest N records (default: 1000)
+- **completion**    - Dump the shell completion script
 
 Detailed Command Reference
 -------------------------
@@ -64,6 +67,7 @@ Detailed Command Reference
 .. contents::
    :local:
    :depth: 2
+
 
 application
 -----------
@@ -75,15 +79,15 @@ Manage applications (list, get, create, update, delete, import/export/remove JSO
     multiflexi-cli application <action> [options]
 
 Actions:
-- list:   List all applications.
-- get:    Get application details by ID or UUID.
-- create: Create a new application (requires --name, --uuid).
-- update: Update an existing application (requires --id or --uuid).
-- delete: Delete an application (requires --id).
-- import-json: Import application from JSON file (requires --json).
-- export-json: Export application to JSON file (requires --id, --json).
-- remove-json: Remove application from JSON file (requires --json).
-- showconfig: Show defined configuration fields for application (requires --id or --uuid).
+- list:         List all applications.
+- get:          Get application details by ID, UUID, or name.
+- create:       Create a new application (requires --name, --uuid).
+- update:       Update an existing application (requires --id or --uuid).
+- delete:       Delete an application (requires --id).
+- import-json:  Import application from JSON file (requires --json).
+- export-json:  Export application to JSON file (requires --id, --json).
+- remove-json:  Remove application from JSON file (requires --json).
+- showconfig:   Show defined configuration fields for application (requires --id or --uuid).
 
 Options:
   --id           Application ID
@@ -94,6 +98,7 @@ Options:
   --executable   Executable
   --ociimage     OCI Image
   --requirements Requirements
+  --homepage     Homepage URL
   --json         Path to JSON file for import/export/remove
   --appversion   Application Version
   -f, --format   Output format: text or json (default: text)
@@ -104,12 +109,73 @@ Examples:
 
     multiflexi-cli application list
     multiflexi-cli application get --id=1
+    multiflexi-cli application get --uuid=uuid-123
+    multiflexi-cli application get --name="App1"
     multiflexi-cli application create --name="App1" --uuid="uuid-123"
     multiflexi-cli application update --id=1 --name="App1 Updated"
     multiflexi-cli application delete --id=1
     multiflexi-cli application import-json --json=app.json
     multiflexi-cli application export-json --id=1 --json=app.json
     multiflexi-cli application showconfig --id=1
+
+companyapp
+----------
+
+Manage company-application relations (list, get, create, update, delete).
+
+.. code-block:: bash
+
+    multiflexi-cli companyapp <action> [options]
+
+Actions:
+- list:   List company-app relations (requires --company_id and --app_id or --app_uuid).
+- get:    Get relation details by ID.
+- create: Create a new relation (requires --company_id and --app_id).
+- update: Update an existing relation (requires --id).
+- delete: Delete a relation (requires --id).
+
+Options:
+  --id           Relation ID
+  --company_id   Company ID
+  --app_id       Application ID
+  --app_uuid     Application UUID
+  -f, --format   Output format: text or json (default: text)
+
+Examples:
+
+.. code-block:: bash
+
+    multiflexi-cli companyapp list --company_id=1 --app_id=2
+    multiflexi-cli companyapp create --company_id=1 --app_id=2
+    multiflexi-cli companyapp delete --id=5
+
+credtype
+--------
+
+Credential type operations (list, get, update).
+
+.. code-block:: bash
+
+    multiflexi-cli credtype <action> [options]
+
+Actions:
+- list:   List all credential types.
+- get:    Get credential type details by ID or UUID.
+- update: Update a credential type (requires --id or --uuid).
+
+Options:
+  --id           Credential Type ID
+  --uuid         Credential Type UUID
+  --name         Name
+  -f, --format   Output format: text or json (default: text)
+
+Examples:
+
+.. code-block:: bash
+
+    multiflexi-cli credtype list
+    multiflexi-cli credtype get --id=1
+    multiflexi-cli credtype update --id=1 --name="API Key"
 
 company
 -------
@@ -367,11 +433,50 @@ List all available commands and their parameters.
 
     multiflexi-cli describe
 
+
 appstatus
 ---------
 
-Prints App Status.
+Show current MultiFlexi system status, including version, database, PHP, OS, resource usage, and service health.
 
 .. code-block:: bash
 
     multiflexi-cli appstatus
+
+Sample output:
+
+.. code-block:: text
+
+    version-cli: dev-main
+    db-migration: RuntemplateCron
+    php: 8.4.11
+    os: Linux
+    memory: 4071888
+    companies: 4
+    apps: 22
+    runtemplates: 177
+    topics: 27
+    credentials: 129
+    credential types: 9
+    database: mysql Localhost via UNIX socket Uptime: 12711  Threads: 12  Questions: 2010  Slow queries: 0  Opens: 113  Open tables: 103  Queries per second avg: 0.158 11.8.2-MariaDB-1 from Debian
+    executor: active
+    scheduler: inactive
+    timestamp: 2025-08-04T14:14:17+00:00
+
+Field descriptions:
+
+- **version-cli**: CLI version (branch or tag)
+- **db-migration**: Latest database migration applied
+- **php**: PHP version
+- **os**: Operating system
+- **memory**: Current PHP memory usage (bytes)
+- **companies**: Number of companies in the system
+- **apps**: Number of applications
+- **runtemplates**: Number of runtemplates
+- **topics**: Number of topics
+- **credentials**: Number of credentials
+- **credential types**: Number of credential types
+- **database**: Database driver and connection info
+- **executor**: Status of the multiflexi-executor service
+- **scheduler**: Status of the multiflexi-scheduler service
+- **timestamp**: ISO 8601 timestamp of the status report

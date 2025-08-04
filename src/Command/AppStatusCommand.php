@@ -78,7 +78,8 @@ class AppStatusCommand extends MultiFlexiCommand
             'credentials' => $engine->getFluentPDO()->from('credentials')->count(),
             'credential_types' => $engine->getFluentPDO()->from('credential_type')->count(),
             'database' => $database,
-            'status' => \MultiFlexi\Runner::isServiceActive('multiflexi.service') ? 'running' : 'stopped',
+            'executor' => \MultiFlexi\Runner::getServiceStatus('multiflexi-executor.service'),
+            'scheduler' => \MultiFlexi\Runner::getServiceStatus('multiflexi-scheduler.service'),
             'timestamp' => date('c'),
         ];
 
