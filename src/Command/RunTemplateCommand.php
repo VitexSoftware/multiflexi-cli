@@ -33,9 +33,32 @@ use Symfony\Component\Console\Output\OutputInterface;
 class RunTemplateCommand extends MultiFlexiCommand
 {
     protected static $defaultName = 'runtemplate';
+
     public function __construct()
     {
         parent::__construct(self::$defaultName);
+    }
+
+    /**
+     * Validate a crontab expression (basic 5-field check).
+     *
+     * @param string $expression
+     * @return bool
+     */
+    protected function isValidCronExpression(string $expression): bool
+    {
+        // Accepts 5 fields separated by spaces, each field can be *, number, range, list, or step
+        $parts = preg_split('/\s+/', trim($expression));
+        if (count($parts) !== 5) {
+            return false;
+        }
+        // Basic check for allowed characters in each field
+        foreach ($parts as $field) {
+            if (!preg_match('/^[\d\*,\/-]+$/', $field)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     protected function configure(): void
@@ -51,6 +74,7 @@ class RunTemplateCommand extends MultiFlexiCommand
             ->addOption('company_id', null, InputOption::VALUE_REQUIRED, 'Company ID')
             ->addOption('company', null, InputOption::VALUE_REQUIRED, 'Company slug (string) or ID (integer)')
             ->addOption('interv', null, InputOption::VALUE_REQUIRED, 'Interval code')
+            ->addOption('cron', null, InputOption::VALUE_OPTIONAL, 'Crontab expression for scheduling')
             ->addOption('active', null, InputOption::VALUE_REQUIRED, 'Active')
             ->addOption('config', null, InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Application config key=value (repeatable)')
             ->addOption('schedule_time', null, InputOption::VALUE_OPTIONAL, 'Schedule time for launch (Y-m-d H:i:s or "now")', 'now')
@@ -199,9 +223,22 @@ class RunTemplateCommand extends MultiFlexiCommand
             case 'create':
                 $data = [];
 
-                foreach (['name', 'app_id', 'company_id', 'interv', 'active'] as $field) {
+                foreach (['name', 'app_id', 'company_id', 'interv', 'cron', 'active'] as $field) {
                     $val = $input->getOption($field);
-
+                    if ($field === 'cron' && $val !== null) {
+                        if (!$this->isValidCronExpression($val)) {
+                            if ($format === 'json') {
+                                $output->writeln(json_encode([
+                                    'status' => 'error',
+                                    'message' => 'Invalid crontab expression',
+                                    'cron' => $val
+                                ], \JSON_PRETTY_PRINT));
+                            } else {
+                                $output->writeln('<error>Invalid crontab expression: ' . $val . '</error>');
+                            }
+                            return MultiFlexiCommand::FAILURE;
+                        }
+                    }
                     if ($val !== null) {
                         $data[$field] = $val;
                     }
@@ -280,14 +317,33 @@ class RunTemplateCommand extends MultiFlexiCommand
                     return MultiFlexiCommand::FAILURE;
                 }
 
+
                 $data = [];
-
-                foreach (['name', 'app_id', 'company_id', 'interv', 'active'] as $field) {
+                foreach (['name', 'app_id', 'company_id', 'interv', 'cron', 'active'] as $field) {
                     $val = $input->getOption($field);
-
+                    if ($field === 'cron' && $val !== null) {
+                        if (!$this->isValidCronExpression($val)) {
+                            if ($format === 'json') {
+                                $output->writeln(json_encode([
+                                    'status' => 'error',
+                                    'message' => 'Invalid crontab expression',
+                                    'cron' => $val
+                                ], \JSON_PRETTY_PRINT));
+                            } else {
+                                $output->writeln('<error>Invalid crontab expression: ' . $val . '</error>');
+                            }
+                            return MultiFlexiCommand::FAILURE;
+                        }
+                    }
                     if ($val !== null) {
                         $data[$field] = $val;
                     }
+                }
+
+                // Handle config option
+                $configData = $this->parseConfigOptions($input);
+                if (!empty($configData)) {
+                    $data['config'] = json_encode($configData, JSON_UNESCAPED_UNICODE);
                 }
 
                 // If app_uuid is provided, resolve app_id by uuid
