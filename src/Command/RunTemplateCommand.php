@@ -123,6 +123,14 @@ class RunTemplateCommand extends MultiFlexiCommand
                     }
                 }
 
+                // Filter by app_uuid if provided
+                $appUuid = $input->getOption('app_uuid');
+                if ($appUuid) {
+                    // Join with apps table and filter by uuid
+                    $query->join('apps ON apps.id = runtemplate.app_id');
+                    $query->where('apps.uuid', $appUuid);
+                }
+
                 $rts = $query->fetchAll();
 
                 if ($format === 'json') {

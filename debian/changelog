@@ -1,5 +1,12 @@
-multiflexi-cli (1.0.0) UNRELEASED; urgency=low
+multiflexi-cli (2.0.0) UNRELEASED; urgency=medium
 
+  * stable version
+
+ -- vitex <info@vitexsoftware.cz>  Mon, 04 Aug 2025 09:37:43 +0200
+
+multiflexi-cli (1.0.0) unstable; urgency=low
+
+  [ Vítězslav Dvořák ]
   * First stable release.
 
- -- Vítězslav Dvořák <info@vitexsoftware.cz>  Mon, 21 Jul 2025 00:56:11 +0200
+ -- vitex <info@vitexsoftware.cz>  Mon, 04 Aug 2025 09:37:14 +0200
