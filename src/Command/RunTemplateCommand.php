@@ -30,8 +30,20 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @author Vitex <info@vitexsoftware.cz>
  */
 // Přidání RunTemplateCommand pro správu runtemplate
+
+/**
+ * Command for managing RunTemplates.
+ *
+ * Handles CRUD, scheduling, and configuration for runtemplates.
+ *
+ * @author Vitex <info@vitexsoftware.cz>
+ */
 class RunTemplateCommand extends MultiFlexiCommand
 {
+    /**
+     * The database field used to store config as JSON.
+     */
+    public const CONFIG_FIELD = 'config_json';
     protected static $defaultName = 'runtemplate';
 
     public function __construct()
@@ -41,23 +53,23 @@ class RunTemplateCommand extends MultiFlexiCommand
 
     /**
      * Validate a crontab expression (basic 5-field check).
-     *
-     * @param string $expression
-     * @return bool
      */
     protected function isValidCronExpression(string $expression): bool
     {
         // Accepts 5 fields separated by spaces, each field can be *, number, range, list, or step
         $parts = preg_split('/\s+/', trim($expression));
-        if (count($parts) !== 5) {
+
+        if (\count($parts) !== 5) {
             return false;
         }
+
         // Basic check for allowed characters in each field
         foreach ($parts as $field) {
             if (!preg_match('/^[\d\*,\/-]+$/', $field)) {
                 return false;
             }
         }
+
         return true;
     }
 
@@ -149,6 +161,7 @@ class RunTemplateCommand extends MultiFlexiCommand
 
                 // Filter by app_uuid if provided
                 $appUuid = $input->getOption('app_uuid');
+
                 if ($appUuid) {
                     // Join with apps table and filter by uuid
                     $query->join('apps ON apps.id = runtemplate.app_id');
@@ -225,20 +238,23 @@ class RunTemplateCommand extends MultiFlexiCommand
 
                 foreach (['name', 'app_id', 'company_id', 'interv', 'cron', 'active'] as $field) {
                     $val = $input->getOption($field);
+
                     if ($field === 'cron' && $val !== null) {
                         if (!$this->isValidCronExpression($val)) {
                             if ($format === 'json') {
                                 $output->writeln(json_encode([
                                     'status' => 'error',
                                     'message' => 'Invalid crontab expression',
-                                    'cron' => $val
+                                    'cron' => $val,
                                 ], \JSON_PRETTY_PRINT));
                             } else {
-                                $output->writeln('<error>Invalid crontab expression: ' . $val . '</error>');
+                                $output->writeln('<error>Invalid crontab expression: '.$val.'</error>');
                             }
+
                             return MultiFlexiCommand::FAILURE;
                         }
                     }
+
                     if ($val !== null) {
                         $data[$field] = $val;
                     }
@@ -317,33 +333,30 @@ class RunTemplateCommand extends MultiFlexiCommand
                     return MultiFlexiCommand::FAILURE;
                 }
 
-
                 $data = [];
+
                 foreach (['name', 'app_id', 'company_id', 'interv', 'cron', 'active'] as $field) {
                     $val = $input->getOption($field);
+
                     if ($field === 'cron' && $val !== null) {
                         if (!$this->isValidCronExpression($val)) {
                             if ($format === 'json') {
                                 $output->writeln(json_encode([
                                     'status' => 'error',
                                     'message' => 'Invalid crontab expression',
-                                    'cron' => $val
+                                    'cron' => $val,
                                 ], \JSON_PRETTY_PRINT));
                             } else {
-                                $output->writeln('<error>Invalid crontab expression: ' . $val . '</error>');
+                                $output->writeln('<error>Invalid crontab expression: '.$val.'</error>');
                             }
+
                             return MultiFlexiCommand::FAILURE;
                         }
                     }
+
                     if ($val !== null) {
                         $data[$field] = $val;
                     }
-                }
-
-                // Handle config option
-                $configData = $this->parseConfigOptions($input);
-                if (!empty($configData)) {
-                    $data['config'] = json_encode($configData, JSON_UNESCAPED_UNICODE);
                 }
 
                 // If app_uuid is provided, resolve app_id by uuid
@@ -366,8 +379,66 @@ class RunTemplateCommand extends MultiFlexiCommand
 
                 $rt = new RunTemplate((int) $id);
 
+                // Save config fields using MultiFlexi\Configuration if --config is provided
+                $configData = $this->parseConfigOptions($input);
+
+                if (!empty($configData)) {
+                    $app = new \MultiFlexi\Application($rt->getDataValue('app_id'));
+                    $companies = new \MultiFlexi\Company($rt->getDataValue('company_id'));
+                    $configurator = new \MultiFlexi\Configuration([
+                        'runtemplate_id' => $rt->getMyKey(),
+                        'app_id' => $app->getMyKey(),
+                        'company_id' => $companies->getMyKey(),
+                    ], ['autoload' => false]);
+
+                    if ($configurator->takeData($configData) && null !== $configurator->saveToSQL()) {
+                        $configurator->addStatusMessage(_('Config fields Saved'), 'success');
+                        // Optionally run setup command if defined
+                        $setupCommand = $app->getDataValue('setup');
+
+                        if (!empty($setupCommand)) {
+                            $appEnvironment = $rt->getEnvironment()->getEnvArray();
+                            $process = new \Symfony\Component\Process\Process(
+                                explode(' ', $setupCommand),
+                                null,
+                                $appEnvironment,
+                                null,
+                                32767,
+                            );
+                            $result = $process->run();
+                            $outputText = $process->getOutput();
+                            $errorText = $process->getErrorOutput();
+
+                            if ($result === 0) {
+                                $configurator->addStatusMessage(_('Setup command executed successfully:'), 'success');
+
+                                if ($outputText) {
+                                    $configurator->addStatusMessage($outputText, 'info');
+                                }
+                            } else {
+                                $configurator->addStatusMessage(_('Setup command failed:'), 'error');
+
+                                if ($errorText) {
+                                    $configurator->addStatusMessage($errorText, 'error');
+                                }
+                            }
+                        }
+                    } else {
+                        $configurator->addStatusMessage(_('Error saving Config fields'), 'error');
+                        $output->writeln('<error>Error saving Config fields</error>');
+
+                        return MultiFlexiCommand::FAILURE;
+                    }
+                }
+
                 if (!empty($data)) {
-                    $rt->updateToSQL($data, ['id' => $id]);
+                    try {
+                        $rt->updateToSQL($data, ['id' => $id]);
+                    } catch (\Exception $e) {
+                        $output->writeln('<error>Failed to update runtemplate: '.$e->getMessage().'</error>');
+
+                        return MultiFlexiCommand::FAILURE;
+                    }
                 }
 
                 if ($output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
