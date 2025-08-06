@@ -10,7 +10,7 @@ Package: multiflexi-cli
 Multi-Arch: foreign
 Depends: ${misc:Depends},
  multiflexi-common,
- php-vitexsoftware-multiflexi-core,
+ php-vitexsoftware-multiflexi-core (>= 2.0.0),
  php-cli,
  locales-all,
  adduser (>= 3.11),

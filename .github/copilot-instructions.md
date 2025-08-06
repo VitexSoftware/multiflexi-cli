@@ -53,3 +53,10 @@ In the tests/test-cli.sh keep the delete action tests at very bottom of the file
 
 Update the multiflexi-cli.rst and multiflexi-cli.1 files each time when the multiflexi-cli command features changes somehow
 
+Keep manpage/multiflexi-cli.1 file up to date with the latest changes in the multiflexi-cli command.
+
+When updating the multiflexi-cli command, ensure that the --help output is clear and concise, providing all necessary information about the command's usage and options.
+
+When writing code, always ensure that it is compatible with the latest version of the VitexSoftware libraries and follows their coding standards.
+
+When writing code, always ensure that it is properly documented, including inline comments where necessary to explain complex logic or important decisions.

@@ -2,10 +2,21 @@
 
 declare(strict_types=1);
 
-use PHPUnit\Framework\TestCase;
+/**
+ * This file is part of the MultiFlexi package
+ *
+ * https://multiflexi.eu/
+ *
+ * (c) Vítězslav Dvořák <http://vitexsoftware.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 use MultiFlexi\Cli\Command\JobCommand;
-use Symfony\Component\Console\Tester\CommandTester;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Tester\CommandTester;
 
 /**
  * Unit tests for JobCommand.
