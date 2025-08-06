@@ -78,7 +78,7 @@ try {
             $userData = [
                 'login' => $unixUsername,
                 'email' => $unixUsername.'@'.gethostname(),
-                'active' => 0,
+                'enabled' => 0,
             ];
             if ($userRecord->insertToSQL($userData)) {
                 // Reload user with new ID
