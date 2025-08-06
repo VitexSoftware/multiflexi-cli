@@ -29,24 +29,42 @@ abstract class MultiFlexiCommand extends \Symfony\Component\Console\Command\Comm
         return [];
     }
 
+    /**
+     * Output a table using LucidFrame\Console\ConsoleTable.
+     *
+     * @param array $data The data to display as a table (array of associative arrays)
+     */
     public function outputTable(array $data): void
     {
-        if ($data) {
-            $table = new \LucidFrame\Console\ConsoleTable();
-
-            foreach (array_keys(current($data)) as $column) {
-                $table->addHeader($column);
-            }
-
-            foreach ($data as $row) {
-                $table->addRow($row);
-            }
-
-            $table->display();
-            // TODO: https://github.com/phplucidframe/console-table/issues/14#issuecomment-2167643219
-        } else {
+        if (empty($data)) {
             echo _('No data')."\n";
+
+            return;
         }
+
+        $table = new \LucidFrame\Console\ConsoleTable();
+
+        $headers = array_keys(reset($data));
+
+        // Add header row with columns so it matches the size of data rows
+        foreach ($headers as $i => $column) {
+            if ($i === 0) {
+                $table->addHeader($column);
+            } else {
+                $table->addColumn($column);
+            }
+        }
+
+        // Add data rows
+        foreach ($data as $row) {
+            $table->addRow();
+
+            foreach ($row as $cell) {
+                $table->addColumn($cell);
+            }
+        }
+
+        $table->display();
     }
 
     /**
