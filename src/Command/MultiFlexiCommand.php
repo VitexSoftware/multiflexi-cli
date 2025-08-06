@@ -36,38 +36,38 @@ abstract class MultiFlexiCommand extends \Symfony\Component\Console\Command\Comm
      */
     public static function outputTable(array $data, int $cellMaxLength = 50): string
     {
-        if (empty($data)) {
-            echo _('No data')."\n";
-        }
-
         $table = new \LucidFrame\Console\ConsoleTable();
 
-        $headers = array_keys(reset($data));
+        if (empty($data)) {
+            echo _('No data')."\n";
+        } else {
+            $headers = array_keys(reset($data));
 
-        // Add header row with columns so it matches the size of data rows
-        foreach ($headers as $i => $column) {
-            if ($i === 0) {
-                $table->addHeader($column);
-            } else {
-                $table->addColumn($column);
-            }
-        }
-
-        // Add data rows
-        foreach ($data as $row) {
-            $table->addRow();
-
-            foreach ($row as $cell) {
-                // Truncate cell value to a maximum of 50 characters, ending with '🪚' if truncated
-                $cellString = (string) $cell;
-
-                if (mb_strlen($cellString) > $cellMaxLength) {
-                    $truncatedCell = mb_substr($cellString, 0, $cellMaxLength - 3).'🪚';
+            // Add header row with columns so it matches the size of data rows
+            foreach ($headers as $i => $column) {
+                if ($i === 0) {
+                    $table->addHeader($column);
                 } else {
-                    $truncatedCell = $cellString;
+                    $table->addColumn($column);
                 }
+            }
 
-                $table->addColumn($truncatedCell);
+            // Add data rows
+            foreach ($data as $row) {
+                $table->addRow();
+
+                foreach ($row as $cell) {
+                    // Truncate cell value to a maximum of 50 characters, ending with '🪚' if truncated
+                    $cellString = (string) $cell;
+
+                    if (mb_strlen($cellString) > $cellMaxLength) {
+                        $truncatedCell = mb_substr($cellString, 0, $cellMaxLength - 3).'🪚';
+                    } else {
+                        $truncatedCell = $cellString;
+                    }
+
+                    $table->addColumn($truncatedCell);
+                }
             }
         }
 
