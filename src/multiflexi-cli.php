@@ -32,6 +32,7 @@ use MultiFlexi\Cli\Command\QueueCommand;
 use MultiFlexi\Cli\Command\RunTemplateCommand;
 use MultiFlexi\Cli\Command\TokenCommand;
 use MultiFlexi\Cli\Command\UserCommand;
+use MultiFlexi\User;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\CompleteCommand;
 use Symfony\Component\Console\Input\InputOption;
@@ -56,7 +57,44 @@ if (Shared::cfg('APP_DEBUG') === 'true') {
 \define('EASE_LOGGER', implode('|', $loggers));
 \define('APP_NAME', 'MultiFlexiCLI');
 
-Shared::user(new Anonym());
+$user = new \MultiFlexi\User();
+
+/**
+ * Attempt to log in using the current Unix username.
+ * If the user does not exist in the 'user' table, create a new one.
+ */
+
+/** @var string $unixUsername */
+$unixUsername = get_current_user();
+
+try {
+    $userRecord = new User($unixUsername);
+
+    if (!$userRecord->getMyKey()) {
+        // User does not exist, create a new one
+        $userData = [
+            'login' => $unixUsername,
+            'name' => $unixUsername,
+            'email' => $unixUsername.'@'.gethostname(),
+            'active' => 0,
+        ];
+
+        if ($userRecord->insertToSQL($userData)) {
+            // Reload user with new ID
+            $userRecord = new User(null, ['login' => $unixUsername]);
+        } else {
+            throw new \Exception(_('Failed to create new user for current Unix username.'));
+        }
+    }
+
+    Shared::user($userRecord);
+} catch (\Exception $exception) {
+    fwrite(\STDERR, json_encode([
+        'error' => _('User login/creation failed'),
+        'message' => $exception->getMessage(),
+    ], \JSON_UNESCAPED_UNICODE | \JSON_PRETTY_PRINT).\PHP_EOL);
+    Shared::user(new Anonym());
+}
 
 $application = new Application(Shared::appName(), Shared::appVersion());
 
