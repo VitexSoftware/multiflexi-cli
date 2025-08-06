@@ -71,19 +71,21 @@ try {
     $userRecord = new User($unixUsername);
 
     if (!$userRecord->getMyKey()) {
-        // User does not exist, create a new one
-        $userData = [
-            'login' => $unixUsername,
-            'name' => $unixUsername,
-            'email' => $unixUsername.'@'.gethostname(),
-            'active' => 0,
-        ];
-
-        if ($userRecord->insertToSQL($userData)) {
-            // Reload user with new ID
-            $userRecord = new User(null, ['login' => $unixUsername]);
+        // User does not exist, create a new one unless DB is dummy
+        if (Shared::cfg('DB_CONNECTION') === 'dummy') {
+            // Skip user creation for dummy DB
         } else {
-            throw new \Exception(_('Failed to create new user for current Unix username.'));
+            $userData = [
+                'login' => $unixUsername,
+                'email' => $unixUsername.'@'.gethostname(),
+                'active' => 0,
+            ];
+            if ($userRecord->insertToSQL($userData)) {
+                // Reload user with new ID
+                $userRecord = new User($unixUsername);
+            } else {
+                throw new \Exception(_('Failed to create new user for current Unix username.'));
+            }
         }
     }
 
