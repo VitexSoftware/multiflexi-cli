@@ -77,9 +77,7 @@ class CompanyAppCommand extends MultiFlexiCommand
             if ($format === 'json') {
                 $output->writeln(json_encode($runtemplates, \JSON_PRETTY_PRINT));
             } else {
-                foreach ($runtemplates as $row) {
-                    $output->writeln(implode(' | ', $row));
-                }
+                $output->writeln(self::outputTable($runtemplates));
             }
 
             return Command::SUCCESS;

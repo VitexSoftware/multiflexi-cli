@@ -86,9 +86,7 @@ class AppStatusCommand extends MultiFlexiCommand
         if ($format === 'json') {
             $output->writeln(json_encode($status, \JSON_PRETTY_PRINT));
         } else {
-            foreach ($status as $key => $value) {
-                $output->writeln(str_replace('_', ' ', $key).': '.$value);
-            }
+            $output->writeln(self::outputTable($status));
         }
 
         return MultiFlexiCommand::SUCCESS;

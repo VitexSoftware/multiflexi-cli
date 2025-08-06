@@ -55,9 +55,7 @@ class CredentialTypeCommand extends MultiFlexiCommand
                 if ($format === 'json') {
                     $output->writeln(json_encode($types, \JSON_PRETTY_PRINT));
                 } else {
-                    foreach ($types as $row) {
-                        $output->writeln(implode(' | ', $row));
-                    }
+                    $output->writeln(self::outputTable($types));
                 }
 
                 return MultiFlexiCommand::SUCCESS;

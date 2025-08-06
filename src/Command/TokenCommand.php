@@ -60,9 +60,7 @@ class TokenCommand extends MultiFlexiCommand
                 if ($format === 'json') {
                     $output->writeln(json_encode($tokens, \JSON_PRETTY_PRINT));
                 } else {
-                    foreach ($tokens as $row) {
-                        $output->writeln(implode(' | ', $row));
-                    }
+                    $output->writeln(self::outputTable($tokens));
                 }
 
                 return MultiFlexiCommand::SUCCESS;

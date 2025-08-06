@@ -53,7 +53,7 @@ class QueueCommand extends MultiFlexiCommand
                 if ($format === 'json') {
                     $output->writeln(json_encode($rows, \JSON_PRETTY_PRINT));
                 } else {
-                    $this->outputTable($rows);
+                    $output->writeln(self::outputTable($rows));
                 }
 
                 return self::SUCCESS;

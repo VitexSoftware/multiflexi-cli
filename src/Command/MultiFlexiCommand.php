@@ -34,12 +34,10 @@ abstract class MultiFlexiCommand extends \Symfony\Component\Console\Command\Comm
      *
      * @param array $data The data to display as a table (array of associative arrays)
      */
-    public function outputTable(array $data): void
+    public static function outputTable(array $data, int $cellMaxLength = 50): string
     {
         if (empty($data)) {
             echo _('No data')."\n";
-
-            return;
         }
 
         $table = new \LucidFrame\Console\ConsoleTable();
@@ -60,11 +58,20 @@ abstract class MultiFlexiCommand extends \Symfony\Component\Console\Command\Comm
             $table->addRow();
 
             foreach ($row as $cell) {
-                $table->addColumn($cell);
+                // Truncate cell value to a maximum of 50 characters, ending with '🪚' if truncated
+                $cellString = (string) $cell;
+
+                if (mb_strlen($cellString) > $cellMaxLength) {
+                    $truncatedCell = mb_substr($cellString, 0, $cellMaxLength - 3).'🪚';
+                } else {
+                    $truncatedCell = $cellString;
+                }
+
+                $table->addColumn($truncatedCell);
             }
         }
 
-        $table->display();
+        return $table->getTable();
     }
 
     /**

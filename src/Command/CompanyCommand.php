@@ -102,9 +102,7 @@ class CompanyCommand extends MultiFlexiCommand
                 if ($format === 'json') {
                     $output->writeln(json_encode($companies, \JSON_PRETTY_PRINT));
                 } else {
-                    foreach ($companies as $row) {
-                        $output->writeln(implode(' | ', $row));
-                    }
+                    $output->writeln(self::outputTable($companies));
                 }
 
                 return MultiFlexiCommand::SUCCESS;

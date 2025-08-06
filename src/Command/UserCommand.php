@@ -82,9 +82,7 @@ class UserCommand extends MultiFlexiCommand
                 if ($format === 'json') {
                     $output->writeln(json_encode($users, \JSON_PRETTY_PRINT));
                 } else {
-                    foreach ($users as $row) {
-                        $output->writeln(implode(' | ', $row));
-                    }
+                    $output->writeln(self::outputTable($users));
                 }
 
                 return MultiFlexiCommand::SUCCESS;

@@ -68,9 +68,7 @@ class ApplicationCommand extends MultiFlexiCommand
                 if ($format === 'json') {
                     $output->writeln(json_encode($apps, \JSON_PRETTY_PRINT));
                 } else {
-                    foreach ($apps as $row) {
-                        $output->writeln(implode(' | ', $row));
-                    }
+                    $output->writeln($this->outputTable($apps));
                 }
 
                 return MultiFlexiCommand::SUCCESS;

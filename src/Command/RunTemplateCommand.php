@@ -173,9 +173,7 @@ class RunTemplateCommand extends MultiFlexiCommand
                 if ($format === 'json') {
                     $output->writeln(json_encode($rts, \JSON_PRETTY_PRINT));
                 } else {
-                    foreach ($rts as $row) {
-                        $output->writeln(implode(' | ', $row));
-                    }
+                    $output->writeln(self::outputTable($rts));
                 }
 
                 return MultiFlexiCommand::SUCCESS;
