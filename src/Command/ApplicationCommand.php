@@ -307,44 +307,53 @@ class ApplicationCommand extends MultiFlexiCommand
                 return MultiFlexiCommand::SUCCESS;
             case 'validate-json':
                 $json = $input->getOption('json');
+
                 if (empty($json) || !file_exists($json)) {
                     if ($format === 'json') {
                         $output->writeln(json_encode([
                             'status' => 'error',
-                            'message' => 'Missing or invalid --json file for validate-json'
+                            'message' => 'Missing or invalid --json file for validate-json',
                         ], \JSON_PRETTY_PRINT));
                     } else {
                         $output->writeln('<error>Missing or invalid --json file for validate-json</error>');
                     }
+
                     return MultiFlexiCommand::FAILURE;
                 }
+
                 $app = new \MultiFlexi\Application();
                 $result = $app->validateAppJson($json);
+
                 if ($format === 'json') {
-                    if ($result) {
+                    if (empty($result)) {
                         $output->writeln(json_encode([
                             'status' => 'success',
                             'file' => $json,
                             'schema' => realpath(Application::$appSchema),
-                            'message' => 'JSON is valid'
+                            'message' => 'JSON is valid',
                         ], \JSON_PRETTY_PRINT));
                     } else {
                         $output->writeln(json_encode([
                             'status' => 'error',
                             'file' => $json,
-                            'schema' => realpath(Application::$appSchema)   ,
-                            'message' => 'JSON validation failed'
+                            'violations' => $result,
+                            'schema' => realpath(Application::$appSchema),
+                            'message' => 'JSON validation failed',
                         ], \JSON_PRETTY_PRINT));
                     }
                 } else {
-                    if ($result) {
+                    if (empty($result)) {
                         $output->writeln('<info>JSON is valid</info>');
                     } else {
                         $output->writeln('<error>JSON validation failed</error>');
+
+                        foreach ($result as $violation) {
+                            $output->writeln('<error> '.$violation.' </error>');
+                        }
                     }
                 }
-                return $result ? MultiFlexiCommand::SUCCESS : MultiFlexiCommand::FAILURE;
 
+                return empty($result) ? MultiFlexiCommand::SUCCESS : MultiFlexiCommand::FAILURE;
             case 'showconfig':
                 $id = $input->getOption('id');
                 $uuid = $input->getOption('uuid');
