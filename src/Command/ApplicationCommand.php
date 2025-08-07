@@ -40,7 +40,7 @@ class ApplicationCommand extends MultiFlexiCommand
         $this
             ->setDescription('Manage applications')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'The output format: text or json. Defaults to text.', 'text')
-            ->addArgument('action', InputArgument::REQUIRED, 'Action: list|get|create|update|delete|import-json|export-json|remove-json|showconfig')
+            ->addArgument('action', InputArgument::REQUIRED, 'Action: list|get|create|update|delete|import-json|export-json|remove-json|validate-json|showconfig')
             ->addOption('id', null, InputOption::VALUE_REQUIRED, 'Application ID')
             ->addOption('name', null, InputOption::VALUE_REQUIRED, 'Name')
             ->addOption('description', null, InputOption::VALUE_OPTIONAL, 'Description')
@@ -50,7 +50,7 @@ class ApplicationCommand extends MultiFlexiCommand
             ->addOption('ociimage', null, InputOption::VALUE_OPTIONAL, 'OCI Image')
             ->addOption('requirements', null, InputOption::VALUE_OPTIONAL, 'Requirements')
             ->addOption('homepage', null, InputOption::VALUE_OPTIONAL, 'Homepage URL')
-            ->addOption('json', null, InputOption::VALUE_REQUIRED, 'Path to JSON file for import/export/remove')
+            ->addOption('json', null, InputOption::VALUE_REQUIRED, 'Path to JSON file for import/export/remove/validate')
             ->addOption('appversion', null, InputOption::VALUE_OPTIONAL, 'Application Version');
         // Add more options as needed
     }
@@ -305,6 +305,22 @@ class ApplicationCommand extends MultiFlexiCommand
                 $output->writeln(json_encode(['removed' => $result], \JSON_PRETTY_PRINT));
 
                 return MultiFlexiCommand::SUCCESS;
+            case 'validate-json':
+                $json = $input->getOption('json');
+                if (empty($json) || !file_exists($json)) {
+                    $output->writeln('<error>Missing or invalid --json file for validate-json</error>');
+
+                    return MultiFlexiCommand::FAILURE;
+                } else {
+                    $app = new \MultiFlexi\Application();
+                    $result = $app->validateAppJson($json);
+                    if ($result) {
+                        $output->writeln('<info>JSON is valid</info>');
+                    } else {
+                        $output->writeln('<error>JSON validation failed</error>');
+                    }
+                }
+
             case 'showconfig':
                 $id = $input->getOption('id');
                 $uuid = $input->getOption('uuid');
