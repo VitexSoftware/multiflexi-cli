@@ -67,7 +67,8 @@ class AppStatusCommand extends MultiFlexiCommand
 
         $status = [
             'version-cli' => Shared::appVersion(),
-            'db-migration' => $databaseVersion['migration_name'] ?? 'unknown ('.($databaseVersion['version'] ?? 'unknown').')',
+            'db-migration' => $databaseVersion['migration_name'].' ('.$databaseVersion['version'].')',
+            'user' => Shared::user()->getUserLogin(),
             'php' => \PHP_VERSION,
             'os' => \PHP_OS,
             'memory' => memory_get_usage(),
@@ -86,7 +87,13 @@ class AppStatusCommand extends MultiFlexiCommand
         if ($format === 'json') {
             $output->writeln(json_encode($status, \JSON_PRETTY_PRINT));
         } else {
-            $output->writeln(self::outputTable($status));
+            // Print as a vertical table: each row is a key-value pair
+
+            foreach ($status as $key => $value) {
+                $statusTable[] = [$key, (string) $value];
+            }
+
+            $output->writeln(self::outputTable($statusTable, 200, ['Key', 'Value']));
         }
 
         return MultiFlexiCommand::SUCCESS;

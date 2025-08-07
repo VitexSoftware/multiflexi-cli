@@ -34,7 +34,7 @@ abstract class MultiFlexiCommand extends \Symfony\Component\Console\Command\Comm
      *
      * @param array $data The data to display as a table (array of associative arrays)
      */
-    public static function outputTable(array $data, int $cellMaxLength = 50): string
+    public static function outputTable(array $data, int $cellMaxLength = 50, array $header = []): string
     {
         $table = new \LucidFrame\Console\ConsoleTable();
 
@@ -45,7 +45,7 @@ abstract class MultiFlexiCommand extends \Symfony\Component\Console\Command\Comm
             return '';
         }
 
-        $headers = array_keys(reset($data));
+        $headers = $header ?: array_keys(reset($data));
 
         // Add header row with columns so it matches the size of data rows
         foreach ($headers as $i => $column) {

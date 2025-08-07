@@ -24,8 +24,9 @@
     },
     "autoload": {
         "psr-4": {
-            "MultiFlexi\\Cli\\": "src",
-            "MultiFlexi\\Cli\\Command\\": "src/Command"
+            "MultiFlexi\\": "src/MultiFlexi/",
+            "MultiFlexi\\Cli\\": "src/",
+            "MultiFlexi\\Cli\\Command\\": "src/Command/"
         }
     },
     "autoload-dev": {
