@@ -27,6 +27,7 @@ echo '###################################################'
 # multiflexi-run-template --uuid 868a8085-03e5-4f9b-899d-2084e1de7d3b --company-slug testco --company-id 1 --run-params '{"param1":"value1","param2":"value2"}'
 
 #TODO check config editing : multiflexi-cli runtemplate update --id=159 --config=IMPORT_SCOPE=2025-08-01>2025-08-02 --format json
+#TODO check json validation: multiflexi-cli application validate-json --json /home/vitex/Projects/VitexSoftware/Redmine2AbraFlexi/multiflexi/redmine2abraflexi.multiflexi.app.json 
 
 
 # Delete action tests

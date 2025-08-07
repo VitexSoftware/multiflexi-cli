@@ -2272,12 +2272,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/VitexSoftware/php-vitexsoftware-multiflexi-core.git",
-                "reference": "96bcd35ddbd0b37755148b9b712284ec3f7a2054"
+                "reference": "f7c9fca384d6bca9dce49d8abe4bc30e4753d8cb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/VitexSoftware/php-vitexsoftware-multiflexi-core/zipball/96bcd35ddbd0b37755148b9b712284ec3f7a2054",
-                "reference": "96bcd35ddbd0b37755148b9b712284ec3f7a2054",
+                "url": "https://api.github.com/repos/VitexSoftware/php-vitexsoftware-multiflexi-core/zipball/f7c9fca384d6bca9dce49d8abe4bc30e4753d8cb",
+                "reference": "f7c9fca384d6bca9dce49d8abe4bc30e4753d8cb",
                 "shasum": ""
             },
             "require": {
@@ -2319,7 +2319,7 @@
                 "issues": "https://github.com/VitexSoftware/php-vitexsoftware-multiflexi-core/issues",
                 "source": "https://github.com/VitexSoftware/php-vitexsoftware-multiflexi-core/tree/main"
             },
-            "time": "2025-08-06T11:58:32+00:00"
+            "time": "2025-08-07T18:10:35+00:00"
         }
     ],
     "packages-dev": [
@@ -3844,12 +3844,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-phpunit.git",
-                "reference": "9a9b161baee88a5f5c58d816943cff354ff233dc"
+                "reference": "1d7eb7e5d8e7daefb033df1beaa497dfeed72c04"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-phpunit/zipball/9a9b161baee88a5f5c58d816943cff354ff233dc",
-                "reference": "9a9b161baee88a5f5c58d816943cff354ff233dc",
+                "url": "https://api.github.com/repos/phpstan/phpstan-phpunit/zipball/1d7eb7e5d8e7daefb033df1beaa497dfeed72c04",
+                "reference": "1d7eb7e5d8e7daefb033df1beaa497dfeed72c04",
                 "shasum": ""
             },
             "require": {
@@ -3888,9 +3888,9 @@
             "description": "PHPUnit extensions and rules for PHPStan",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan-phpunit/issues",
-                "source": "https://github.com/phpstan/phpstan-phpunit/tree/2.0.7"
+                "source": "https://github.com/phpstan/phpstan-phpunit/tree/2.0.x"
             },
-            "time": "2025-07-13T11:31:46+00:00"
+            "time": "2025-08-07T11:38:35+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
