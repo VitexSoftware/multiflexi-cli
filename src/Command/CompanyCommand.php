@@ -58,26 +58,6 @@ class CompanyCommand extends MultiFlexiCommand
         // Add more options as needed
     }
 
-    /**
-     * Convert string option to boolean if needed.
-     *
-     * @param mixed $val
-     */
-    protected function parseBoolOption($val)
-    {
-        if (\is_bool($val)) {
-            return $val;
-        }
-
-        if (null === $val) {
-            return null;
-        }
-
-        $val = strtolower((string) $val);
-
-        return \in_array($val, ['1', 'true', 'yes', 'on'], true);
-    }
-
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $format = strtolower($input->getOption('format'));
@@ -320,7 +300,7 @@ class CompanyCommand extends MultiFlexiCommand
                 }
 
                 $company = new Company((int) $id);
-                $company->deleteFromSQL();
+                $company->deleteFromSQL(['id'=>$id]);
 
                 if ($output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
                     $output->writeln("Company removed: ID={$id}");
