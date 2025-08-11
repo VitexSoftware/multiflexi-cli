@@ -387,9 +387,12 @@ class RunTemplateCommand extends MultiFlexiCommand
                         'runtemplate_id' => $rt->getMyKey(),
                         'app_id' => $app->getMyKey(),
                         'company_id' => $companies->getMyKey(),
-                    ], ['autoload' => false]);
+                    ], ['autoload' => true]);
 
-                    if ($configurator->takeData($configData) && null !== $configurator->saveToSQL()) {
+                    $currentConfig = $configurator->getData();
+                    $updatedConfig = array_merge($currentConfig, $configData);
+
+                    if ($configurator->takeData($updatedConfig) && null !== $configurator->saveToSQL()) {
                         $configurator->addStatusMessage(_('Config fields Saved'), 'success');
                         // Optionally run setup command if defined
                         $setupCommand = $app->getDataValue('setup');
