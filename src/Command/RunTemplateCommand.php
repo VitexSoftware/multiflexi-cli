@@ -385,11 +385,11 @@ class RunTemplateCommand extends MultiFlexiCommand
                     $companies = new \MultiFlexi\Company($rt->getDataValue('company_id'));
                     $configurator = new \MultiFlexi\Configuration([
                         'runtemplate_id' => $rt->getMyKey(),
-                        'app_id' => $app->getMyKey(),
-                        'company_id' => $companies->getMyKey(),
+//                        'app_id' => $app->getMyKey(),
+//                        'company_id' => $companies->getMyKey(),
                     ], ['autoload' => true]);
 
-                    $currentConfig = $configurator->getData();
+                    $currentConfig = $configurator->getConfigFields()->getEnvArray();
                     $updatedConfig = array_merge($currentConfig, $configData);
 
                     if ($configurator->takeData($updatedConfig) && null !== $configurator->saveToSQL()) {
