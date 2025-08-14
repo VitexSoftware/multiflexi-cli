@@ -382,14 +382,18 @@ class RunTemplateCommand extends MultiFlexiCommand
 
                 if (!empty($configData)) {
                     $app = new \MultiFlexi\Application($rt->getDataValue('app_id'));
-                    $companies = new \MultiFlexi\Company($rt->getDataValue('company_id'));
-                    $configurator = new \MultiFlexi\Configuration([
+                    $venue = [
                         'runtemplate_id' => $rt->getMyKey(),
                         'app_id' => $app->getMyKey(),
-                        'company_id' => $companies->getMyKey(),
-                    ], ['autoload' => false]);
+                        'company_id' => $rt->getCompany()->getMyKey(),
+                    ];
+                    $companies = new \MultiFlexi\Company($rt->getDataValue('company_id'));
+                    $configurator = new \MultiFlexi\Configuration($venue, ['autoload' => true]);
 
-                    if ($configurator->takeData($configData) && null !== $configurator->saveToSQL()) {
+                    $currentConfig = $configurator->getConfigFields()->getEnvArray();
+                    $updatedConfig = array_merge($currentConfig, $configData);
+                    $configurator->setData($venue);
+                    if ($configurator->takeData($updatedConfig) && null !== $configurator->saveToSQL($updatedConfig)) {
                         $configurator->addStatusMessage(_('Config fields Saved'), 'success');
                         // Optionally run setup command if defined
                         $setupCommand = $app->getDataValue('setup');
