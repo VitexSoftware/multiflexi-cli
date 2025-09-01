@@ -14,7 +14,7 @@
         "ext-yaml": "*",
         "ext-simplexml": "*",
         "vitexsoftware/ease-fluentpdo": "dev-main",
-        "symfony/process": "^5.4",
+        "symfony/process": "^7.3",
         "vitexsoftware/multiflexi-core": "dev-main",
         "phplucidframe/console-table": "^1.4",
         "confirm-it-solutions/php-zabbix-api": "^3.0",
