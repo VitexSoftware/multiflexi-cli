@@ -40,7 +40,7 @@
         "phpstan/phpstan": "*",
         "friendsofphp/php-cs-fixer": "^3.75",
         "ergebnis/composer-normalize": "^2.47",
-        "ergebnis/php-cs-fixer-config": "^6.46",
+        "ergebnis/php-cs-fixer-config": "^6.54",
         "phpstan/phpstan-phpunit": "2.0.x-dev"
     },
     "bin": ["src/multiflexi-cli"],
