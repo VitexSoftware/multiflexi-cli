@@ -300,7 +300,7 @@ class CompanyCommand extends MultiFlexiCommand
                 }
 
                 $company = new Company((int) $id);
-                $company->deleteFromSQL(['id'=>$id]);
+                $company->deleteFromSQL(['id' => $id]);
 
                 if ($output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
                     $output->writeln("Company removed: ID={$id}");

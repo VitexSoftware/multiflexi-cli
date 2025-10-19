@@ -8,7 +8,6 @@ All code should be written in PHP 8.4 or later.
 
 All code should follow the PSR-12 coding standard.
 
-
 When writing code, always include a docblock for functions and classes, describing their purpose, parameters, and return types.
 
 When writing or updating commands, always ensure that all output (including errors, status, and results) is returned in JSON format when the --format json option is requested, for all commands and operations.
@@ -60,3 +59,15 @@ When updating the multiflexi-cli command, ensure that the --help output is clear
 When writing code, always ensure that it is compatible with the latest version of the VitexSoftware libraries and follows their coding standards.
 
 When writing code, always ensure that it is properly documented, including inline comments where necessary to explain complex logic or important decisions.
+
+When developing or testing this application, always run the main script from the src/:
+```bash
+cd src/
+php multiflexi-cli.php
+```
+
+This ensures the relative paths (../vendor/autoload.php and ../.env) work correctly during development.
+
+The application uses relative paths intentionally - they are resolved during Debian packaging via sed commands in debian/rules file for production deployment.
+
+After every single edit to a PHP file, always run `php -l` on the edited file to lint it and ensure code sanity before proceeding further. This is mandatory for all PHP code changes.

@@ -130,7 +130,14 @@ EOD;
                 $id = $input->getOption('id');
 
                 if (empty($id)) {
-                    $output->writeln('<error>Missing --id for job get</error>');
+                    if ($format === 'json') {
+                        $output->writeln(json_encode([
+                            'status' => 'error',
+                            'message' => 'Missing --id for job get',
+                        ], \JSON_PRETTY_PRINT));
+                    } else {
+                        $output->writeln('<error>Missing --id for job get</error>');
+                    }
 
                     return MultiFlexiCommand::FAILURE;
                 }
@@ -169,7 +176,14 @@ EOD;
                 $scheduled = $input->getOption('scheduled');
 
                 if (empty($runtemplateId) || empty($scheduled)) {
-                    $output->writeln('<error>Missing --runtemplate_id or --scheduled for job create</error>');
+                    if ($format === 'json') {
+                        $output->writeln(json_encode([
+                            'status' => 'error',
+                            'message' => 'Failed: Missing --runtemplate_id or --scheduled for job create',
+                        ], \JSON_PRETTY_PRINT));
+                    } else {
+                        $output->writeln('<error>Failed: Missing --runtemplate_id or --scheduled for job create</error>');
+                    }
 
                     return MultiFlexiCommand::FAILURE;
                 }

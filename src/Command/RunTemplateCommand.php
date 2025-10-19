@@ -393,6 +393,7 @@ class RunTemplateCommand extends MultiFlexiCommand
                     $currentConfig = $configurator->getConfigFields()->getEnvArray();
                     $updatedConfig = array_merge($currentConfig, $configData);
                     $configurator->setData($venue);
+
                     if ($configurator->takeData($updatedConfig) && null !== $configurator->saveToSQL($updatedConfig)) {
                         $configurator->addStatusMessage(_('Config fields Saved'), 'success');
                         // Optionally run setup command if defined

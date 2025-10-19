@@ -107,6 +107,35 @@ abstract class MultiFlexiCommand extends \Symfony\Component\Console\Command\Comm
     }
 
     /**
+     * valid filename for current App Json.
+     *
+     * @return string
+     */
+    public function jsonFileName()
+    {
+        return strtolower(trim(preg_replace('#\W+#', '_', (string) $this->getRecordName()), '_')).'.multiflexi.'.strtolower(\Ease\Functions::baseClassName($this)).'.json';
+    }
+
+    /**
+     * @return array<string> errors
+     */
+    public static function validateJson(string $jsonFile, string $schemaFile): array
+    {
+        $violations = [];
+        $data = json_decode(file_get_contents($jsonFile));
+        $validator = new \JsonSchema\Validator();
+        $validator->validate($data, (object) ['$ref' => 'file://'.realpath($schemaFile)]);
+
+        if (!$validator->isValid()) {
+            foreach ($validator->getErrors() as $error) {
+                $violations[] = sprintf("[%s] %s\n", $error['property'], $error['message']);
+            }
+        }
+
+        return $violations;
+    }
+
+    /**
      * Output a JSON error response with status and message fields.
      */
     protected function jsonError(OutputInterface $output, string $message, string $status = 'error'): void

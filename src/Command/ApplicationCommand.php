@@ -50,7 +50,7 @@ class ApplicationCommand extends MultiFlexiCommand
             ->addOption('ociimage', null, InputOption::VALUE_OPTIONAL, 'OCI Image')
             ->addOption('requirements', null, InputOption::VALUE_OPTIONAL, 'Requirements')
             ->addOption('homepage', null, InputOption::VALUE_OPTIONAL, 'Homepage URL')
-            ->addOption('json', null, InputOption::VALUE_REQUIRED, 'Path to JSON file for import/export/remove/validate')
+            ->addOption('file', null, InputOption::VALUE_REQUIRED, 'Path to JSON file for import/export/remove/validate')
             ->addOption('appversion', null, InputOption::VALUE_OPTIONAL, 'Application Version');
         // Add more options as needed
     }
