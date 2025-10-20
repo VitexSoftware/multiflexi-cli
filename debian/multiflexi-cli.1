@@ -13,22 +13,22 @@ is a command-line tool for managing MultiFlexi applications, jobs, users, tokens
 .B application
 Manage applications
 .RS
-Actions: list, get, create, update, delete, import-json, export-json, remove-json, showconfig
-Options: --id, --name, --uuid, --description, --topics, --executable, --ociimage, --requirements, --homepage, --json, --appversion, --format, --help
+Actions: list, get, create, update, delete, import-json, export-json, remove-json, validate-json, showconfig
+Options: --id, --name, --uuid, --description, --topics, --executable, --ociimage, --requirements, --homepage, --file, --appversion, --format, --help
 .RE
 .TP
 .B job
 Manage jobs
 .RS
 Actions: status, list, get, create, update, delete
-Options: --id, --runtemplate_id, --scheduled, --executor, --schedule_type, --app_id, --format, --help
+Options: --id, --runtemplate_id, --scheduled, --executor, --schedule_type, --app_id, --fields, --format, --help
 .RE
 .TP
 .B user
 Manage users
 .RS
 Actions: list, get, create, update, delete
-Options: --id, --login, --email, --firstname, --lastname, --enabled, --format, --help
+Options: --id, --login, --email, --firstname, --lastname, --password, --plaintext, --enabled, --format, --help
 .RE
 .TP
 .B token
@@ -54,11 +54,18 @@ Options: --id, --name, --app_id, --app_uuid, --company_id, --company, --interv, 
 Note: Only runtemplates with active=1 can be scheduled. Inactive runtemplates will be rejected.
 .RE
 .TP
+.B artifact
+Manage job artifacts
+.RS
+Actions: list, get, save
+Options: --id, --job_id, --file, --fields, --format, --help
+.RE
+.TP
 .B credtype
 Credential type operations
 .RS
-Actions: list, get, update
-Options: --id, --uuid, --name, --format, --help
+Actions: list, get, update, import, import-json, export-json, remove-json, validate-json
+Options: --id, --uuid, --name, --file, --format, --help
 .RE
 .TP
 .B companyapp
@@ -70,14 +77,18 @@ Options: --id, --company_id, --app_id, --app_uuid, --format, --help
 .TP
 .B appstatus
 Prints App Status
+.RS
+Options: --format, --help
 .RE
 .TP
 .B describe
 Show all available commands and their parameters in JSON or YAML
-.RE
 .TP
 .B completion
 Dump the shell completion script
+.RS
+Arguments: shell (optional - bash, zsh, fish)
+Options: --debug, --help
 .RE
 .TP
 .B queue
@@ -92,21 +103,6 @@ Prune logs and jobs, keeping only the latest N records (default: 1000)
 .RS
 Options: --logs, --jobs, --keep
 .RE
-.TP
-.B appstatus
-Prints App Status
-.TP
-.B describe
-Show all available commands and their parameters in JSON or YAML
-.TP
-.B completion
-Dump the shell completion script
-.TP
-.B queue list
-List all scheduled jobs in the queue. Use -f json for JSON output.
-.TP
-.B queue truncate
-Remove all scheduled jobs from the queue. Use -f json for JSON output.
 
 .SH OPTIONS
 Most commands support:
@@ -143,20 +139,38 @@ Specify configuration key=value (repeatable, where supported)
 List all applications in JSON:
 .B multiflexi-cli application list -f json
 .TP
-Get user by login:
-.B multiflexi-cli user get --login demo
+Validate application JSON file:
+.B multiflexi-cli application validate-json --file=app.json
+.TP
+Get user by ID:
+.B multiflexi-cli user get --id=1
 .TP
 Create a new token for user ID 3:
-.B multiflexi-cli token create --user 3 --token sometoken
+.B multiflexi-cli token create --user 3
+.TP
+Generate a new token:
+.B multiflexi-cli token generate --user 2
 .TP
 Schedule a runtemplate (active=1 required):
 .B multiflexi-cli runtemplate schedule --id=123 --schedule_time="2025-07-01 10:00:00" --executor=Native --env=FOO=bar
 .TP
+Show job status aggregation:
+.B multiflexi-cli job status
+.TP
 Show available commands and options:
 .B multiflexi-cli describe
 .TP
-Delete a job by its ID:
-.B multiflexi-cli job delete --id=123
+List artifacts for job ID 123:
+.B multiflexi-cli artifact list --job_id=123
+.TP
+Save artifact to file:
+.B multiflexi-cli artifact save --id=456 --file=output.txt
+.TP
+Import credential type from JSON:
+.B multiflexi-cli credtype import-json --file=credtype.json
+.TP
+Create company-application relation:
+.B multiflexi-cli companyapp create --company_id=1 --app_id=5
 .TP
 Prune logs and jobs, keeping only the latest 500 records:
 .B multiflexi-cli prune --logs --jobs --keep 500
