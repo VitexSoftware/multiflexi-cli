@@ -1,8 +1,14 @@
-multiflexi-cli (2.0.0) UNRELEASED; urgency=medium
+multiflexi-cli (2.1.0) UNRELEASED; urgency=medium
+
+  * work with artifacts added
+
+ -- vitex <info@vitexsoftware.cz>  Mon, 20 Oct 2025 10:20:04 +0200
+
+multiflexi-cli (2.0.0) unstable; urgency=medium
 
   * stable version
 
- -- vitex <info@vitexsoftware.cz>  Mon, 04 Aug 2025 09:37:43 +0200
+ -- vitex <info@vitexsoftware.cz>  Mon, 20 Oct 2025 10:19:36 +0200
 
 multiflexi-cli (1.0.0) unstable; urgency=low
 

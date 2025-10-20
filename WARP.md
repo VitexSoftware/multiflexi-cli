@@ -55,6 +55,7 @@ Project structure and architecture
   - Notable commands:
     - AppStatusCommand: High-level system status (DB, migrations, services, counts).
     - ApplicationCommand: Manage "apps" including JSON import/export/validate and config schema inspection.
+    - ArtifactCommand: Manage job artifacts; list, get, and save artifact content to files with job filtering.
     - RunTemplateCommand: Manage and schedule run templates; supports config/env overrides and cron validation.
     - JobCommand: Manage jobs; status aggregation, CRUD, and field filtering via --fields.
     - CompanyCommand: Manage companies with lookup by id/ic/name/slug and slug derivation.
