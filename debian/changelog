@@ -1,8 +1,14 @@
-multiflexi-cli (2.1.0) UNRELEASED; urgency=medium
+multiflexi-cli (2.2.0) UNRELEASED; urgency=medium
+
+  * Credentials management added
+
+ -- vitex <info@vitexsoftware.cz>  Mon, 20 Oct 2025 11:14:04 +0200
+
+multiflexi-cli (2.1.0) unstable; urgency=medium
 
   * work with artifacts added
 
- -- vitex <info@vitexsoftware.cz>  Mon, 20 Oct 2025 10:20:04 +0200
+ -- vitex <info@vitexsoftware.cz>  Mon, 20 Oct 2025 11:13:46 +0200
 
 multiflexi-cli (2.0.0) unstable; urgency=medium
 

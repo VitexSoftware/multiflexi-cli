@@ -25,6 +25,7 @@ use MultiFlexi\Cli\Command\AppStatusCommand;
 use MultiFlexi\Cli\Command\ArtifactCommand;
 use MultiFlexi\Cli\Command\CompanyAppCommand;
 use MultiFlexi\Cli\Command\CompanyCommand;
+use MultiFlexi\Cli\Command\CredentialCommand;
 use MultiFlexi\Cli\Command\CredentialTypeCommand;
 use MultiFlexi\Cli\Command\DescribeCommand;
 use MultiFlexi\Cli\Command\JobCommand;
@@ -63,6 +64,7 @@ $application = new Application(Shared::appName(), Shared::appVersion());
 
 $application->add(new JobCommand());
 $application->add(new CompanyCommand());
+$application->add(new CredentialCommand());
 $application->add(new TokenCommand());
 $application->add(new RunTemplateCommand());
 $application->add(new UserCommand());

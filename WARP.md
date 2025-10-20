@@ -61,6 +61,7 @@ Project structure and architecture
     - CompanyCommand: Manage companies with lookup by id/ic/name/slug and slug derivation.
     - TokenCommand: Manage/generate tokens.
     - QueueCommand: Inspect and truncate scheduler queue (handles SQLite vs others).
+    - CredentialCommand: Manage credentials; CRUD operations for credential instances based on credential types.
     - CredentialTypeCommand: List/get/update credential types.
     - CompanyAppCommand: List runtemplates for a given company+app context (partial implementation for non-list actions).
     - DescribeCommand: Introspect all commands and emit JSON/YAML schemas of arguments/options (used to keep external test scripts in sync).
@@ -82,7 +83,12 @@ Important Copilot rules in this repo
 - All messages and comments in English; PHP 8.4+; follow PSR-12.
 - For every command, ensure that --format json returns JSON for errors, status, and results.
 - Keep tests/test-cli.sh consistent with the multiflexi-cli describe output, and keep delete-action tests at the bottom of that file.
-- Update reST docs and manpage files when CLI features change (doc/multiflexi-cli.rst, manpage/multiflexi-cli.1 if present).
+- Update reST docs and manpage files when CLI features change (doc/multiflexi-cli.rst, debian/multiflexi-cli.1).
+- IMPORTANT: Always update debian/multiflexi-cli.1 when:
+  - Adding new commands (add to COMMANDS section with actions and options)
+  - Adding new command options or actions
+  - Adding new examples (add to EXAMPLES section)
+  - Changing command behavior that affects user interaction
 
 Environment and configuration
 

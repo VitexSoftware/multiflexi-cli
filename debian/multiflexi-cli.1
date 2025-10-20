@@ -61,6 +61,13 @@ Actions: list, get, save
 Options: --id, --job_id, --file, --fields, --format, --help
 .RE
 .TP
+.B credential
+Manage credentials
+.RS
+Actions: list, get, create, update, remove
+Options: --id, --name, --company-id, --credential-type-id, --fields, --format, --help
+.RE
+.TP
 .B credtype
 Credential type operations
 .RS
@@ -165,6 +172,15 @@ List artifacts for job ID 123:
 .TP
 Save artifact to file:
 .B multiflexi-cli artifact save --id=456 --file=output.txt
+.TP
+Create a new credential:
+.B multiflexi-cli credential create --company-id=1 --credential-type-id=2 --name="My Credential"
+.TP
+List all credentials in JSON:
+.B multiflexi-cli credential list -f json
+.TP
+Get credential by ID:
+.B multiflexi-cli credential get --id=123
 .TP
 Import credential type from JSON:
 .B multiflexi-cli credtype import-json --file=credtype.json

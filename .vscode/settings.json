@@ -1,0 +1,20 @@
+{
+    // Editor color theme
+    "workbench.colorTheme": "Default Dark Modern",
+    // Enable semantic highlighting for better code colors
+    "editor.semanticHighlighting.enabled": true,
+    // Bracket pair colorization
+    "editor.bracketPairColorization.enabled": true,
+    // Highlight active line
+    "editor.renderLineHighlight": "all",
+    // Color customizations for better contrast
+    "workbench.colorCustomizations": {
+        "editor.lineHighlightBackground": "#22224455",
+        "editor.selectionBackground": "#33446688",
+        "editorCursor.foreground": "#FFCC00",
+        "editorIndentGuide.background": "#444466",
+        "editorIndentGuide.activeBackground": "#8888FF"
+    },
+    // Terminal colors for better readability
+    "terminal.integrated.minimumContrastRatio": 4.5
+}
