@@ -65,6 +65,7 @@ Project structure and architecture
     - CredentialTypeCommand: List/get/update credential types.
     - CompanyAppCommand: List runtemplates for a given company+app context (partial implementation for non-list actions).
     - DescribeCommand: Introspect all commands and emit JSON/YAML schemas of arguments/options (used to keep external test scripts in sync).
+    - UserDataErasureCommand: GDPR user data erasure management; create, approve, reject, and process deletion requests with audit trail.
 
 - Domain and persistence
   - Domain classes (Application, RunTemplate, Job, Company, Token, etc.) are provided by the vitexsoftware/multiflexi-core dependency.

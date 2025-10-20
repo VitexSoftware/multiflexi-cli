@@ -27,8 +27,15 @@ Options: --id, --runtemplate_id, --scheduled, --executor, --schedule_type, --app
 .B user
 Manage users
 .RS
-Actions: list, get, create, update, delete
+Actions: list, get, create, update, delete, data-erasure
 Options: --id, --login, --email, --firstname, --lastname, --password, --plaintext, --enabled, --format, --help
+.RE
+.TP
+.B user:data-erasure
+Manage GDPR user data erasure requests
+.RS
+Actions: list, create, approve, reject, process, audit, cleanup
+Options: --user-id, --user-login, --request-id, --deletion-type, --reason, --notes, --force, --export-audit, --status, --format, --help
 .RE
 .TP
 .B token
@@ -193,6 +200,21 @@ Prune logs and jobs, keeping only the latest 500 records:
 .TP
 Truncate the job queue:
 .B multiflexi-cli queue truncate
+.TP
+List user deletion requests:
+.B multiflexi-cli user:data-erasure list --status=pending
+.TP
+Create a soft deletion request:
+.B multiflexi-cli user:data-erasure create --user-id=123 --deletion-type=soft --reason="User requested deletion"
+.TP
+Approve a deletion request:
+.B multiflexi-cli user:data-erasure approve --request-id=456 --notes="Approved by admin"
+.TP
+Process an approved deletion request:
+.B multiflexi-cli user:data-erasure process --request-id=456
+.TP
+Show audit trail for a deletion request:
+.B multiflexi-cli user:data-erasure audit --request-id=456 --export-audit=audit.csv
 
 .SH AUTHOR
 Vítězslav Dvořák <info@vitexsoftware.cz>

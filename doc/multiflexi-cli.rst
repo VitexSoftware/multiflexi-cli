@@ -53,6 +53,7 @@ The MultiFlexi CLI provides the following main commands:
 - **job**           - Manage job execution and monitoring
 - **runtemplate**   - Manage run templates and scheduling
 - **user**          - User account management
+- **user:data-erasure** - GDPR user data erasure management
 - **token**         - API token management
 - **credtype**      - Credential type operations
 - **queue**         - Job queue operations
@@ -326,6 +327,69 @@ Examples:
     multiflexi-cli user create --login="jsmith" --firstname="John" --lastname="Smith" --email="jsmith@example.com" --password="secret"
     multiflexi-cli user update --id=1 --email="john.smith@example.com"
     multiflexi-cli user delete --id=1
+
+user:data-erasure
+-----------------
+
+Manage GDPR user data erasure requests under Article 17 (Right to Erasure).
+
+.. code-block:: bash
+
+    multiflexi-cli user:data-erasure <action> [options]
+
+Actions:
+- list:     List deletion requests (optionally filtered by status).
+- create:   Create a new deletion request for a user.
+- approve:  Approve a pending deletion request (requires admin).
+- reject:   Reject a pending deletion request (requires admin).
+- process:  Process an approved deletion request.
+- audit:    Show audit trail for a deletion request.
+- cleanup:  Clean up old audit logs (7-year retention).
+
+Options:
+  --user-id          Target user ID for the operation
+  --user-login       Target user login for the operation
+  --request-id       Deletion request ID
+  --deletion-type    Deletion type: soft, hard, anonymize (default: soft)
+  --reason           Reason for the deletion request
+  --notes            Review notes for approval/rejection
+  --force            Force operation without confirmation
+  --export-audit     Export audit trail to CSV file
+  --status           Filter requests by status: pending, approved, rejected, completed
+  -f, --format       Output format: text or json (default: text)
+
+Deletion Types:
+- **soft**: Disable user account, anonymize personal data, preserve data structures
+- **hard**: Permanently delete user data and account (requires approval)
+- **anonymize**: Replace personal data with anonymized values, disable account
+
+Examples:
+
+.. code-block:: bash
+
+    # List all pending deletion requests
+    multiflexi-cli user:data-erasure list --status=pending
+    
+    # Create a soft deletion request for user ID 123
+    multiflexi-cli user:data-erasure create --user-id=123 --deletion-type=soft --reason="User requested account deletion"
+    
+    # Create a hard deletion request by user login
+    multiflexi-cli user:data-erasure create --user-login=jsmith --deletion-type=hard --reason="Legal compliance requirement"
+    
+    # Approve a deletion request with review notes
+    multiflexi-cli user:data-erasure approve --request-id=456 --notes="Verified user identity and legal basis"
+    
+    # Reject a deletion request
+    multiflexi-cli user:data-erasure reject --request-id=789 --reason="Insufficient documentation provided"
+    
+    # Process an approved deletion request
+    multiflexi-cli user:data-erasure process --request-id=456
+    
+    # Show audit trail and export to CSV
+    multiflexi-cli user:data-erasure audit --request-id=456 --export-audit=/tmp/audit_456.csv
+    
+    # Clean up old audit logs (7-year retention)
+    multiflexi-cli user:data-erasure cleanup
 
 token
 -----
