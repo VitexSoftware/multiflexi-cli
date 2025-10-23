@@ -1,8 +1,14 @@
-multiflexi-cli (2.2.0) UNRELEASED; urgency=medium
+multiflexi-cli (2.2.1) UNRELEASED; urgency=medium
+
+  * update for vitexsoftware/fluentpdo
+
+ -- vitex <info@vitexsoftware.cz>  Thu, 23 Oct 2025 10:44:28 +0200
+
+multiflexi-cli (2.2.0) unstable; urgency=medium
 
   * Credentials management added
 
- -- vitex <info@vitexsoftware.cz>  Mon, 20 Oct 2025 11:14:04 +0200
+ -- vitex <info@vitexsoftware.cz>  Thu, 23 Oct 2025 10:44:04 +0200
 
 multiflexi-cli (2.1.0) unstable; urgency=medium
 
