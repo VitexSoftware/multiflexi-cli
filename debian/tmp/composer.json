@@ -40,8 +40,12 @@
     },
     {
       "type": "path",
+      "url": "/usr/share/php/FluentPDO/"
+    },
+    {
+      "type": "path",
       "url": "/usr/share/php/EaseFluentPDO/"
     }
   ],
-  "version": "2.0.0"
+  "version": "2.2.1"
 }

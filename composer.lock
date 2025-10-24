@@ -85,65 +85,6 @@
             "time": "2021-06-15T18:58:00+00:00"
         },
         {
-            "name": "fpdo/fluentpdo",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/envms/fluentpdo.git",
-                "reference": "1985e0e8406a56140f387bc9bec786b419cbeccc"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/envms/fluentpdo/zipball/1985e0e8406a56140f387bc9bec786b419cbeccc",
-                "reference": "1985e0e8406a56140f387bc9bec786b419cbeccc",
-                "shasum": ""
-            },
-            "require": {
-                "ext-pdo": "*",
-                "php": ">=7.1"
-            },
-            "require-dev": {
-                "envms/fluent-test": "^1.0",
-                "phpunit/phpunit": "^8.0"
-            },
-            "default-branch": true,
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Envms\\FluentPDO\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0",
-                "GPL-2.0+"
-            ],
-            "authors": [
-                {
-                    "name": "envms",
-                    "homepage": "https://env.ms"
-                }
-            ],
-            "description": "FluentPDO is a quick and light PHP library for rapid query building. It features a smart join builder, which automatically creates table joins.",
-            "homepage": "https://github.com/envms/fluentpdo",
-            "keywords": [
-                "builder",
-                "database",
-                "db",
-                "dbal",
-                "fluent",
-                "mysql",
-                "oracle",
-                "pdo",
-                "query"
-            ],
-            "support": {
-                "issues": "https://github.com/envms/fluentpdo/issues",
-                "source": "https://github.com/envms/fluentpdo/tree/v2.2.4"
-            },
-            "time": "2022-01-27T21:49:44+00:00"
-        },
-        {
             "name": "guzzlehttp/guzzle",
             "version": "7.10.x-dev",
             "source": {
@@ -2118,18 +2059,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/VitexSoftware/php-ease-fluentpdo.git",
-                "reference": "7387ed1dd73f7f3fceb94b5b4c57566322d27503"
+                "reference": "a252650d8b2ae01f11c08d0187257cec088645a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/VitexSoftware/php-ease-fluentpdo/zipball/7387ed1dd73f7f3fceb94b5b4c57566322d27503",
-                "reference": "7387ed1dd73f7f3fceb94b5b4c57566322d27503",
+                "url": "https://api.github.com/repos/VitexSoftware/php-ease-fluentpdo/zipball/a252650d8b2ae01f11c08d0187257cec088645a4",
+                "reference": "a252650d8b2ae01f11c08d0187257cec088645a4",
                 "shasum": ""
             },
             "require": {
-                "fpdo/fluentpdo": ">=2.2.4",
-                "php": ">=7.4",
-                "vitexsoftware/ease-core": ">=1.49.0"
+                "php": ">=8.1",
+                "vitexsoftware/ease-core": ">=1.49.0",
+                "vitexsoftware/fluentpdo": "^3.0.0"
             },
             "conflict": {
                 "vitexsoftware/ease-framework": "*"
@@ -2171,7 +2112,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2025-10-07T17:00:20+00:00"
+            "time": "2025-10-21T23:54:05+00:00"
         },
         {
             "name": "vitexsoftware/ease-html",
@@ -2229,17 +2170,98 @@
             "time": "2025-09-15T15:06:24+00:00"
         },
         {
+            "name": "vitexsoftware/fluentpdo",
+            "version": "v3.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/VitexSoftware/fluentpdo.git",
+                "reference": "d72b5d08315691cf92d85f3f7b29f802271948da"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/VitexSoftware/fluentpdo/zipball/d72b5d08315691cf92d85f3f7b29f802271948da",
+                "reference": "d72b5d08315691cf92d85f3f7b29f802271948da",
+                "shasum": ""
+            },
+            "require": {
+                "ext-pdo": "*",
+                "php": ">=8.1"
+            },
+            "replace": {
+                "envms/fluentpdo": "^2.2"
+            },
+            "require-dev": {
+                "envms/fluent-test": "^1.0",
+                "ergebnis/composer-normalize": "^2.48",
+                "ergebnis/php-cs-fixer-config": "^6.54",
+                "friendsofphp/php-cs-fixer": "^3.87",
+                "phpstan/phpstan": "*",
+                "phpunit/phpunit": "^12.4",
+                "roave/security-advisories": "dev-latest"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Envms\\FluentPDO\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0",
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "envms",
+                    "homepage": "https://env.ms"
+                },
+                {
+                    "name": "vitex",
+                    "homepage": "https://vitexsoftware.com"
+                }
+            ],
+            "description": "FluentPDO - PHP 8.1+ Edition. A modernized fork with strict typing, union types, and enhanced features. Quick and light PHP library for rapid query building with smart join builder.",
+            "homepage": "https://github.com/VitexSoftware/php-vitexsoftware-fluentpdo",
+            "keywords": [
+                "builder",
+                "database",
+                "db",
+                "dbal",
+                "fluent",
+                "modern-php",
+                "mssql",
+                "mysql",
+                "oracle",
+                "pdo",
+                "php8",
+                "php81",
+                "query",
+                "strict-types",
+                "union-types"
+            ],
+            "support": {
+                "source": "https://github.com/VitexSoftware/fluentpdo/tree/v3.0.2"
+            },
+            "funding": [
+                {
+                    "url": "https://www.patreon.com/VitexSoftware",
+                    "type": "patreon"
+                }
+            ],
+            "time": "2025-10-24T16:17:31+00:00"
+        },
+        {
             "name": "vitexsoftware/multiflexi-core",
             "version": "dev-main",
             "source": {
                 "type": "git",
                 "url": "https://github.com/VitexSoftware/php-vitexsoftware-multiflexi-core.git",
-                "reference": "08081ce28368bfad741a489ee70dd4ee5a32d6ba"
+                "reference": "6522872a3c16926ca97a53417e7677ca7c8c8614"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/VitexSoftware/php-vitexsoftware-multiflexi-core/zipball/08081ce28368bfad741a489ee70dd4ee5a32d6ba",
-                "reference": "08081ce28368bfad741a489ee70dd4ee5a32d6ba",
+                "url": "https://api.github.com/repos/VitexSoftware/php-vitexsoftware-multiflexi-core/zipball/6522872a3c16926ca97a53417e7677ca7c8c8614",
+                "reference": "6522872a3c16926ca97a53417e7677ca7c8c8614",
                 "shasum": ""
             },
             "require": {
@@ -2283,7 +2305,7 @@
                 "issues": "https://github.com/VitexSoftware/php-vitexsoftware-multiflexi-core/issues",
                 "source": "https://github.com/VitexSoftware/php-vitexsoftware-multiflexi-core/tree/main"
             },
-            "time": "2025-10-20T07:39:43+00:00"
+            "time": "2025-10-23T11:52:34+00:00"
         }
     ],
     "packages-dev": [
@@ -3567,12 +3589,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "0105ba17b5095f96b67b00010687cd65790b8658"
+                "reference": "3a454ca033b9e06b63282ce19562e892747449bb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/0105ba17b5095f96b67b00010687cd65790b8658",
-                "reference": "0105ba17b5095f96b67b00010687cd65790b8658",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/3a454ca033b9e06b63282ce19562e892747449bb",
+                "reference": "3a454ca033b9e06b63282ce19562e892747449bb",
                 "shasum": ""
             },
             "require": {
@@ -3618,7 +3640,7 @@
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
                 "source": "https://github.com/nikic/PHP-Parser/tree/master"
             },
-            "time": "2025-10-19T13:43:25+00:00"
+            "time": "2025-10-21T19:32:17+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -3744,8 +3766,8 @@
             "version": "2.1.x-dev",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/e437c5a56ab4ed14b50db8b4894e3a8f09b94732",
-                "reference": "e437c5a56ab4ed14b50db8b4894e3a8f09b94732",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/fa997420f9e3827c02b5f8fb9c1bc201fca0a999",
+                "reference": "fa997420f9e3827c02b5f8fb9c1bc201fca0a999",
                 "shasum": ""
             },
             "require": {
@@ -3791,7 +3813,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-10-20T08:13:05+00:00"
+            "time": "2025-10-24T09:00:35+00:00"
         },
         {
             "name": "phpstan/phpstan-phpunit",
@@ -4240,12 +4262,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "33d931d538fb5fc3600273e629299c9638b761bd"
+                "reference": "a96c61dfc29d9827155ee9771454967bd57bef5d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/33d931d538fb5fc3600273e629299c9638b761bd",
-                "reference": "33d931d538fb5fc3600273e629299c9638b761bd",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/a96c61dfc29d9827155ee9771454967bd57bef5d",
+                "reference": "a96c61dfc29d9827155ee9771454967bd57bef5d",
                 "shasum": ""
             },
             "require": {
@@ -4338,7 +4360,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-10-16T06:58:55+00:00"
+            "time": "2025-10-22T06:18:11+00:00"
         },
         {
             "name": "psr/event-dispatcher",

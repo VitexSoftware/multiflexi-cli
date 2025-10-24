@@ -70,7 +70,7 @@ configure)
         $SERVER_USER
     # 5. adjust file and directory permissions
     if ! dpkg-statoverride --list $SERVER_HOME >/dev/null; then
-        chown -R $SERVER_USER:adm $SERVER_HOME
+        chown $SERVER_USER:adm $SERVER_HOME
         chmod u=rwx,g=rxs,o= $SERVER_HOME
     fi
     # 6. Add the user to the ADDGROUP group
