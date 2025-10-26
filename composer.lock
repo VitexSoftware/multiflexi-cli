@@ -3766,8 +3766,8 @@
             "version": "2.1.x-dev",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/fa997420f9e3827c02b5f8fb9c1bc201fca0a999",
-                "reference": "fa997420f9e3827c02b5f8fb9c1bc201fca0a999",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/38a7dfd1101f1c75347fc9265dd7f8e9403b1268",
+                "reference": "38a7dfd1101f1c75347fc9265dd7f8e9403b1268",
                 "shasum": ""
             },
             "require": {
@@ -3813,7 +3813,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-10-24T09:00:35+00:00"
+            "time": "2025-10-24T16:28:56+00:00"
         },
         {
             "name": "phpstan/phpstan-phpunit",
@@ -4258,16 +4258,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "dev-main",
+            "version": "12.5.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "a96c61dfc29d9827155ee9771454967bd57bef5d"
+                "reference": "59a94243e963991e7606690609d9674f8b3b9165"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/a96c61dfc29d9827155ee9771454967bd57bef5d",
-                "reference": "a96c61dfc29d9827155ee9771454967bd57bef5d",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/59a94243e963991e7606690609d9674f8b3b9165",
+                "reference": "59a94243e963991e7606690609d9674f8b3b9165",
                 "shasum": ""
             },
             "require": {
@@ -4280,7 +4280,7 @@
                 "myclabs/deep-copy": "^1.13.4",
                 "phar-io/manifest": "^2.0.4",
                 "phar-io/version": "^3.2.1",
-                "php": ">=8.4.1",
+                "php": ">=8.3",
                 "phpunit/php-code-coverage": "^12.4.0",
                 "phpunit/php-file-iterator": "^6.0.0",
                 "phpunit/php-invoker": "^6.0.0",
@@ -4297,14 +4297,13 @@
                 "sebastian/version": "^6.0.0",
                 "staabm/side-effects-detector": "^1.0.5"
             },
-            "default-branch": true,
             "bin": [
                 "phpunit"
             ],
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "13.0-dev"
+                    "dev-main": "12.5-dev"
                 }
             },
             "autoload": {
@@ -4336,7 +4335,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/main"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/12.5"
             },
             "funding": [
                 {
@@ -4360,7 +4359,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-10-22T06:18:11+00:00"
+            "time": "2025-10-22T06:17:56+00:00"
         },
         {
             "name": "psr/event-dispatcher",
@@ -6768,10 +6767,10 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "justinrainbow/json-schema": 20,
-        "phpstan/phpstan-phpunit": 20,
         "vitexsoftware/ease-fluentpdo": 20,
-        "vitexsoftware/multiflexi-core": 20
+        "vitexsoftware/multiflexi-core": 20,
+        "justinrainbow/json-schema": 20,
+        "phpstan/phpstan-phpunit": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
@@ -6779,6 +6778,6 @@
         "ext-yaml": "*",
         "ext-simplexml": "*"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "plugin-api-version": "2.6.0"
 }
