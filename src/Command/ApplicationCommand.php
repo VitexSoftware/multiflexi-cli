@@ -262,10 +262,10 @@ class ApplicationCommand extends MultiFlexiCommand
 
                 return MultiFlexiCommand::SUCCESS;
             case 'import-json':
-                $json = $input->getOption('json');
+                $json = $input->getOption('file');
 
                 if (empty($json) || !file_exists($json)) {
-                    $output->writeln('<error>Missing or invalid --json file for import-json</error>');
+                    $output->writeln('<error>Missing or invalid --file for import-json</error>');
 
                     return MultiFlexiCommand::FAILURE;
                 }
@@ -277,10 +277,10 @@ class ApplicationCommand extends MultiFlexiCommand
                 return MultiFlexiCommand::SUCCESS;
             case 'export-json':
                 $id = $input->getOption('id');
-                $json = $input->getOption('json');
+                $json = $input->getOption('file');
 
                 if (empty($id) || empty($json)) {
-                    $output->writeln('<error>Missing --id or --json for export-json</error>');
+                    $output->writeln('<error>Missing --id or --file for export-json</error>');
 
                     return MultiFlexiCommand::FAILURE;
                 }
@@ -292,10 +292,10 @@ class ApplicationCommand extends MultiFlexiCommand
 
                 return MultiFlexiCommand::SUCCESS;
             case 'remove-json':
-                $json = $input->getOption('json');
+                $json = $input->getOption('file');
 
                 if (empty($json) || !file_exists($json)) {
-                    $output->writeln('<error>Missing or invalid --json file for remove-json</error>');
+                    $output->writeln('<error>Missing or invalid --file for remove-json</error>');
 
                     return MultiFlexiCommand::FAILURE;
                 }
@@ -306,16 +306,16 @@ class ApplicationCommand extends MultiFlexiCommand
 
                 return MultiFlexiCommand::SUCCESS;
             case 'validate-json':
-                $json = $input->getOption('json');
+                $json = $input->getOption('file');
 
                 if (empty($json) || !file_exists($json)) {
                     if ($format === 'json') {
                         $output->writeln(json_encode([
                             'status' => 'error',
-                            'message' => 'Missing or invalid --json file for validate-json',
+                            'message' => 'Missing or invalid --file for validate-json',
                         ], \JSON_PRETTY_PRINT));
                     } else {
-                        $output->writeln('<error>Missing or invalid --json file for validate-json</error>');
+                        $output->writeln('<error>Missing or invalid --file for validate-json</error>');
                     }
 
                     return MultiFlexiCommand::FAILURE;
