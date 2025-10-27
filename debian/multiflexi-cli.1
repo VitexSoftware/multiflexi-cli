@@ -82,6 +82,13 @@ Actions: list, get, update, import, import-json, export-json, remove-json, valid
 Options: --id, --uuid, --name, --file, --format, --help
 .RE
 .TP
+.B encryption
+Manage encryption keys
+.RS
+Actions: init
+Options: --format, --help
+.RE
+.TP
 .B companyapp
 Manage company-application relations
 .RS
@@ -215,6 +222,9 @@ Process an approved deletion request:
 .TP
 Show audit trail for a deletion request:
 .B multiflexi-cli user:data-erasure audit --request-id=456 --export-audit=audit.csv
+.TP
+Re-initialize encryption keys:
+.B multiflexi-cli encryption init
 
 .SH AUTHOR
 Vítězslav Dvořák <info@vitexsoftware.cz>

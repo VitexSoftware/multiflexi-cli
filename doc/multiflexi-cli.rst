@@ -56,6 +56,7 @@ The MultiFlexi CLI provides the following main commands:
 - **user:data-erasure** - GDPR user data erasure management
 - **token**         - API token management
 - **credtype**      - Credential type operations
+- **encryption**    - Manage encryption keys
 - **queue**         - Job queue operations
 - **appstatus**     - System status information
 - **describe**      - List all available commands and their parameters
@@ -422,6 +423,34 @@ Examples:
     multiflexi-cli token create --user=2
     multiflexi-cli token generate --user=2
     multiflexi-cli token update --id=1 --token=NEWVALUE
+
+encryption
+----------
+
+Manage encryption keys for secure credential storage.
+
+.. code-block:: bash
+
+    multiflexi-cli encryption <action> [options]
+
+Actions:
+- init: Re-initialize encryption keys (generates new 256-bit key for AES-256-GCM)
+
+Options:
+  -f, --format   Output format: text or json (default: text)
+
+Examples:
+
+.. code-block:: bash
+
+    # Re-initialize encryption keys
+    multiflexi-cli encryption init
+    
+    # Re-initialize with JSON output
+    multiflexi-cli encryption init -f json
+
+**Warning**: Re-initializing encryption keys will invalidate all previously encrypted credentials. 
+Use this command only during initial setup or when explicitly required for security reasons.
 
 queue
 -----
