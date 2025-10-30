@@ -68,6 +68,9 @@ class AppStatusCommand extends MultiFlexiCommand
         // Check encryption status
         $encryptionStatus = $this->getEncryptionStatus($engine);
 
+        // Check OpenTelemetry status
+        $otelStatus = $this->getOpenTelemetryStatus();
+
         $status = [
             'version-cli' => Shared::appVersion(),
             'db-migration' => $databaseVersion['migration_name'].' ('.$databaseVersion['version'].')',
@@ -83,6 +86,7 @@ class AppStatusCommand extends MultiFlexiCommand
             'credential_types' => $engine->getFluentPDO()->from('credential_type')->count(),
             'database' => $database,
             'encryption' => $encryptionStatus,
+            'telemetry' => $otelStatus,
             'executor' => \MultiFlexi\Runner::getServiceStatus('multiflexi-executor.service'),
             'scheduler' => \MultiFlexi\Runner::getServiceStatus('multiflexi-scheduler.service'),
             'timestamp' => date('c'),
@@ -151,5 +155,32 @@ class AppStatusCommand extends MultiFlexiCommand
             
             return 'unknown (error: '.$e->getMessage().')';
         }
+    }
+
+    /**
+     * Check OpenTelemetry configuration status.
+     *
+     * @return string Status: 'disabled' or configured endpoint
+     */
+    private function getOpenTelemetryStatus(): string
+    {
+        // Check if OTEL_ENABLED is set
+        $otelEnabled = Shared::cfg('OTEL_ENABLED', false);
+
+        if (!$otelEnabled || $otelEnabled === 'false' || $otelEnabled === '0') {
+            return 'disabled';
+        }
+
+        // Get the configured endpoint
+        $endpoint = Shared::cfg('OTEL_EXPORTER_OTLP_ENDPOINT', 'http://localhost:4318');
+        $protocol = Shared::cfg('OTEL_EXPORTER_OTLP_PROTOCOL', 'http/json');
+        $serviceName = Shared::cfg('OTEL_SERVICE_NAME', 'multiflexi');
+
+        // Check if OTel SDK is available
+        if (!class_exists('\OpenTelemetry\SDK\Metrics\MeterProvider')) {
+            return 'enabled (SDK not installed)';
+        }
+
+        return sprintf('enabled (%s, %s, %s)', $serviceName, $endpoint, $protocol);
     }
 }
