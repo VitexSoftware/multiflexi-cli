@@ -72,7 +72,8 @@ class EncryptionCommand extends MultiFlexiCommand
     private function showEncryptionStatus(OutputInterface $output, string $format): int
     {
         try {
-            $pdo = \Ease\Shared::db();
+            $engine = new \MultiFlexi\Engine();
+            $pdo = $engine->getPdo();
 
             // Check ENCRYPTION_MASTER_KEY
             $masterKey = $this->getMasterKey();
@@ -146,7 +147,8 @@ class EncryptionCommand extends MultiFlexiCommand
                 return MultiFlexiCommand::FAILURE;
             }
 
-            $pdo = \Ease\Shared::db();
+            $engine = new \MultiFlexi\Engine();
+            $pdo = $engine->getPdo();
 
             // Encrypt the key using master key (AES-256-CBC)
             $key = random_bytes(32);
