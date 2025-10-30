@@ -71,6 +71,9 @@ class AppStatusCommand extends MultiFlexiCommand
         // Check OpenTelemetry status
         $otelStatus = $this->getOpenTelemetryStatus();
 
+        // Check Zabbix status
+        $zabbixStatus = $this->getZabbixStatus();
+
         $status = [
             'version-cli' => Shared::appVersion(),
             'db-migration' => $databaseVersion['migration_name'].' ('.$databaseVersion['version'].')',
@@ -86,6 +89,7 @@ class AppStatusCommand extends MultiFlexiCommand
             'credential_types' => $engine->getFluentPDO()->from('credential_type')->count(),
             'database' => $database,
             'encryption' => $encryptionStatus,
+            'zabbix' => $zabbixStatus,
             'telemetry' => $otelStatus,
             'executor' => \MultiFlexi\Runner::getServiceStatus('multiflexi-executor.service'),
             'scheduler' => \MultiFlexi\Runner::getServiceStatus('multiflexi-scheduler.service'),
@@ -182,5 +186,30 @@ class AppStatusCommand extends MultiFlexiCommand
         }
 
         return sprintf('enabled (%s, %s, %s)', $serviceName, $endpoint, $protocol);
+    }
+
+    /**
+     * Check Zabbix configuration status.
+     *
+     * @return string Status: 'disabled' or monitored hostname => zabbix server
+     */
+    private function getZabbixStatus(): string
+    {
+        // Check if ZABBIX_SERVER is configured
+        $zabbixServer = Shared::cfg('ZABBIX_SERVER');
+
+        if (!$zabbixServer || empty($zabbixServer)) {
+            return 'disabled';
+        }
+
+        // Get the monitored machine hostname
+        $monitoredHost = Shared::cfg('ZABBIX_HOST');
+
+        // If ZABBIX_HOST is not set, use system hostname
+        if (!$monitoredHost || empty($monitoredHost)) {
+            $monitoredHost = gethostname() ?: 'localhost';
+        }
+
+        return sprintf('%s => %s', $monitoredHost, $zabbixServer);
     }
 }
