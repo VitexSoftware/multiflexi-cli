@@ -58,7 +58,8 @@ The MultiFlexi CLI provides the following main commands:
 - **credtype**      - Credential type operations
 - **encryption**    - Manage encryption keys
 - **queue**         - Job queue operations
-- **appstatus**     - System status information
+- **status**        - System status information (encryption, Zabbix, OpenTelemetry)
+- **telemetry:test** - Test OpenTelemetry metrics export
 - **describe**      - List all available commands and their parameters
 - **prune**         - Prune logs and jobs, keeping only the latest N records (default: 1000)
 - **completion**    - Dump the shell completion script
@@ -633,14 +634,15 @@ List all available commands and their parameters.
     multiflexi-cli describe
 
 
-appstatus
----------
+status
+------
 
-Show current MultiFlexi system status, including version, database, PHP, OS, resource usage, and service health.
+Show current MultiFlexi system status, including version, database, PHP, OS, resource usage, monitoring systems (Zabbix, OpenTelemetry), encryption, and service health.
 
 .. code-block:: bash
 
-    multiflexi-cli appstatus
+    multiflexi-cli status
+    multiflexi-cli status --format json
 
 Sample output:
 
@@ -659,6 +661,8 @@ Sample output:
     credential types: 9
     database: mysql Localhost via UNIX socket Uptime: 12711  Threads: 12  Questions: 2010  Slow queries: 0  Opens: 113  Open tables: 103  Queries per second avg: 0.158 11.8.2-MariaDB-1 from Debian
     encryption: active (3 keys)
+    zabbix: multiflexi-server => zabbix.example.com
+    telemetry: enabled (multiflexi, http://otel-collector:4318, http/json)
     executor: active
     scheduler: inactive
     timestamp: 2025-08-04T14:14:17+00:00
@@ -678,6 +682,8 @@ Field descriptions:
 - **credential types**: Number of credential types
 - **database**: Database driver and connection info
 - **encryption**: Encryption system status (see below)
+- **zabbix**: Zabbix monitoring status (see below)
+- **telemetry**: OpenTelemetry status (see below)
 - **executor**: Status of the multiflexi-executor service
 - **scheduler**: Status of the multiflexi-scheduler service
 - **timestamp**: ISO 8601 timestamp of the status report
@@ -690,3 +696,80 @@ Encryption Status Values:
 - **broken (no active keys)**: Master key configured but no active keys in database
 - **broken (table missing)**: ``encryption_keys`` table doesn't exist
 - **unknown (error: ...)**: Database error occurred
+
+Zabbix Status Values:
+
+- **disabled**: Zabbix monitoring is not configured (no ``ZABBIX_SERVER``)
+- **hostname => server**: Monitoring active, e.g. ``multiflexi-server => zabbix.example.com``
+- Uses ``ZABBIX_HOST`` config or system hostname as monitored hostname
+
+OpenTelemetry Status Values:
+
+- **disabled**: OpenTelemetry is not enabled (``OTEL_ENABLED=false`` or not set)
+- **enabled (service, endpoint, protocol)**: Active configuration, e.g. ``enabled (multiflexi, http://otel-collector:4318, http/json)``
+- **enabled (SDK not installed)**: Enabled but OpenTelemetry PHP SDK is not installed
+
+telemetry:test
+--------------
+
+Test OpenTelemetry metrics export functionality by sending test metrics to the configured OTLP endpoint.
+
+.. code-block:: bash
+
+    multiflexi-cli telemetry:test
+    multiflexi-cli telemetry:test --endpoint http://custom:4318
+    multiflexi-cli telemetry:test --disable-gauges
+
+Options:
+  -e, --endpoint     Override OTLP endpoint URL
+  --disable-gauges   Disable observable gauges (test only counters/histograms)
+
+This command:
+
+1. Checks if OpenTelemetry is enabled (``OTEL_ENABLED=true``)
+2. Displays current configuration (service name, endpoint, protocol)
+3. Initializes the OTel Metrics Exporter
+4. Sends test metrics:
+   - Job start metric (job_id=99999)
+   - Job end metrics (success and failure)
+   - Observable gauges (jobs.running, applications.total, etc.)
+5. Flushes metrics to the OTLP endpoint
+
+Example output:
+
+.. code-block:: text
+
+    Testing OpenTelemetry Metrics Export
+
+    Configuration:
+      Service Name: multiflexi
+      Endpoint: http://localhost:4318
+      Protocol: http/json
+
+    Initializing OTel Metrics Exporter...
+    ✓ Exporter initialized successfully
+
+    Testing job start metric...
+    ✓ Job start metric recorded
+
+    Testing job end metrics...
+      ✓ Success metric (exitcode=0, duration=5.5s)
+      ✓ Failure metric (exitcode=1, duration=2.3s)
+
+    Testing observable gauges (real-time metrics)...
+      ✓ multiflexi.jobs.running
+      ✓ multiflexi.applications.total
+      ✓ multiflexi.companies.total
+
+    Flushing metrics to OTLP endpoint...
+    ✓ Metrics flushed successfully
+
+    Test completed successfully!
+
+Available metrics:
+
+- **Counters**: ``multiflexi.jobs.total``, ``multiflexi.jobs.success``, ``multiflexi.jobs.failed``
+- **Histogram**: ``multiflexi.job.duration`` (seconds)
+- **Gauges**: ``multiflexi.jobs.running``, ``multiflexi.applications.{total,enabled}``, ``multiflexi.companies.total``, ``multiflexi.runtemplates.total``
+
+See the `OpenTelemetry documentation <https://multiflexi.readthedocs.io/en/latest/opentelemetry.html>`_ for complete integration guide.

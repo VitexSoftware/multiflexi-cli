@@ -26,7 +26,8 @@ multiflexi-cli <command> [options]
 - `create`: Create a new entity
 - `delete`: Delete an entity
 - `describe`: Show available commands and features
-- `appstatus`: Show application status (includes encryption status)
+- `status`: Show MultiFlexi status (includes encryption, Zabbix, OpenTelemetry)
+- `telemetry:test`: Test OpenTelemetry metrics export
 - `encryption`: Manage encryption keys (status, init)
 - `prune`: Remove obsolete data
 - `queue`: Manage job queue
@@ -46,9 +47,15 @@ multiflexi-cli create user --name "John Doe" --email "john@example.com"
 multiflexi-cli delete app 456
 multiflexi-cli describe
 
+# System status (includes encryption, Zabbix, OpenTelemetry)
+multiflexi-cli status
+multiflexi-cli status --format json
+
 # Encryption management
 multiflexi-cli encryption status
-multiflexi-cli appstatus  # includes encryption status
+
+# OpenTelemetry testing
+multiflexi-cli telemetry:test
 ```
 
 ```bash
