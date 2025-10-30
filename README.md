@@ -8,6 +8,7 @@ MultiFlexi CLI (`multiflexi-cli`) is a command-line tool for managing MultiFlexi
 - List, create, get, and delete entities such as applications, jobs, users, companies, and credentials.
 - Query application and job status.
 - Manage templates, tokens, and queues.
+- **Encryption management**: Check status and initialize encryption keys for secure credential storage.
 - Prune obsolete data.
 - Internationalization support (i18n).
 - JSON output for easy integration with other tools (`--format json`).
@@ -25,7 +26,8 @@ multiflexi-cli <command> [options]
 - `create`: Create a new entity
 - `delete`: Delete an entity
 - `describe`: Show available commands and features
-- `appstatus`: Show application status
+- `appstatus`: Show application status (includes encryption status)
+- `encryption`: Manage encryption keys (status, init)
 - `prune`: Remove obsolete data
 - `queue`: Manage job queue
 - `token`: Manage authentication tokens
@@ -43,6 +45,10 @@ multiflexi-cli get job 123
 multiflexi-cli create user --name "John Doe" --email "john@example.com"
 multiflexi-cli delete app 456
 multiflexi-cli describe
+
+# Encryption management
+multiflexi-cli encryption status
+multiflexi-cli appstatus  # includes encryption status
 ```
 
 ```bash

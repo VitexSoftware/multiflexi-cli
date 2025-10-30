@@ -65,6 +65,9 @@ class AppStatusCommand extends MultiFlexiCommand
 
         $databaseVersion = $engine->getFluentPDO()->from('phinxlog')->orderBy('version DESC')->limit(1)->fetch();
 
+        // Check encryption status
+        $encryptionStatus = $this->getEncryptionStatus($engine);
+
         $status = [
             'version-cli' => Shared::appVersion(),
             'db-migration' => $databaseVersion['migration_name'].' ('.$databaseVersion['version'].')',
@@ -79,6 +82,7 @@ class AppStatusCommand extends MultiFlexiCommand
             'credentials' => $engine->getFluentPDO()->from('credentials')->count(),
             'credential_types' => $engine->getFluentPDO()->from('credential_type')->count(),
             'database' => $database,
+            'encryption' => $encryptionStatus,
             'executor' => \MultiFlexi\Runner::getServiceStatus('multiflexi-executor.service'),
             'scheduler' => \MultiFlexi\Runner::getServiceStatus('multiflexi-scheduler.service'),
             'timestamp' => date('c'),
@@ -97,5 +101,55 @@ class AppStatusCommand extends MultiFlexiCommand
         }
 
         return MultiFlexiCommand::SUCCESS;
+    }
+
+    /**
+     * Check encryption system status.
+     *
+     * @param \MultiFlexi\Engine $engine
+     * @return string Status: 'disabled', 'active', 'broken', or 'unknown'
+     */
+    private function getEncryptionStatus(\MultiFlexi\Engine $engine): string
+    {
+        // Check if DATA_ENCRYPTION_ENABLED is set
+        $encryptionEnabled = Shared::cfg('DATA_ENCRYPTION_ENABLED', true);
+        
+        if (!$encryptionEnabled) {
+            return 'disabled';
+        }
+
+        // Check if ENCRYPTION_MASTER_KEY is configured
+        $masterKey = getenv('ENCRYPTION_MASTER_KEY');
+        if (!$masterKey) {
+            $masterKey = getenv('MULTIFLEXI_MASTER_KEY');
+        }
+        if (!$masterKey) {
+            $masterKey = Shared::cfg('ENCRYPTION_MASTER_KEY');
+        }
+
+        if (!$masterKey) {
+            return 'broken (no master key)';
+        }
+
+        // Check if encryption_keys table exists and has keys
+        try {
+            $pdo = $engine->getPdo();
+            $stmt = $pdo->query("SELECT COUNT(*) FROM encryption_keys WHERE is_active = TRUE");
+            $activeKeyCount = $stmt->fetchColumn();
+
+            if ($activeKeyCount > 0) {
+                return 'active ('.$activeKeyCount.' keys)';
+            }
+            
+            return 'broken (no active keys)';
+        } catch (\PDOException $e) {
+            // Table might not exist
+            if (strpos($e->getMessage(), 'no such table') !== false || 
+                strpos($e->getMessage(), "doesn't exist") !== false) {
+                return 'broken (table missing)';
+            }
+            
+            return 'unknown (error: '.$e->getMessage().')';
+        }
     }
 }

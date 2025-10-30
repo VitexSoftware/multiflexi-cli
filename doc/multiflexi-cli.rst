@@ -427,19 +427,104 @@ Examples:
 encryption
 ----------
 
-Manage encryption keys for secure credential storage.
+Manage encryption keys for secure credential storage. MultiFlexi uses AES-256 encryption to protect sensitive data (passwords, API keys, tokens) in the database.
 
 .. code-block:: bash
 
     multiflexi-cli encryption <action> [options]
 
 Actions:
-- init: Re-initialize encryption keys (generates new 256-bit key for AES-256-GCM)
+- **status**: Show encryption system status (master key, active keys, key details)
+- **init**: Re-initialize encryption keys (generates new 256-bit key encrypted with master key)
 
 Options:
   -f, --format   Output format: text or json (default: text)
 
-Examples:
+Configuration
+^^^^^^^^^^^^^
+
+MultiFlexi encryption requires ``ENCRYPTION_MASTER_KEY`` to be configured in one of the following ways (checked in priority order):
+
+1. Environment variable: ``ENCRYPTION_MASTER_KEY``
+2. Environment variable: ``MULTIFLEXI_MASTER_KEY`` (backward compatibility)
+3. Configuration file: ``/etc/multiflexi/multiflexi.env``
+
+**Automatic Setup**: During installation of the ``multiflexi-common`` package, a master key is automatically generated and stored in ``/etc/multiflexi/multiflexi.env``.
+
+**Manual Configuration**:
+
+.. code-block:: bash
+
+    # Generate a secure 256-bit key
+    openssl rand -base64 32
+    
+    # Add to /etc/multiflexi/multiflexi.env
+    echo "ENCRYPTION_MASTER_KEY=<generated-key>" | sudo tee -a /etc/multiflexi/multiflexi.env
+
+**Important Security Notes**:
+
+- Backup ``/etc/multiflexi/multiflexi.env`` - without the master key, encrypted credentials cannot be recovered
+- Never commit the master key to version control
+- If the master key is lost, all encrypted credentials become permanently inaccessible
+- The master key is used to encrypt database encryption keys (key wrapping)
+
+Status Action
+^^^^^^^^^^^^^
+
+Check the encryption system status:
+
+.. code-block:: bash
+
+    multiflexi-cli encryption status
+    
+    # JSON output for automation
+    multiflexi-cli encryption status -f json
+
+Sample output:
+
+.. code-block:: text
+
+    Encryption Status
+    Master Key: configured
+    Total Keys: 3
+    Active Keys: 3
+    
+    Keys:
+    +-------------+-------------+--------+---------------------+---------+
+    | Key Name    | Algorithm   | Status | Created             | Rotated |
+    +-------------+-------------+--------+---------------------+---------+
+    | credentials | aes-256-gcm | active | 2025-10-30 09:00:00 | never   |
+    | default     | aes-256-gcm | active | 2025-10-29 10:00:00 | never   |
+    | personal    | aes-256-gcm | active | 2025-10-28 08:00:00 | never   |
+    +-------------+-------------+--------+---------------------+---------+
+
+JSON output includes:
+
+.. code-block:: json
+
+    {
+        "success": true,
+        "message": "Encryption status retrieved",
+        "data": {
+            "master_key": "configured",
+            "total_keys": 3,
+            "active_keys": 3,
+            "keys": [
+                {
+                    "key_name": "credentials",
+                    "algorithm": "aes-256-gcm",
+                    "created_at": "2025-10-30 09:00:00",
+                    "rotated_at": null,
+                    "is_active": true
+                }
+            ]
+        }
+    }
+
+Init Action
+^^^^^^^^^^^
+
+Re-initialize encryption keys:
 
 .. code-block:: bash
 
@@ -449,8 +534,29 @@ Examples:
     # Re-initialize with JSON output
     multiflexi-cli encryption init -f json
 
-**Warning**: Re-initializing encryption keys will invalidate all previously encrypted credentials. 
-Use this command only during initial setup or when explicitly required for security reasons.
+Sample output:
+
+.. code-block:: text
+
+    Encryption key initialized successfully
+    Key name: credentials
+    Algorithm: aes-256-gcm
+    WARNING: All existing encrypted credentials are now invalid and must be re-entered
+
+**Warning**: Re-initializing encryption keys will invalidate all previously encrypted credentials. All sensitive data must be re-entered after running this command. Use this command only during:
+
+- Initial system setup
+- After master key rotation
+- Security incident response
+- Explicit security policy requirements
+
+**Error Handling**:
+
+If ``ENCRYPTION_MASTER_KEY`` is not configured, the init command will fail:
+
+.. code-block:: text
+
+    ERROR: ENCRYPTION_MASTER_KEY is not configured. Set it in .env file or as environment variable.
 
 queue
 -----
@@ -552,6 +658,7 @@ Sample output:
     credentials: 129
     credential types: 9
     database: mysql Localhost via UNIX socket Uptime: 12711  Threads: 12  Questions: 2010  Slow queries: 0  Opens: 113  Open tables: 103  Queries per second avg: 0.158 11.8.2-MariaDB-1 from Debian
+    encryption: active (3 keys)
     executor: active
     scheduler: inactive
     timestamp: 2025-08-04T14:14:17+00:00
@@ -570,6 +677,16 @@ Field descriptions:
 - **credentials**: Number of credentials
 - **credential types**: Number of credential types
 - **database**: Database driver and connection info
+- **encryption**: Encryption system status (see below)
 - **executor**: Status of the multiflexi-executor service
 - **scheduler**: Status of the multiflexi-scheduler service
 - **timestamp**: ISO 8601 timestamp of the status report
+
+Encryption Status Values:
+
+- **disabled**: Encryption is turned off (``DATA_ENCRYPTION_ENABLED=false``)
+- **active (N keys)**: Encryption is working with N active encryption keys
+- **broken (no master key)**: ``ENCRYPTION_MASTER_KEY`` not configured
+- **broken (no active keys)**: Master key configured but no active keys in database
+- **broken (table missing)**: ``encryption_keys`` table doesn't exist
+- **unknown (error: ...)**: Database error occurred
