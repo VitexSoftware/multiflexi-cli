@@ -15,8 +15,8 @@ declare(strict_types=1);
 
 namespace MultiFlexi\Cli\Command;
 
-use MultiFlexi\Credential;
 use MultiFlexi\Company;
+use MultiFlexi\Credential;
 use MultiFlexi\CredentialType;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -79,7 +79,6 @@ class CredentialCommand extends MultiFlexiCommand
                 }
 
                 return MultiFlexiCommand::SUCCESS;
-
             case 'get':
                 $id = $input->getOption('id');
 
@@ -133,7 +132,6 @@ class CredentialCommand extends MultiFlexiCommand
                 }
 
                 return MultiFlexiCommand::SUCCESS;
-
             case 'create':
                 $name = $input->getOption('name');
                 $companyId = $input->getOption('company-id');
@@ -162,6 +160,7 @@ class CredentialCommand extends MultiFlexiCommand
 
                 // Verify company exists
                 $company = new Company((int) $companyId);
+
                 if (empty($company->getData())) {
                     if ($format === 'json') {
                         $this->jsonError($output, 'Company with given ID not found');
@@ -174,6 +173,7 @@ class CredentialCommand extends MultiFlexiCommand
 
                 // Verify credential type exists
                 $credentialType = new CredentialType((int) $credentialTypeId);
+
                 if (empty($credentialType->getData())) {
                     if ($format === 'json') {
                         $this->jsonError($output, 'Credential type with given ID not found');
@@ -210,9 +210,9 @@ class CredentialCommand extends MultiFlexiCommand
                     return MultiFlexiCommand::SUCCESS;
                 } catch (\Exception $e) {
                     if ($format === 'json') {
-                        $this->jsonError($output, 'Failed to create credential: ' . $e->getMessage());
+                        $this->jsonError($output, 'Failed to create credential: '.$e->getMessage());
                     } else {
-                        $output->writeln('<error>Failed to create credential: ' . $e->getMessage() . '</error>');
+                        $output->writeln('<error>Failed to create credential: '.$e->getMessage().'</error>');
                     }
 
                     return MultiFlexiCommand::FAILURE;
@@ -235,6 +235,7 @@ class CredentialCommand extends MultiFlexiCommand
                 }
 
                 $credential = new Credential((int) $id);
+
                 if (empty($credential->getData())) {
                     if ($format === 'json') {
                         $this->jsonError($output, 'No credential found with given ID', 'not found');
@@ -254,6 +255,7 @@ class CredentialCommand extends MultiFlexiCommand
                 if (!empty($companyId)) {
                     // Verify company exists
                     $company = new Company((int) $companyId);
+
                     if (empty($company->getData())) {
                         if ($format === 'json') {
                             $this->jsonError($output, 'Company with given ID not found');
@@ -263,12 +265,14 @@ class CredentialCommand extends MultiFlexiCommand
 
                         return MultiFlexiCommand::FAILURE;
                     }
+
                     $data['company_id'] = (int) $companyId;
                 }
 
                 if (!empty($credentialTypeId)) {
                     // Verify credential type exists
                     $credentialType = new CredentialType((int) $credentialTypeId);
+
                     if (empty($credentialType->getData())) {
                         if ($format === 'json') {
                             $this->jsonError($output, 'Credential type with given ID not found');
@@ -278,6 +282,7 @@ class CredentialCommand extends MultiFlexiCommand
 
                         return MultiFlexiCommand::FAILURE;
                     }
+
                     $data['credential_type_id'] = (int) $credentialTypeId;
                 }
 
@@ -300,15 +305,15 @@ class CredentialCommand extends MultiFlexiCommand
                             'updated' => true,
                         ]);
                     } else {
-                        $output->writeln("<info>Credential updated successfully</info>");
+                        $output->writeln('<info>Credential updated successfully</info>');
                     }
 
                     return MultiFlexiCommand::SUCCESS;
                 } catch (\Exception $e) {
                     if ($format === 'json') {
-                        $this->jsonError($output, 'Failed to update credential: ' . $e->getMessage());
+                        $this->jsonError($output, 'Failed to update credential: '.$e->getMessage());
                     } else {
-                        $output->writeln('<error>Failed to update credential: ' . $e->getMessage() . '</error>');
+                        $output->writeln('<error>Failed to update credential: '.$e->getMessage().'</error>');
                     }
 
                     return MultiFlexiCommand::FAILURE;
@@ -328,6 +333,7 @@ class CredentialCommand extends MultiFlexiCommand
                 }
 
                 $credential = new Credential((int) $id);
+
                 if (empty($credential->getData())) {
                     if ($format === 'json') {
                         $this->jsonError($output, 'No credential found with given ID', 'not found');
@@ -347,15 +353,15 @@ class CredentialCommand extends MultiFlexiCommand
                             'removed' => true,
                         ]);
                     } else {
-                        $output->writeln("<info>Credential removed successfully</info>");
+                        $output->writeln('<info>Credential removed successfully</info>');
                     }
 
                     return MultiFlexiCommand::SUCCESS;
                 } catch (\Exception $e) {
                     if ($format === 'json') {
-                        $this->jsonError($output, 'Failed to remove credential: ' . $e->getMessage());
+                        $this->jsonError($output, 'Failed to remove credential: '.$e->getMessage());
                     } else {
-                        $output->writeln('<error>Failed to remove credential: ' . $e->getMessage() . '</error>');
+                        $output->writeln('<error>Failed to remove credential: '.$e->getMessage().'</error>');
                     }
 
                     return MultiFlexiCommand::FAILURE;

@@ -12,6 +12,8 @@ When writing code, always include a docblock for functions and classes, describi
 
 When writing or updating commands, always ensure that all output (including errors, status, and results) is returned in JSON format when the --format json option is requested, for all commands and operations.
 
+The default output format for all commands should be text/human-readable format unless explicitly requested otherwise with --format json. Never return JSON format as default output when --format json is not specified by the user.
+
 When writing tests, use PHPUnit and follow the PSR-12 coding standard.
 
 When writing README, use markdown format.

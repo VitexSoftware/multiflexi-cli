@@ -25,7 +25,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
- * GDPR User Data Erasure CLI Command
+ * GDPR User Data Erasure CLI Command.
  *
  * @author Vítězslav Dvořák <info@vitexsoftware.cz>
  */
@@ -58,48 +58,52 @@ class UserDataErasureCommand extends Command
         try {
             switch ($action) {
                 case 'list':
-                    return $this->listDeletionRequests($input, $io);
+                    return self::listDeletionRequests($input, $io);
                 case 'create':
-                    return $this->createDeletionRequest($input, $io);
+                    return self::createDeletionRequest($input, $io);
                 case 'approve':
-                    return $this->approveDeletionRequest($input, $io);
+                    return self::approveDeletionRequest($input, $io);
                 case 'reject':
-                    return $this->rejectDeletionRequest($input, $io);
+                    return self::rejectDeletionRequest($input, $io);
                 case 'process':
-                    return $this->processDeletionRequest($input, $io);
+                    return self::processDeletionRequest($input, $io);
                 case 'audit':
-                    return $this->showAuditTrail($input, $io);
+                    return self::showAuditTrail($input, $io);
                 case 'cleanup':
-                    return $this->cleanupAuditLogs($input, $io);
+                    return self::cleanupAuditLogs($input, $io);
+
                 default:
                     $io->error("Unknown action: {$action}");
                     $io->text('Available actions: list, create, approve, reject, process, audit, cleanup');
+
                     return Command::FAILURE;
             }
         } catch (\Exception $e) {
-            $io->error("Error: " . $e->getMessage());
+            $io->error('Error: '.$e->getMessage());
+
             if ($output->isVerbose()) {
                 $io->text($e->getTraceAsString());
             }
+
             return Command::FAILURE;
         }
     }
 
-    private function listDeletionRequests(InputInterface $input, SymfonyStyle $io): int
+    private static function listDeletionRequests(InputInterface $input, SymfonyStyle $io): int
     {
         $status = $input->getOption('status');
-        
+
         $requests = new \Ease\SQL\Orm();
         $requests->setMyTable('user_deletion_requests');
-        
+
         $query = $requests->listingQuery()
             ->select([
                 'udr.*',
                 'u.login as target_user_login',
-                'u.firstname as target_user_firstname', 
+                'u.firstname as target_user_firstname',
                 'u.lastname as target_user_lastname',
                 'ru.login as requested_by_login',
-                'rev.login as reviewed_by_login'
+                'rev.login as reviewed_by_login',
             ])
             ->join('user u', 'u.id = udr.user_id')
             ->join('user ru', 'ru.id = udr.requested_by_user_id')
@@ -115,16 +119,19 @@ class UserDataErasureCommand extends Command
         if (empty($requestList)) {
             $statusText = $status ? " with status '{$status}'" : '';
             $io->info("No deletion requests found{$statusText}.");
+
             return Command::SUCCESS;
         }
 
         $tableData = [];
+
         foreach ($requestList as $request) {
-            $userName = trim($request['target_user_firstname'] . ' ' . $request['target_user_lastname']);
+            $userName = trim($request['target_user_firstname'].' '.$request['target_user_lastname']);
+
             if (empty($userName)) {
                 $userName = 'N/A';
             }
-            
+
             $tableData[] = [
                 $request['id'],
                 $request['target_user_login'],
@@ -133,20 +140,20 @@ class UserDataErasureCommand extends Command
                 $request['status'],
                 substr($request['request_date'], 0, 16), // Trim seconds
                 $request['requested_by_login'],
-                $request['reviewed_by_login'] ?: 'N/A'
+                $request['reviewed_by_login'] ?: 'N/A',
             ];
         }
 
         $io->title('User Deletion Requests');
         $io->table(
             ['ID', 'User Login', 'User Name', 'Type', 'Status', 'Request Date', 'Requested By', 'Reviewed By'],
-            $tableData
+            $tableData,
         );
 
         return Command::SUCCESS;
     }
 
-    private function createDeletionRequest(InputInterface $input, SymfonyStyle $io): int
+    private static function createDeletionRequest(InputInterface $input, SymfonyStyle $io): int
     {
         $userId = $input->getOption('user-id');
         $userLogin = $input->getOption('user-login');
@@ -155,46 +162,55 @@ class UserDataErasureCommand extends Command
 
         if (!$userId && !$userLogin) {
             $io->error('Either --user-id or --user-login must be specified');
+
             return Command::FAILURE;
         }
 
-        if (!in_array($deletionType, ['soft', 'hard', 'anonymize'])) {
+        if (!\in_array($deletionType, ['soft', 'hard', 'anonymize'], true)) {
             $io->error('Invalid deletion type. Must be: soft, hard, or anonymize');
+
             return Command::FAILURE;
         }
 
         // Load target user
         $targetUser = new User($userId ?: $userLogin);
+
         if (!$targetUser->getId()) {
             $io->error('User not found');
+
             return Command::FAILURE;
         }
 
         // Check if user can request deletion
         $canRequest = UserDataEraser::canRequestDeletion($targetUser);
+
         if (!$canRequest['allowed']) {
             $io->error($canRequest['reason']);
+
             return Command::FAILURE;
         }
 
         // Use system user as requesting user for CLI operations
         $requestingUser = User::singleton();
+
         if (!$requestingUser->getId()) {
             $io->error('No authenticated user found for CLI operations');
+
             return Command::FAILURE;
         }
 
         $io->title('Creating Deletion Request');
         $io->definitionList(
-            ['Target User' => $targetUser->getUserName() . ' (' . $targetUser->getDataValue('login') . ')'],
+            ['Target User' => $targetUser->getUserName().' ('.$targetUser->getDataValue('login').')'],
             ['Deletion Type' => $deletionType],
             ['Reason' => $reason ?: 'N/A'],
-            ['Requesting User' => $requestingUser->getUserName()]
+            ['Requesting User' => $requestingUser->getUserName()],
         );
 
         if (!$input->getOption('force')) {
             if (!$io->confirm('Do you want to proceed?')) {
                 $io->info('Operation cancelled.');
+
                 return Command::SUCCESS;
             }
         }
@@ -203,36 +219,40 @@ class UserDataErasureCommand extends Command
         $requestId = $eraser->createDeletionRequest($deletionType, $reason);
 
         $io->success("Deletion request created with ID: {$requestId}");
-        
+
         if ($deletionType === 'soft') {
             $io->info('Soft deletion requests can be processed immediately.');
+
             if ($io->confirm('Process this request now?')) {
-                return $this->processRequestById($requestId, $io);
+                return self::processRequestById($requestId, $io);
             }
         } else {
             $io->info('This request requires admin approval before processing.');
-            $io->text('Use: multiflexi-cli user:data-erasure approve --request-id ' . $requestId);
+            $io->text('Use: multiflexi-cli user:data-erasure approve --request-id '.$requestId);
         }
 
         return Command::SUCCESS;
     }
 
-    private function approveDeletionRequest(InputInterface $input, SymfonyStyle $io): int
+    private static function approveDeletionRequest(InputInterface $input, SymfonyStyle $io): int
     {
         $requestId = $input->getOption('request-id');
         $notes = $input->getOption('notes') ?: '';
 
         if (!$requestId) {
             $io->error('--request-id is required');
+
             return Command::FAILURE;
         }
 
         $reviewer = User::singleton();
+
         if (!$reviewer->getId()) {
             $io->error('No authenticated user found for review operations');
+
             return Command::FAILURE;
         }
-        
+
         // Load request details
         $request = new \Ease\SQL\Orm();
         $request->setMyTable('user_deletion_requests');
@@ -240,11 +260,13 @@ class UserDataErasureCommand extends Command
 
         if (!$request->getId()) {
             $io->error('Deletion request not found');
+
             return Command::FAILURE;
         }
 
         if ($request->getDataValue('status') !== 'pending') {
             $io->warning("Request status is '{$request->getDataValue('status')}', not 'pending'");
+
             if (!$io->confirm('Continue anyway?')) {
                 return Command::SUCCESS;
             }
@@ -259,46 +281,51 @@ class UserDataErasureCommand extends Command
             ['Target User' => $targetUser->getUserName()],
             ['Deletion Type' => $request->getDataValue('deletion_type')],
             ['Current Status' => $request->getDataValue('status')],
-            ['Review Notes' => $notes ?: 'N/A']
+            ['Review Notes' => $notes ?: 'N/A'],
         );
 
         if (!$input->getOption('force')) {
             if (!$io->confirm('Do you want to approve this deletion request?')) {
                 $io->info('Operation cancelled.');
+
                 return Command::SUCCESS;
             }
         }
 
         if ($eraser->approveDeletionRequest($requestId, $reviewer, $notes)) {
             $io->success('Deletion request approved successfully.');
-            
+
             if ($io->confirm('Process this request now?')) {
-                return $this->processRequestById($requestId, $io);
+                return self::processRequestById($requestId, $io);
             }
         } else {
             $io->error('Failed to approve deletion request.');
+
             return Command::FAILURE;
         }
 
         return Command::SUCCESS;
     }
 
-    private function rejectDeletionRequest(InputInterface $input, SymfonyStyle $io): int
+    private static function rejectDeletionRequest(InputInterface $input, SymfonyStyle $io): int
     {
         $requestId = $input->getOption('request-id');
         $reason = $input->getOption('reason') ?: 'Request rejected by administrator';
 
         if (!$requestId) {
             $io->error('--request-id is required');
+
             return Command::FAILURE;
         }
 
         $reviewer = User::singleton();
+
         if (!$reviewer->getId()) {
             $io->error('No authenticated user found for review operations');
+
             return Command::FAILURE;
         }
-        
+
         // Load request details
         $request = new \Ease\SQL\Orm();
         $request->setMyTable('user_deletion_requests');
@@ -306,6 +333,7 @@ class UserDataErasureCommand extends Command
 
         if (!$request->getId()) {
             $io->error('Deletion request not found');
+
             return Command::FAILURE;
         }
 
@@ -317,12 +345,13 @@ class UserDataErasureCommand extends Command
             ['Request ID' => $requestId],
             ['Target User' => $targetUser->getUserName()],
             ['Current Status' => $request->getDataValue('status')],
-            ['Rejection Reason' => $reason]
+            ['Rejection Reason' => $reason],
         );
 
         if (!$input->getOption('force')) {
             if (!$io->confirm('Do you want to reject this deletion request?')) {
                 $io->info('Operation cancelled.');
+
                 return Command::SUCCESS;
             }
         }
@@ -331,25 +360,27 @@ class UserDataErasureCommand extends Command
             $io->success('Deletion request rejected successfully.');
         } else {
             $io->error('Failed to reject deletion request.');
+
             return Command::FAILURE;
         }
 
         return Command::SUCCESS;
     }
 
-    private function processDeletionRequest(InputInterface $input, SymfonyStyle $io): int
+    private static function processDeletionRequest(InputInterface $input, SymfonyStyle $io): int
     {
         $requestId = $input->getOption('request-id');
 
         if (!$requestId) {
             $io->error('--request-id is required');
+
             return Command::FAILURE;
         }
 
-        return $this->processRequestById($requestId, $io);
+        return self::processRequestById($requestId, $io);
     }
 
-    private function processRequestById(int $requestId, SymfonyStyle $io): int
+    private static function processRequestById(int $requestId, SymfonyStyle $io): int
     {
         // Load request details
         $request = new \Ease\SQL\Orm();
@@ -358,14 +389,16 @@ class UserDataErasureCommand extends Command
 
         if (!$request->getId()) {
             $io->error('Deletion request not found');
+
             return Command::FAILURE;
         }
 
         $targetUser = new User($request->getDataValue('user_id'));
         $processingUser = User::singleton();
-        
+
         if (!$processingUser->getId()) {
             $io->error('No authenticated user found for processing operations');
+
             return Command::FAILURE;
         }
 
@@ -376,11 +409,12 @@ class UserDataErasureCommand extends Command
             ['Request ID' => $requestId],
             ['Target User' => $targetUser->getUserName()],
             ['Deletion Type' => $request->getDataValue('deletion_type')],
-            ['Status' => $request->getDataValue('status')]
+            ['Status' => $request->getDataValue('status')],
         );
 
         if ($request->getDataValue('status') === 'completed') {
             $io->warning('This request has already been completed.');
+
             return Command::SUCCESS;
         }
 
@@ -394,7 +428,7 @@ class UserDataErasureCommand extends Command
                 '  - Run templates (if not shared)',
                 '  - Job history (anonymized)',
                 '',
-                'Audit logs will be retained for legal compliance.'
+                'Audit logs will be retained for legal compliance.',
             ]);
         } elseif ($request->getDataValue('deletion_type') === 'anonymize') {
             $io->warning('This operation will anonymize all personal data for this user.');
@@ -403,6 +437,7 @@ class UserDataErasureCommand extends Command
 
         if (!$io->confirm('Do you want to proceed with processing this deletion request?', false)) {
             $io->info('Operation cancelled.');
+
             return Command::SUCCESS;
         }
 
@@ -412,56 +447,60 @@ class UserDataErasureCommand extends Command
 
         try {
             $result = $eraser->processDeletionRequest($requestId, false); // Skip admin approval check for CLI
-            
+
             $progressBar->setMessage('Deletion process completed');
             $progressBar->finish();
             $io->newLine(2);
 
             if ($result) {
                 $io->success('✅ Deletion request processed successfully.');
-                
+
                 // Show audit trail
                 if ($io->confirm('Show audit trail?')) {
-                    $this->showAuditTrailForRequest($requestId, $io);
+                    self::showAuditTrailForRequest($requestId, $io);
                 }
             } else {
                 $io->error('❌ Failed to process deletion request.');
+
                 return Command::FAILURE;
             }
         } catch (\Exception $e) {
             $progressBar->finish();
             $io->newLine();
-            $io->error("Processing failed: " . $e->getMessage());
-            
+            $io->error('Processing failed: '.$e->getMessage());
+
             if ($io->isVerbose()) {
                 $io->text($e->getTraceAsString());
             }
+
             return Command::FAILURE;
         }
 
         return Command::SUCCESS;
     }
 
-    private function showAuditTrail(InputInterface $input, SymfonyStyle $io): int
+    private static function showAuditTrail(InputInterface $input, SymfonyStyle $io): int
     {
         $requestId = $input->getOption('request-id');
         $exportFile = $input->getOption('export-audit');
 
         if (!$requestId) {
             $io->error('--request-id is required');
+
             return Command::FAILURE;
         }
 
-        $this->showAuditTrailForRequest($requestId, $io);
+        self::showAuditTrailForRequest($requestId, $io);
 
         if ($exportFile) {
             $auditLogger = new \MultiFlexi\DataErasure\DeletionAuditLogger();
             $csvContent = $auditLogger->exportAuditTrailAsCsv($requestId);
-            
+
             if (file_put_contents($exportFile, $csvContent) !== false) {
                 $io->success("Audit trail exported to: {$exportFile}");
             } else {
                 $io->error("Failed to export audit trail to: {$exportFile}");
+
                 return Command::FAILURE;
             }
         }
@@ -469,59 +508,64 @@ class UserDataErasureCommand extends Command
         return Command::SUCCESS;
     }
 
-    private function showAuditTrailForRequest(int $requestId, SymfonyStyle $io): void
+    private static function showAuditTrailForRequest(int $requestId, SymfonyStyle $io): void
     {
         $auditLogger = new \MultiFlexi\DataErasure\DeletionAuditLogger();
         $auditTrail = $auditLogger->getAuditTrail($requestId);
 
         if (empty($auditTrail)) {
             $io->info('No audit trail found for this request.');
+
             return;
         }
 
         $tableData = [];
+
         foreach ($auditTrail as $entry) {
             $tableData[] = [
                 substr($entry['performed_date'], 0, 19), // Trim microseconds
                 $entry['table_name'],
                 $entry['record_id'] ?: 'N/A',
                 $entry['action'],
-                $this->truncateText($entry['reason'], 40),
-                $entry['performed_by_user_id']
+                self::truncateText($entry['reason'], 40),
+                $entry['performed_by_user_id'],
             ];
         }
 
         $io->title("Audit Trail for Request #{$requestId}");
         $io->table(
             ['Date', 'Table', 'Record ID', 'Action', 'Reason', 'Performed By'],
-            $tableData
+            $tableData,
         );
 
         // Show integrity verification
         $verification = $auditLogger->verifyAuditTrailIntegrity($requestId);
+
         if ($verification['complete']) {
             $io->success("✅ Audit trail is complete ({$verification['entry_count']} entries)");
         } else {
-            $io->warning("⚠️  Audit trail has issues:");
+            $io->warning('⚠️  Audit trail has issues:');
+
             foreach ($verification['issues'] as $issue) {
                 $io->text("  - {$issue}");
             }
         }
     }
 
-    private function cleanupAuditLogs(InputInterface $input, SymfonyStyle $io): int
+    private static function cleanupAuditLogs(InputInterface $input, SymfonyStyle $io): int
     {
         $retentionDays = 2555; // 7 years default
-        
+
         $io->title('Cleaning Up Old Audit Logs');
         $io->text("Retention period: {$retentionDays} days (7 years)");
-        
+
         $cutoffDate = new \DateTime();
         $cutoffDate->sub(new \DateInterval("P{$retentionDays}D"));
-        $io->text("Will delete audit logs older than: " . $cutoffDate->format('Y-m-d H:i:s'));
-        
+        $io->text('Will delete audit logs older than: '.$cutoffDate->format('Y-m-d H:i:s'));
+
         if (!$io->confirm('Do you want to proceed with cleanup?')) {
             $io->info('Operation cancelled.');
+
             return Command::SUCCESS;
         }
 
@@ -533,16 +577,16 @@ class UserDataErasureCommand extends Command
         } else {
             $io->info('No old audit log entries found to clean up.');
         }
-        
+
         return Command::SUCCESS;
     }
 
-    private function truncateText(string $text, int $maxLength): string
+    private static function truncateText(string $text, int $maxLength): string
     {
-        if (strlen($text) <= $maxLength) {
+        if (\strlen($text) <= $maxLength) {
             return $text;
         }
-        
-        return substr($text, 0, $maxLength - 3) . '...';
+
+        return substr($text, 0, $maxLength - 3).'...';
     }
 }

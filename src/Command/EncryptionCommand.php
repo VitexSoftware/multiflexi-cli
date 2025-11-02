@@ -51,7 +51,6 @@ class EncryptionCommand extends MultiFlexiCommand
         switch ($action) {
             case 'status':
                 return $this->showEncryptionStatus($output, $format);
-
             case 'init':
                 return $this->initializeEncryptionKey($output, $format);
 
@@ -76,32 +75,33 @@ class EncryptionCommand extends MultiFlexiCommand
             $pdo = $engine->getPdo();
 
             // Check ENCRYPTION_MASTER_KEY
-            $masterKey = $this->getMasterKey();
+            $masterKey = self::getMasterKey();
             $masterKeyStatus = $masterKey ? 'configured' : 'missing';
 
             // Check encryption_keys table
-            $stmt = $pdo->query("SELECT key_name, algorithm, created_at, rotated_at, is_active FROM encryption_keys ORDER BY created_at DESC");
+            $stmt = $pdo->query('SELECT key_name, algorithm, created_at, rotated_at, is_active FROM encryption_keys ORDER BY created_at DESC');
             $keys = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
-            $activeKeys = array_filter($keys, fn($key) => $key['is_active']);
+            $activeKeys = array_filter($keys, static fn ($key) => $key['is_active']);
 
             if ($format === 'json') {
                 $this->jsonSuccess($output, 'Encryption status retrieved', [
                     'master_key' => $masterKeyStatus,
-                    'total_keys' => count($keys),
-                    'active_keys' => count($activeKeys),
+                    'total_keys' => \count($keys),
+                    'active_keys' => \count($activeKeys),
                     'keys' => $keys,
                 ]);
             } else {
                 $output->writeln('<info>Encryption Status</info>');
-                $output->writeln('Master Key: ' . $masterKeyStatus);
-                $output->writeln('Total Keys: ' . count($keys));
-                $output->writeln('Active Keys: ' . count($activeKeys));
+                $output->writeln('Master Key: '.$masterKeyStatus);
+                $output->writeln('Total Keys: '.\count($keys));
+                $output->writeln('Active Keys: '.\count($activeKeys));
                 $output->writeln('');
 
                 if (!empty($keys)) {
                     $output->writeln('Keys:');
                     $table = [];
+
                     foreach ($keys as $key) {
                         $table[] = [
                             $key['key_name'],
@@ -111,6 +111,7 @@ class EncryptionCommand extends MultiFlexiCommand
                             $key['rotated_at'] ?? 'never',
                         ];
                     }
+
                     $output->writeln(self::outputTable($table, 200, ['Key Name', 'Algorithm', 'Status', 'Created', 'Rotated']));
                 }
             }
@@ -118,9 +119,9 @@ class EncryptionCommand extends MultiFlexiCommand
             return MultiFlexiCommand::SUCCESS;
         } catch (\Exception $e) {
             if ($format === 'json') {
-                $this->jsonError($output, 'Failed to retrieve encryption status: ' . $e->getMessage());
+                $this->jsonError($output, 'Failed to retrieve encryption status: '.$e->getMessage());
             } else {
-                $output->writeln('<error>Failed to retrieve encryption status: ' . $e->getMessage() . '</error>');
+                $output->writeln('<error>Failed to retrieve encryption status: '.$e->getMessage().'</error>');
             }
 
             return MultiFlexiCommand::FAILURE;
@@ -129,21 +130,24 @@ class EncryptionCommand extends MultiFlexiCommand
 
     /**
      * Initialize or re-initialize the encryption key for credentials.
-     * 
+     *
      * WARNING: This will invalidate all existing encrypted credentials!
      */
     private function initializeEncryptionKey(OutputInterface $output, string $format): int
     {
         try {
             // Check if master key is configured
-            $masterKey = $this->getMasterKey();
+            $masterKey = self::getMasterKey();
+
             if (!$masterKey) {
                 $errorMsg = 'ENCRYPTION_MASTER_KEY is not configured. Set it in .env file or as environment variable.';
+
                 if ($format === 'json') {
                     $this->jsonError($output, $errorMsg);
                 } else {
-                    $output->writeln('<error>' . $errorMsg . '</error>');
+                    $output->writeln('<error>'.$errorMsg.'</error>');
                 }
+
                 return MultiFlexiCommand::FAILURE;
             }
 
@@ -154,13 +158,13 @@ class EncryptionCommand extends MultiFlexiCommand
             $key = random_bytes(32);
             $iv = random_bytes(16);
             $hashedMasterKey = hash('sha256', $masterKey, true);
-            $encryptedKey = openssl_encrypt($key, 'aes-256-cbc', $hashedMasterKey, OPENSSL_RAW_DATA, $iv);
-            
+            $encryptedKey = openssl_encrypt($key, 'aes-256-cbc', $hashedMasterKey, \OPENSSL_RAW_DATA, $iv);
+
             if ($encryptedKey === false) {
-                throw new \RuntimeException('Failed to encrypt key: ' . openssl_error_string());
+                throw new \RuntimeException('Failed to encrypt key: '.openssl_error_string());
             }
 
-            $keyData = base64_encode($iv . $encryptedKey);
+            $keyData = base64_encode($iv.$encryptedKey);
 
             // Delete existing credentials key
             $deleteStmt = $pdo->prepare("DELETE FROM encryption_keys WHERE key_name = 'credentials'");
@@ -168,8 +172,10 @@ class EncryptionCommand extends MultiFlexiCommand
 
             // Insert new key
             $insertStmt = $pdo->prepare(
-                "INSERT INTO encryption_keys (key_name, key_data, algorithm, created_at, is_active) 
-                 VALUES ('credentials', :key_data, 'aes-256-gcm', NOW(), TRUE)"
+                <<<'EOD'
+INSERT INTO encryption_keys (key_name, key_data, algorithm, created_at, is_active)
+                 VALUES ('credentials', :key_data, 'aes-256-gcm', NOW(), TRUE)
+EOD
             );
             $insertStmt->execute(['key_data' => $keyData]);
 
@@ -190,9 +196,9 @@ class EncryptionCommand extends MultiFlexiCommand
             return MultiFlexiCommand::SUCCESS;
         } catch (\Exception $e) {
             if ($format === 'json') {
-                $this->jsonError($output, 'Failed to initialize encryption key: ' . $e->getMessage());
+                $this->jsonError($output, 'Failed to initialize encryption key: '.$e->getMessage());
             } else {
-                $output->writeln('<error>Failed to initialize encryption key: ' . $e->getMessage() . '</error>');
+                $output->writeln('<error>Failed to initialize encryption key: '.$e->getMessage().'</error>');
             }
 
             return MultiFlexiCommand::FAILURE;
@@ -202,14 +208,16 @@ class EncryptionCommand extends MultiFlexiCommand
     /**
      * Get master key from environment or config.
      */
-    private function getMasterKey(): ?string
+    private static function getMasterKey(): ?string
     {
         $masterKey = getenv('ENCRYPTION_MASTER_KEY');
+
         if ($masterKey) {
             return $masterKey;
         }
 
         $masterKey = getenv('MULTIFLEXI_MASTER_KEY');
+
         if ($masterKey) {
             return $masterKey;
         }

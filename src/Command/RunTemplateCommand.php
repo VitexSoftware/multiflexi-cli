@@ -318,7 +318,11 @@ class RunTemplateCommand extends MultiFlexiCommand
                         }
                     }
                 } else {
-                    $output->writeln(json_encode(['runtemplate_id' => $rtId, 'created' => true], \JSON_PRETTY_PRINT));
+                    if ($format === 'json') {
+                        $output->writeln(json_encode(['runtemplate_id' => $rtId, 'created' => true], \JSON_PRETTY_PRINT));
+                    } else {
+                        $output->writeln("RunTemplate created with ID: {$rtId}");
+                    }
                 }
 
                 return MultiFlexiCommand::SUCCESS;
@@ -456,7 +460,11 @@ class RunTemplateCommand extends MultiFlexiCommand
                         }
                     }
                 } else {
-                    $output->writeln(json_encode(['runtemplate_id' => $id, 'updated' => true], \JSON_PRETTY_PRINT));
+                    if ($format === 'json') {
+                        $output->writeln(json_encode(['runtemplate_id' => $id, 'updated' => true], \JSON_PRETTY_PRINT));
+                    } else {
+                        $output->writeln("RunTemplate updated successfully (ID: {$id})");
+                    }
                 }
 
                 return MultiFlexiCommand::SUCCESS;
@@ -475,7 +483,11 @@ class RunTemplateCommand extends MultiFlexiCommand
                 if ($output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
                     $output->writeln("RunTemplate deleted: ID={$id}");
                 } else {
-                    $output->writeln(json_encode(['runtemplate_id' => $id, 'deleted' => true], \JSON_PRETTY_PRINT));
+                    if ($format === 'json') {
+                        $output->writeln(json_encode(['runtemplate_id' => $id, 'deleted' => true], \JSON_PRETTY_PRINT));
+                    } else {
+                        $output->writeln("RunTemplate deleted successfully (ID: {$id})");
+                    }
                 }
 
                 return MultiFlexiCommand::SUCCESS;
@@ -521,13 +533,22 @@ class RunTemplateCommand extends MultiFlexiCommand
                     $when = $scheduleTime;
                     $prepared = $jobber->prepareJob($rt->getMyKey(), $uploadEnv, new \DateTime($when), $executor);
                     $scheduleId = $jobber->scheduleJobRun(new \DateTime($when));
-                    $output->writeln(json_encode([
-                        'runtemplate_id' => $id,
-                        'scheduled' => (new \DateTime($when))->format('Y-m-d H:i:s'),
-                        'executor' => $executor,
-                        'schedule_id' => $scheduleId,
-                        'job_id' => $jobber->getMyKey(),
-                    ], \JSON_PRETTY_PRINT));
+                    
+                    if ($format === 'json') {
+                        $output->writeln(json_encode([
+                            'runtemplate_id' => $id,
+                            'scheduled' => (new \DateTime($when))->format('Y-m-d H:i:s'),
+                            'executor' => $executor,
+                            'schedule_id' => $scheduleId,
+                            'job_id' => $jobber->getMyKey(),
+                        ], \JSON_PRETTY_PRINT));
+                    } else {
+                        $scheduledTime = (new \DateTime($when))->format('Y-m-d H:i:s');
+                        $output->writeln("RunTemplate {$id} scheduled for execution at {$scheduledTime}");
+                        $output->writeln("Executor: {$executor}");
+                        $output->writeln("Job ID: {$jobber->getMyKey()}");
+                        $output->writeln("Schedule ID: {$scheduleId}");
+                    }
 
                     return MultiFlexiCommand::SUCCESS;
                 } catch (\Exception $e) {

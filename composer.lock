@@ -2256,12 +2256,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/VitexSoftware/php-vitexsoftware-multiflexi-core.git",
-                "reference": "fcfdaa5c809860533c43bbf275892cca17cc151d"
+                "reference": "f2461a4f7dae75d9585391963b26749803159495"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/VitexSoftware/php-vitexsoftware-multiflexi-core/zipball/fcfdaa5c809860533c43bbf275892cca17cc151d",
-                "reference": "fcfdaa5c809860533c43bbf275892cca17cc151d",
+                "url": "https://api.github.com/repos/VitexSoftware/php-vitexsoftware-multiflexi-core/zipball/f2461a4f7dae75d9585391963b26749803159495",
+                "reference": "f2461a4f7dae75d9585391963b26749803159495",
                 "shasum": ""
             },
             "require": {
@@ -2305,7 +2305,7 @@
                 "issues": "https://github.com/VitexSoftware/php-vitexsoftware-multiflexi-core/issues",
                 "source": "https://github.com/VitexSoftware/php-vitexsoftware-multiflexi-core/tree/main"
             },
-            "time": "2025-10-28T14:34:00+00:00"
+            "time": "2025-10-30T12:15:32+00:00"
         }
     ],
     "packages-dev": [
@@ -3766,8 +3766,8 @@
             "version": "2.1.x-dev",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/391711c5db1ea29e06bbdcab0e67560fd3d703b3",
-                "reference": "391711c5db1ea29e06bbdcab0e67560fd3d703b3",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/ae9d277aecf00e6e69654d2daf64f3ab07974af5",
+                "reference": "ae9d277aecf00e6e69654d2daf64f3ab07974af5",
                 "shasum": ""
             },
             "require": {
@@ -3813,7 +3813,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-10-30T08:00:07+00:00"
+            "time": "2025-10-31T11:39:50+00:00"
         },
         {
             "name": "phpstan/phpstan-phpunit",

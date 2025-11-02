@@ -193,7 +193,11 @@ class UserCommand extends MultiFlexiCommand
                         }
                     }
                 } else {
-                    $output->writeln(json_encode(['user_id' => $userId], \JSON_PRETTY_PRINT));
+                    if ($format === 'json') {
+                        $output->writeln(json_encode(['user_id' => $userId], \JSON_PRETTY_PRINT));
+                    } else {
+                        $output->writeln("User created with ID: {$userId}");
+                    }
                 }
 
                 return MultiFlexiCommand::SUCCESS;
@@ -263,7 +267,11 @@ class UserCommand extends MultiFlexiCommand
                         }
                     }
                 } else {
-                    $output->writeln(json_encode(['updated' => true, 'user_id' => $id], \JSON_PRETTY_PRINT));
+                    if ($format === 'json') {
+                        $output->writeln(json_encode(['updated' => true, 'user_id' => $id], \JSON_PRETTY_PRINT));
+                    } else {
+                        $output->writeln("User updated successfully (ID: {$id})");
+                    }
                 }
 
                 return MultiFlexiCommand::SUCCESS;

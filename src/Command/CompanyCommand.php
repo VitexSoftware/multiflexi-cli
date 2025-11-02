@@ -220,7 +220,11 @@ class CompanyCommand extends MultiFlexiCommand
                         }
                     }
                 } else {
-                    $output->writeln(json_encode(['company_id' => $companyId], \JSON_PRETTY_PRINT));
+                    if ($format === 'json') {
+                        $output->writeln(json_encode(['company_id' => $companyId], \JSON_PRETTY_PRINT));
+                    } else {
+                        $output->writeln("Company created with ID: {$companyId}");
+                    }
                 }
 
                 return MultiFlexiCommand::SUCCESS;
@@ -268,7 +272,11 @@ class CompanyCommand extends MultiFlexiCommand
                 }
 
                 if (!$changed) {
-                    $output->writeln(json_encode(['updated' => false, 'company_id' => $id, 'message' => 'No changes detected'], \JSON_PRETTY_PRINT));
+                    if ($format === 'json') {
+                        $output->writeln(json_encode(['updated' => false, 'company_id' => $id, 'message' => 'No changes detected'], \JSON_PRETTY_PRINT));
+                    } else {
+                        $output->writeln("No changes detected for company ID: {$id}");
+                    }
 
                     return MultiFlexiCommand::SUCCESS;
                 }
@@ -286,7 +294,11 @@ class CompanyCommand extends MultiFlexiCommand
                         }
                     }
                 } else {
-                    $output->writeln(json_encode(['updated' => true, 'company_id' => $id], \JSON_PRETTY_PRINT));
+                    if ($format === 'json') {
+                        $output->writeln(json_encode(['updated' => true, 'company_id' => $id], \JSON_PRETTY_PRINT));
+                    } else {
+                        $output->writeln("Company updated: ID={$id}");
+                    }
                 }
 
                 return MultiFlexiCommand::SUCCESS;
@@ -302,10 +314,10 @@ class CompanyCommand extends MultiFlexiCommand
                 $company = new Company((int) $id);
                 $company->deleteFromSQL(['id' => $id]);
 
-                if ($output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
-                    $output->writeln("Company removed: ID={$id}");
-                } else {
+                if ($format === 'json') {
                     $output->writeln(json_encode(['company_id' => $id, 'removed' => true], \JSON_PRETTY_PRINT));
+                } else {
+                    $output->writeln("Company removed: ID={$id}");
                 }
 
                 return MultiFlexiCommand::SUCCESS;

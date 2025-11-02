@@ -11,7 +11,7 @@ MultiFlexi CLI (`multiflexi-cli`) is a command-line tool for managing MultiFlexi
 - **Encryption management**: Check status and initialize encryption keys for secure credential storage.
 - Prune obsolete data.
 - Internationalization support (i18n).
-- JSON output for easy integration with other tools (`--format json`).
+- **Flexible output formats**: Human-readable text output by default, with optional JSON output for integration (`--format json`).
 
 ## Usage
 
@@ -33,9 +33,13 @@ multiflexi-cli <command> [options]
 - `queue`: Manage job queue
 - `token`: Manage authentication tokens
 
+## Output Formats
+
+By default, all commands output human-readable text format suitable for terminal viewing. For programmatic integration or automation, you can request JSON format using the `--format json` option.
+
 ## Options
 
-- `--format json`: Output results in JSON format
+- `--format json`: Output results in JSON format (default is human-readable text)
 - `--help`: Show help for a command
 
 ## Examples

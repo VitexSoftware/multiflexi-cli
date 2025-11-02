@@ -221,7 +221,11 @@ EOD;
                         }
                     }
                 } else {
-                    $output->writeln(json_encode(['job_id' => $jobId], \JSON_PRETTY_PRINT));
+                    if ($format === 'json') {
+                        $output->writeln(json_encode(['job_id' => $jobId], \JSON_PRETTY_PRINT));
+                    } else {
+                        $output->writeln("Job created with ID: {$jobId}");
+                    }
                 }
 
                 return MultiFlexiCommand::SUCCESS;
@@ -264,7 +268,11 @@ EOD;
                         }
                     }
                 } else {
-                    $output->writeln(json_encode(['updated' => true, 'job_id' => $id], \JSON_PRETTY_PRINT));
+                    if ($format === 'json') {
+                        $output->writeln(json_encode(['updated' => true, 'job_id' => $id], \JSON_PRETTY_PRINT));
+                    } else {
+                        $output->writeln("Job updated successfully (ID: {$id})");
+                    }
                 }
 
                 return MultiFlexiCommand::SUCCESS;

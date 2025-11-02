@@ -66,13 +66,13 @@ class AppStatusCommand extends MultiFlexiCommand
         $databaseVersion = $engine->getFluentPDO()->from('phinxlog')->orderBy('version DESC')->limit(1)->fetch();
 
         // Check encryption status
-        $encryptionStatus = $this->getEncryptionStatus($engine);
+        $encryptionStatus = self::getEncryptionStatus($engine);
 
         // Check OpenTelemetry status
-        $otelStatus = $this->getOpenTelemetryStatus();
+        $otelStatus = self::getOpenTelemetryStatus();
 
         // Check Zabbix status
-        $zabbixStatus = $this->getZabbixStatus();
+        $zabbixStatus = self::getZabbixStatus();
 
         $status = [
             'version-cli' => Shared::appVersion(),
@@ -114,23 +114,24 @@ class AppStatusCommand extends MultiFlexiCommand
     /**
      * Check encryption system status.
      *
-     * @param \MultiFlexi\Engine $engine
      * @return string Status: 'disabled', 'active', 'broken', or 'unknown'
      */
-    private function getEncryptionStatus(\MultiFlexi\Engine $engine): string
+    private static function getEncryptionStatus(\MultiFlexi\Engine $engine): string
     {
         // Check if DATA_ENCRYPTION_ENABLED is set
         $encryptionEnabled = Shared::cfg('DATA_ENCRYPTION_ENABLED', true);
-        
+
         if (!$encryptionEnabled) {
             return 'disabled';
         }
 
         // Check if ENCRYPTION_MASTER_KEY is configured
         $masterKey = getenv('ENCRYPTION_MASTER_KEY');
+
         if (!$masterKey) {
             $masterKey = getenv('MULTIFLEXI_MASTER_KEY');
         }
+
         if (!$masterKey) {
             $masterKey = Shared::cfg('ENCRYPTION_MASTER_KEY');
         }
@@ -142,21 +143,21 @@ class AppStatusCommand extends MultiFlexiCommand
         // Check if encryption_keys table exists and has keys
         try {
             $pdo = $engine->getPdo();
-            $stmt = $pdo->query("SELECT COUNT(*) FROM encryption_keys WHERE is_active = TRUE");
+            $stmt = $pdo->query('SELECT COUNT(*) FROM encryption_keys WHERE is_active = TRUE');
             $activeKeyCount = $stmt->fetchColumn();
 
             if ($activeKeyCount > 0) {
                 return 'active ('.$activeKeyCount.' keys)';
             }
-            
+
             return 'broken (no active keys)';
         } catch (\PDOException $e) {
             // Table might not exist
-            if (strpos($e->getMessage(), 'no such table') !== false || 
-                strpos($e->getMessage(), "doesn't exist") !== false) {
+            if (str_contains($e->getMessage(), 'no such table')
+                || str_contains($e->getMessage(), "doesn't exist")) {
                 return 'broken (table missing)';
             }
-            
+
             return 'unknown (error: '.$e->getMessage().')';
         }
     }
@@ -166,7 +167,7 @@ class AppStatusCommand extends MultiFlexiCommand
      *
      * @return string Status: 'disabled' or configured endpoint
      */
-    private function getOpenTelemetryStatus(): string
+    private static function getOpenTelemetryStatus(): string
     {
         // Check if OTEL_ENABLED is set
         $otelEnabled = Shared::cfg('OTEL_ENABLED', false);
@@ -193,7 +194,7 @@ class AppStatusCommand extends MultiFlexiCommand
      *
      * @return string Status: 'disabled' or monitored hostname => zabbix server
      */
-    private function getZabbixStatus(): string
+    private static function getZabbixStatus(): string
     {
         // Check if ZABBIX_SERVER is configured
         $zabbixServer = Shared::cfg('ZABBIX_SERVER');

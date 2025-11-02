@@ -53,11 +53,11 @@ class EncryptionCommandTest extends TestCase
         ]);
 
         $output = $this->commandTester->getDisplay();
-        
+
         // Should contain either success output or error message
         $this->assertTrue(
-            str_contains($output, 'Encryption Status') || 
-            str_contains($output, 'Failed to retrieve encryption status')
+            str_contains($output, 'Encryption Status')
+            || str_contains($output, 'Failed to retrieve encryption status'),
         );
     }
 
@@ -81,7 +81,7 @@ class EncryptionCommandTest extends TestCase
 
         $this->assertIsArray($json);
         $this->assertArrayHasKey('status', $json);
-        
+
         // If successful, check for expected keys
         if ($json['status'] === 'success') {
             $this->assertArrayHasKey('master_key', $json);

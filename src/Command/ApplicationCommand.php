@@ -175,7 +175,11 @@ class ApplicationCommand extends MultiFlexiCommand
                         $output->writeln("{$k}: {$v}");
                     }
                 } else {
-                    $output->writeln(json_encode(['application_id' => $appId], \JSON_PRETTY_PRINT));
+                    if ($format === 'json') {
+                        $output->writeln(json_encode(['application_id' => $appId], \JSON_PRETTY_PRINT));
+                    } else {
+                        $output->writeln("Application created with ID: {$appId}");
+                    }
                 }
 
                 return MultiFlexiCommand::SUCCESS;
@@ -238,7 +242,11 @@ class ApplicationCommand extends MultiFlexiCommand
                         }
                     }
                 } else {
-                    $output->writeln(json_encode(['updated' => true, 'application_id' => $id], \JSON_PRETTY_PRINT));
+                    if ($format === 'json') {
+                        $output->writeln(json_encode(['updated' => true, 'application_id' => $id], \JSON_PRETTY_PRINT));
+                    } else {
+                        $output->writeln("Application updated successfully (ID: {$id})");
+                    }
                 }
 
                 return MultiFlexiCommand::SUCCESS;
@@ -257,7 +265,11 @@ class ApplicationCommand extends MultiFlexiCommand
                 if ($output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
                     $output->writeln("Application deleted: ID={$id}");
                 } else {
-                    $output->writeln(json_encode(['deleted' => true, 'application_id' => $id], \JSON_PRETTY_PRINT));
+                    if ($format === 'json') {
+                        $output->writeln(json_encode(['deleted' => true, 'application_id' => $id], \JSON_PRETTY_PRINT));
+                    } else {
+                        $output->writeln("Application deleted successfully (ID: {$id})");
+                    }
                 }
 
                 return MultiFlexiCommand::SUCCESS;
@@ -272,7 +284,12 @@ class ApplicationCommand extends MultiFlexiCommand
 
                 $app = new \MultiFlexi\Application();
                 $result = $app->importAppJson($json);
-                $output->writeln(json_encode(['imported' => $result], \JSON_PRETTY_PRINT));
+                
+                if ($format === 'json') {
+                    $output->writeln(json_encode(['imported' => $result], \JSON_PRETTY_PRINT));
+                } else {
+                    $output->writeln($result ? 'Application imported successfully' : 'Failed to import application');
+                }
 
                 return MultiFlexiCommand::SUCCESS;
             case 'export-json':
@@ -288,7 +305,12 @@ class ApplicationCommand extends MultiFlexiCommand
                 $app = new \MultiFlexi\Application((int) $id);
                 $jsonData = $app->getAppJson();
                 file_put_contents($json, $jsonData);
-                $output->writeln(json_encode(['exported' => true, 'file' => $json], \JSON_PRETTY_PRINT));
+                
+                if ($format === 'json') {
+                    $output->writeln(json_encode(['exported' => true, 'file' => $json], \JSON_PRETTY_PRINT));
+                } else {
+                    $output->writeln("Application exported to: {$json}");
+                }
 
                 return MultiFlexiCommand::SUCCESS;
             case 'remove-json':
@@ -302,7 +324,12 @@ class ApplicationCommand extends MultiFlexiCommand
 
                 $app = new \MultiFlexi\Application();
                 $result = $app->jsonAppRemove($json);
-                $output->writeln(json_encode(['removed' => $result], \JSON_PRETTY_PRINT));
+                
+                if ($format === 'json') {
+                    $output->writeln(json_encode(['removed' => $result], \JSON_PRETTY_PRINT));
+                } else {
+                    $output->writeln($result ? 'Application removed successfully' : 'Failed to remove application');
+                }
 
                 return MultiFlexiCommand::SUCCESS;
             case 'validate-json':
@@ -378,10 +405,12 @@ class ApplicationCommand extends MultiFlexiCommand
                 }
 
                 $app = new \MultiFlexi\Application((int) $id);
-                $fields = $app->getAppEnvironmentFields();
+                // TODO: Fix missing method getAppEnvironmentFields() 
+                // $fields = $app->getAppEnvironmentFields();
                 $result = [];
 
-                foreach ($fields as $field) {
+                // Temporary placeholder until getAppEnvironmentFields() method is available
+                /* foreach ($fields as $field) {
                     $result[] = [
                         'code' => $field->getCode(),
                         'name' => $field->getName(),
@@ -390,7 +419,7 @@ class ApplicationCommand extends MultiFlexiCommand
                         'default' => $field->getDefaultValue(),
                         'description' => $field->getDescription(),
                     ];
-                }
+                } */
 
                 if ($format === 'json') {
                     $output->writeln(json_encode($result, \JSON_PRETTY_PRINT));

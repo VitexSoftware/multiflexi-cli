@@ -117,7 +117,11 @@ class TokenCommand extends MultiFlexiCommand
                         }
                     }
                 } else {
-                    $output->writeln(json_encode(['token_id' => $tokenId], \JSON_PRETTY_PRINT));
+                    if ($format === 'json') {
+                        $output->writeln(json_encode(['token_id' => $tokenId], \JSON_PRETTY_PRINT));
+                    } else {
+                        $output->writeln("Token created with ID: {$tokenId}");
+                    }
                 }
 
                 return MultiFlexiCommand::SUCCESS;
@@ -134,7 +138,14 @@ class TokenCommand extends MultiFlexiCommand
                 $token->setDataValue('user', $user);
                 $token->generate();
                 $tokenId = $token->saveToSQL();
-                $output->writeln(json_encode(['token_id' => $tokenId, 'token' => $token->getDataValue('token')], \JSON_PRETTY_PRINT));
+                
+                if ($format === 'json') {
+                    $output->writeln(json_encode(['token_id' => $tokenId, 'token' => $token->getDataValue('token')], \JSON_PRETTY_PRINT));
+                } else {
+                    $output->writeln("Token generated for user: {$user}");
+                    $output->writeln("Token ID: {$tokenId}");
+                    $output->writeln("Token: {$token->getDataValue('token')}");
+                }
 
                 return MultiFlexiCommand::SUCCESS;
             case 'update':
@@ -176,7 +187,11 @@ class TokenCommand extends MultiFlexiCommand
                         }
                     }
                 } else {
-                    $output->writeln(json_encode(['updated' => true, 'token_id' => $id], \JSON_PRETTY_PRINT));
+                    if ($format === 'json') {
+                        $output->writeln(json_encode(['updated' => true, 'token_id' => $id], \JSON_PRETTY_PRINT));
+                    } else {
+                        $output->writeln("Token updated: ID={$id}");
+                    }
                 }
 
                 return MultiFlexiCommand::SUCCESS;
@@ -192,10 +207,10 @@ class TokenCommand extends MultiFlexiCommand
                 $token = new \MultiFlexi\Token((int) $id);
                 $token->deleteFromSQL();
 
-                if ($output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
-                    $output->writeln("Token deleted: ID={$id}");
-                } else {
+                if ($format === 'json') {
                     $output->writeln(json_encode(['deleted' => true, 'token_id' => $id], \JSON_PRETTY_PRINT));
+                } else {
+                    $output->writeln("Token deleted: ID={$id}");
                 }
 
                 return MultiFlexiCommand::SUCCESS;
