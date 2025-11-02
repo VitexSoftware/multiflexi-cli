@@ -144,7 +144,7 @@ class CredentialTypeCommand extends MultiFlexiCommand
 
                 $credType = new CredentialType((int) $id);
                 $credType->updateToSQL($data, ['id' => $id]);
-                
+
                 if ($format === 'json') {
                     $output->writeln(json_encode(['updated' => true], \JSON_PRETTY_PRINT));
                 } else {

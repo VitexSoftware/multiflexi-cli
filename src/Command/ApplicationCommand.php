@@ -284,7 +284,7 @@ class ApplicationCommand extends MultiFlexiCommand
 
                 $app = new \MultiFlexi\Application();
                 $result = $app->importAppJson($json);
-                
+
                 if ($format === 'json') {
                     $output->writeln(json_encode(['imported' => $result], \JSON_PRETTY_PRINT));
                 } else {
@@ -305,7 +305,7 @@ class ApplicationCommand extends MultiFlexiCommand
                 $app = new \MultiFlexi\Application((int) $id);
                 $jsonData = $app->getAppJson();
                 file_put_contents($json, $jsonData);
-                
+
                 if ($format === 'json') {
                     $output->writeln(json_encode(['exported' => true, 'file' => $json], \JSON_PRETTY_PRINT));
                 } else {
@@ -324,7 +324,7 @@ class ApplicationCommand extends MultiFlexiCommand
 
                 $app = new \MultiFlexi\Application();
                 $result = $app->jsonAppRemove($json);
-                
+
                 if ($format === 'json') {
                     $output->writeln(json_encode(['removed' => $result], \JSON_PRETTY_PRINT));
                 } else {
@@ -405,12 +405,13 @@ class ApplicationCommand extends MultiFlexiCommand
                 }
 
                 $app = new \MultiFlexi\Application((int) $id);
-                // TODO: Fix missing method getAppEnvironmentFields() 
+                // TODO: Fix missing method getAppEnvironmentFields()
                 // $fields = $app->getAppEnvironmentFields();
                 $result = [];
 
                 // Temporary placeholder until getAppEnvironmentFields() method is available
-                /* foreach ($fields as $field) {
+                /*
+                 * foreach ($fields as $field) {
                     $result[] = [
                         'code' => $field->getCode(),
                         'name' => $field->getName(),
@@ -419,7 +420,8 @@ class ApplicationCommand extends MultiFlexiCommand
                         'default' => $field->getDefaultValue(),
                         'description' => $field->getDescription(),
                     ];
-                } */
+                }
+                 */
 
                 if ($format === 'json') {
                     $output->writeln(json_encode($result, \JSON_PRETTY_PRINT));

@@ -533,7 +533,7 @@ class RunTemplateCommand extends MultiFlexiCommand
                     $when = $scheduleTime;
                     $prepared = $jobber->prepareJob($rt->getMyKey(), $uploadEnv, new \DateTime($when), $executor);
                     $scheduleId = $jobber->scheduleJobRun(new \DateTime($when));
-                    
+
                     if ($format === 'json') {
                         $output->writeln(json_encode([
                             'runtemplate_id' => $id,

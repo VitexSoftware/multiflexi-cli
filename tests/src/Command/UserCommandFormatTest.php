@@ -29,43 +29,42 @@ class UserCommandFormatTest extends TestCase
     /**
      * Test that commands default to text output (not JSON) when --format json is not specified.
      * This tests compliance with copilot-instructions.md rule:
-     * "The default output format for all commands should be text/human-readable format unless explicitly requested otherwise with --format json."
+     * "The default output format for all commands should be text/human-readable format unless explicitly requested otherwise with --format json.".
      */
     public function testDefaultOutputFormatIsText(): void
     {
         // Mock the MultiFlexi\User class to avoid database dependency
         $mockUser = $this->createMock(\MultiFlexi\User::class);
         $mockUser->method('listingQuery')->willReturn(
-            $this->createMock(\stdClass::class)
+            $this->createMock(\stdClass::class),
         );
-        
+
         $command = new UserCommand();
         $tester = new CommandTester($command);
-        
+
         try {
             // Execute without --format json
             $tester->execute([
                 'action' => 'list',
             ]);
-            
+
             $output = $tester->getDisplay();
-            
+
             // Default output should NOT be JSON
-            $this->assertFalse($this->isValidJson($output), 'Default output should not be JSON format');
-            
+            $this->assertFalse(self::isValidJson($output), 'Default output should not be JSON format');
         } catch (\Exception $e) {
             // If we get database connection errors, that's expected without proper setup
             // The important thing is that we're testing the format logic
-            if (strpos($e->getMessage(), 'Database') !== false || 
-                strpos($e->getMessage(), 'Connection') !== false ||
-                strpos($e->getMessage(), 'Unimplemented') !== false) {
+            if (str_contains($e->getMessage(), 'Database')
+                || str_contains($e->getMessage(), 'Connection')
+                || str_contains($e->getMessage(), 'Unimplemented')) {
                 $this->markTestSkipped('Database connection required for full test, but format logic is checked');
             } else {
                 throw $e;
             }
         }
     }
-    
+
     /**
      * Test that commands return JSON when --format json is explicitly requested.
      */
@@ -73,40 +72,37 @@ class UserCommandFormatTest extends TestCase
     {
         $command = new UserCommand();
         $tester = new CommandTester($command);
-        
+
         try {
             // Execute with --format json
             $tester->execute([
                 'action' => 'list',
                 '--format' => 'json',
             ]);
-            
+
             $output = $tester->getDisplay();
-            
+
             // Should be valid JSON when requested
-            $this->assertTrue($this->isValidJson($output), 'Output should be valid JSON when --format json is specified');
-            
+            $this->assertTrue(self::isValidJson($output), 'Output should be valid JSON when --format json is specified');
         } catch (\Exception $e) {
             // If we get database connection errors, that's expected without proper setup
-            if (strpos($e->getMessage(), 'Database') !== false || 
-                strpos($e->getMessage(), 'Connection') !== false ||
-                strpos($e->getMessage(), 'Unimplemented') !== false) {
+            if (str_contains($e->getMessage(), 'Database')
+                || str_contains($e->getMessage(), 'Connection')
+                || str_contains($e->getMessage(), 'Unimplemented')) {
                 $this->markTestSkipped('Database connection required for full test, but format logic is checked');
             } else {
                 throw $e;
             }
         }
     }
-    
+
     /**
      * Helper method to check if a string is valid JSON.
-     *
-     * @param string $string
-     * @return bool
      */
-    private function isValidJson(string $string): bool
+    private static function isValidJson(string $string): bool
     {
         json_decode($string);
-        return json_last_error() === JSON_ERROR_NONE;
+
+        return json_last_error() === \JSON_ERROR_NONE;
     }
 }

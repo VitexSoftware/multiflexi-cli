@@ -138,7 +138,7 @@ class TokenCommand extends MultiFlexiCommand
                 $token->setDataValue('user', $user);
                 $token->generate();
                 $tokenId = $token->saveToSQL();
-                
+
                 if ($format === 'json') {
                     $output->writeln(json_encode(['token_id' => $tokenId, 'token' => $token->getDataValue('token')], \JSON_PRETTY_PRINT));
                 } else {
