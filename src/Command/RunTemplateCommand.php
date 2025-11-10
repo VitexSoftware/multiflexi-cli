@@ -92,7 +92,9 @@ class RunTemplateCommand extends MultiFlexiCommand
             ->addOption('schedule_time', null, InputOption::VALUE_OPTIONAL, 'Schedule time for launch (Y-m-d H:i:s or "now")', 'now')
             ->addOption('executor', null, InputOption::VALUE_OPTIONAL, 'Executor to use for launch', 'Native')
             ->addOption('env', null, InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Environment override key=value (repeatable)')
-            ->addOption('fields', null, InputOption::VALUE_OPTIONAL, 'Comma-separated list of fields to display');
+            ->addOption('fields', null, InputOption::VALUE_OPTIONAL, 'Comma-separated list of fields to display')
+            ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit number of results for list action')
+            ->addOption('order', null, InputOption::VALUE_REQUIRED, 'Sort order for list action: A (ascending) or D (descending)');
         // Add more options as needed
     }
 
@@ -167,8 +169,36 @@ class RunTemplateCommand extends MultiFlexiCommand
                     $query->join('apps ON apps.id = runtemplate.app_id');
                     $query->where('apps.uuid', $appUuid);
                 }
+                
+                // Handle order option
+                $order = $input->getOption('order');
+                if (!empty($order)) {
+                    $orderBy = strtoupper($order) === 'D' ? 'DESC' : 'ASC';
+                    $query = $query->orderBy('id ' . $orderBy);
+                }
+                
+                // Handle limit option
+                $limit = $input->getOption('limit');
+                if (!empty($limit) && is_numeric($limit)) {
+                    $query = $query->limit((int) $limit);
+                }
+                
+                // Handle offset option
+                $offset = $input->getOption('offset');
+                if (!empty($offset) && is_numeric($offset)) {
+                    $query = $query->offset((int) $offset);
+                }
 
                 $rts = $query->fetchAll();
+                
+                // Handle fields option
+                $fields = $input->getOption('fields');
+                if (!empty($fields)) {
+                    $fieldList = array_map('trim', explode(',', $fields));
+                    $rts = array_map(function($rt) use ($fieldList) {
+                        return array_intersect_key($rt, array_flip($fieldList));
+                    }, $rts);
+                }
 
                 if ($format === 'json') {
                     $output->writeln(json_encode($rts, \JSON_PRETTY_PRINT));

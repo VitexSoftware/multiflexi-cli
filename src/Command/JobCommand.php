@@ -59,7 +59,9 @@ class JobCommand extends MultiFlexiCommand
             ->addOption('scheduled', null, InputOption::VALUE_REQUIRED, 'Scheduled datetime')
             ->addOption('executor', null, InputOption::VALUE_REQUIRED, 'Executor')
             ->addOption('schedule_type', null, InputOption::VALUE_REQUIRED, 'Schedule type')
-            ->addOption('app_id', null, InputOption::VALUE_REQUIRED, 'App ID');
+            ->addOption('app_id', null, InputOption::VALUE_REQUIRED, 'App ID')
+            ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit number of results for list action')
+            ->addOption('order', null, InputOption::VALUE_REQUIRED, 'Sort order for list action: A (ascending) or D (descending)');
         // Add more options as needed
     }
 
@@ -115,7 +117,37 @@ EOD;
                 return MultiFlexiCommand::SUCCESS;
             case 'list':
                 $job = new Job();
-                $jobs = $job->listingQuery()->fetchAll();
+                $query = $job->listingQuery();
+                
+                // Handle order option
+                $order = $input->getOption('order');
+                if (!empty($order)) {
+                    $orderBy = strtoupper($order) === 'D' ? 'DESC' : 'ASC';
+                    $query = $query->orderBy('id ' . $orderBy);
+                }
+                
+                // Handle limit option
+                $limit = $input->getOption('limit');
+                if (!empty($limit) && is_numeric($limit)) {
+                    $query = $query->limit((int) $limit);
+                }
+                
+                // Handle offset option
+                $offset = $input->getOption('offset');
+                if (!empty($offset) && is_numeric($offset)) {
+                    $query = $query->offset((int) $offset);
+                }
+                
+                $jobs = $query->fetchAll();
+                
+                // Handle fields option
+                $fields = $input->getOption('fields');
+                if (!empty($fields)) {
+                    $fieldList = array_map('trim', explode(',', $fields));
+                    $jobs = array_map(function($job) use ($fieldList) {
+                        return array_intersect_key($job, array_flip($fieldList));
+                    }, $jobs);
+                }
 
                 if ($format === 'json') {
                     $output->writeln(json_encode($jobs, \JSON_PRETTY_PRINT));

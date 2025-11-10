@@ -51,7 +51,9 @@ class ApplicationCommand extends MultiFlexiCommand
             ->addOption('requirements', null, InputOption::VALUE_OPTIONAL, 'Requirements')
             ->addOption('homepage', null, InputOption::VALUE_OPTIONAL, 'Homepage URL')
             ->addOption('file', null, InputOption::VALUE_REQUIRED, 'Path to JSON file for import/export/remove/validate')
-            ->addOption('appversion', null, InputOption::VALUE_OPTIONAL, 'Application Version');
+            ->addOption('appversion', null, InputOption::VALUE_OPTIONAL, 'Application Version')
+            ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit number of results for list action')
+            ->addOption('order', null, InputOption::VALUE_REQUIRED, 'Sort order for list action: A (ascending) or D (descending)');
         // Add more options as needed
     }
 
@@ -63,7 +65,37 @@ class ApplicationCommand extends MultiFlexiCommand
         switch ($action) {
             case 'list':
                 $app = new Application();
-                $apps = $app->listingQuery()->fetchAll();
+                $query = $app->listingQuery();
+                
+                // Handle order option
+                $order = $input->getOption('order');
+                if (!empty($order)) {
+                    $orderBy = strtoupper($order) === 'D' ? 'DESC' : 'ASC';
+                    $query = $query->orderBy('id ' . $orderBy);
+                }
+                
+                // Handle limit option
+                $limit = $input->getOption('limit');
+                if (!empty($limit) && is_numeric($limit)) {
+                    $query = $query->limit((int) $limit);
+                }
+                
+                // Handle offset option
+                $offset = $input->getOption('offset');
+                if (!empty($offset) && is_numeric($offset)) {
+                    $query = $query->offset((int) $offset);
+                }
+                
+                $apps = $query->fetchAll();
+                
+                // Handle fields option
+                $fields = $input->getOption('fields');
+                if (!empty($fields)) {
+                    $fieldList = array_map('trim', explode(',', $fields));
+                    $apps = array_map(function($app) use ($fieldList) {
+                        return array_intersect_key($app, array_flip($fieldList));
+                    }, $apps);
+                }
 
                 if ($format === 'json') {
                     $output->writeln(json_encode($apps, \JSON_PRETTY_PRINT));

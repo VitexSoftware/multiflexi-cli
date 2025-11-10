@@ -65,7 +65,9 @@ class UserCommand extends MultiFlexiCommand
             ->addOption('password', null, InputOption::VALUE_REQUIRED, 'Password (hashed)')
             ->addOption('plaintext', null, InputOption::VALUE_REQUIRED, 'Plaintext password')
             ->addOption('enabled', null, InputOption::VALUE_OPTIONAL, 'Enabled (true/false)')
-            ->setHelp('This command manage Jobs');
+            ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit number of results for list action')
+            ->addOption('order', null, InputOption::VALUE_REQUIRED, 'Sort order for list action: A (ascending) or D (descending)')
+            ->setHelp('This command manage Users');
         // Add more options as needed
     }
 
@@ -77,7 +79,37 @@ class UserCommand extends MultiFlexiCommand
         switch ($action) {
             case 'list':
                 $user = new User();
-                $users = $user->listingQuery()->fetchAll();
+                $query = $user->listingQuery();
+                
+                // Handle order option
+                $order = $input->getOption('order');
+                if (!empty($order)) {
+                    $orderBy = strtoupper($order) === 'D' ? 'DESC' : 'ASC';
+                    $query = $query->orderBy('id ' . $orderBy);
+                }
+                
+                // Handle limit option
+                $limit = $input->getOption('limit');
+                if (!empty($limit) && is_numeric($limit)) {
+                    $query = $query->limit((int) $limit);
+                }
+                
+                // Handle offset option
+                $offset = $input->getOption('offset');
+                if (!empty($offset) && is_numeric($offset)) {
+                    $query = $query->offset((int) $offset);
+                }
+                
+                $users = $query->fetchAll();
+                
+                // Handle fields option
+                $fields = $input->getOption('fields');
+                if (!empty($fields)) {
+                    $fieldList = array_map('trim', explode(',', $fields));
+                    $users = array_map(function($user) use ($fieldList) {
+                        return array_intersect_key($user, array_flip($fieldList));
+                    }, $users);
+                }
 
                 if ($format === 'json') {
                     $output->writeln(json_encode($users, \JSON_PRETTY_PRINT));

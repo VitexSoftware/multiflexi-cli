@@ -37,7 +37,9 @@ class QueueCommand extends MultiFlexiCommand
             ->setName('queue')
             ->setDescription('Queue operations (list, truncate)')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'The output format: text or json. Defaults to text.', 'text')
-            ->addArgument('action', InputArgument::REQUIRED, 'Action: list|truncate');
+            ->addArgument('action', InputArgument::REQUIRED, 'Action: list|truncate')
+            ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit number of results for list action')
+            ->addOption('order', null, InputOption::VALUE_REQUIRED, 'Sort order for list action: A (ascending) or D (descending)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -48,7 +50,37 @@ class QueueCommand extends MultiFlexiCommand
         switch ($action) {
             case 'list':
                 $lister = new ScheduleLister();
-                $rows = $lister->listingQuery()->fetchAll();
+                $query = $lister->listingQuery();
+                
+                // Handle order option
+                $order = $input->getOption('order');
+                if (!empty($order)) {
+                    $orderBy = strtoupper($order) === 'D' ? 'DESC' : 'ASC';
+                    $query = $query->orderBy('id ' . $orderBy);
+                }
+                
+                // Handle limit option
+                $limit = $input->getOption('limit');
+                if (!empty($limit) && is_numeric($limit)) {
+                    $query = $query->limit((int) $limit);
+                }
+                
+                // Handle offset option
+                $offset = $input->getOption('offset');
+                if (!empty($offset) && is_numeric($offset)) {
+                    $query = $query->offset((int) $offset);
+                }
+                
+                $rows = $query->fetchAll();
+                
+                // Handle fields option
+                $fields = $input->getOption('fields');
+                if (!empty($fields)) {
+                    $fieldList = array_map('trim', explode(',', $fields));
+                    $rows = array_map(function($row) use ($fieldList) {
+                        return array_intersect_key($row, array_flip($fieldList));
+                    }, $rows);
+                }
 
                 if ($format === 'json') {
                     $output->writeln(json_encode($rows, \JSON_PRETTY_PRINT));

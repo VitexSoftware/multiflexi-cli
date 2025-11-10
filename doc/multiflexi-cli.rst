@@ -155,21 +155,27 @@ Examples:
 credtype
 --------
 
-Credential type operations (list, get, update).
+Credential type operations (list, get, update, import, import-json, export-json, remove-json, validate-json).
 
 .. code-block:: bash
 
     multiflexi-cli credtype <action> [options]
 
 Actions:
-- list:   List all credential types.
-- get:    Get credential type details by ID or UUID.
-- update: Update a credential type (requires --id or --uuid).
+- list:         List all credential types.
+- get:          Get credential type details by ID or UUID.
+- update:       Update a credential type (requires --id or --uuid).
+- import:       Import credential type from JSON file with validation (requires --file).
+- import-json:  Import credential type from JSON file (alias for import, requires --file).
+- export-json:  Export credential type to JSON file (requires --id or --uuid, --file).
+- remove-json:  Remove credential type based on JSON file (requires --file).
+- validate-json: Validate credential type JSON file against schema (requires --file).
 
 Options:
   --id           Credential Type ID
   --uuid         Credential Type UUID
   --name         Name
+  --file         Path to JSON file for import/export/remove/validate operations
   -f, --format   Output format: text or json (default: text)
 
 Examples:
@@ -178,7 +184,68 @@ Examples:
 
     multiflexi-cli credtype list
     multiflexi-cli credtype get --id=1
-    multiflexi-cli credtype update --id=1 --name="API Key"
+    multiflexi-cli credtype get --uuid="d3d3ae58-d64a-4ab4-afb5-ba439ffc8587"
+    multiflexi-cli credtype update --id=1 --name="Updated API Key"
+    
+    # JSON Operations
+    multiflexi-cli credtype import-json --file credential-type.json
+    multiflexi-cli credtype import-json --file credential-type.json --format json
+    multiflexi-cli credtype validate-json --file credential-type.json
+    multiflexi-cli credtype export-json --id=1 --file exported-credtype.json
+    
+    # Schema validation before import
+    multiflexi-cli credtype validate-json --file new-credtype.json
+    multiflexi-cli credtype import-json --file new-credtype.json
+
+**JSON Import Features:**
+
+- **Schema Validation**: All JSON files are validated against the MultiFlexi credential type schema before import
+- **Duplicate Detection**: Prevents importing credential types with existing UUIDs
+- **Localization Support**: Supports multi-language names and descriptions
+- **Field Definition Import**: Automatically creates field definitions with proper types and validation
+- **Error Reporting**: Detailed error messages for validation failures and import issues
+
+**Credential Type JSON Structure:**
+
+The JSON file must conform to the MultiFlexi credential type schema and include:
+
+- ``uuid``: Unique identifier for the credential type
+- ``code``: Short code for the credential type
+- ``name``: Name (can be localized object or string)
+- ``description``: Description (can be localized object or string)
+- ``fields``: Array of field definitions with keyword, name, type, description, and requirements
+
+Example credential type JSON:
+
+.. code-block:: json
+
+    {
+      "uuid": "d3d3ae58-d64a-4ab4-afb5-ba439ffc8587",
+      "code": "ProbeAPI",
+      "name": {
+        "en": "Probe API Credentials",
+        "cs": "Přihlašovací údaje pro Probe API"
+      },
+      "description": {
+        "en": "Credential type for probe integrations.",
+        "cs": "Typ přihlašovacích údajů pro sondy."
+      },
+      "fields": [
+        {
+          "keyword": "PROBE_API_KEY",
+          "name": {
+            "en": "API Key",
+            "cs": "API klíč"
+          },
+          "type": "secret",
+          "description": {
+            "en": "API key for authentication.",
+            "cs": "API klíč pro autentizaci."
+          },
+          "required": true
+        }
+      ]
+    }
 
 company
 -------

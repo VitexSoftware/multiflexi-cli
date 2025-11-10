@@ -1,4 +1,4 @@
-.TH MULTIFLEXI-CLI 1 "August 2025" "MultiFlexi" "User Commands"
+.TH MULTIFLEXI-CLI 1 "November 2025" "MultiFlexi" "User Commands"
 .SH NAME
 multiflexi-cli \- MultiFlexi command-line interface for application and job management
 .SH SYNOPSIS
@@ -76,10 +76,22 @@ Options: --id, --name, --company-id, --credential-type-id, --fields, --format, -
 .RE
 .TP
 .B credtype
-Credential type operations
+Credential type operations (list, get, update, import, import-json, export-json, remove-json, validate-json)
 .RS
 Actions: list, get, update, import, import-json, export-json, remove-json, validate-json
 Options: --id, --uuid, --name, --file, --format, --help
+
+The credtype command provides comprehensive credential type management with JSON import/export capabilities:
+.br
+- Schema validation ensures JSON files comply with MultiFlexi credential type schema
+.br
+- Duplicate detection prevents importing credential types with existing UUIDs
+.br
+- Localization support for multi-language names and descriptions
+.br
+- Field definition import with proper types and validation
+.br
+- Comprehensive error reporting for validation failures and import issues
 .RE
 .TP
 .B encryption
@@ -198,6 +210,18 @@ Get credential by ID:
 .TP
 Import credential type from JSON:
 .B multiflexi-cli credtype import-json --file=credtype.json
+.TP
+Validate credential type JSON before import:
+.B multiflexi-cli credtype validate-json --file=credtype.json
+.TP
+List all credential types:
+.B multiflexi-cli credtype list
+.TP
+Get credential type by UUID:
+.B multiflexi-cli credtype get --uuid="d3d3ae58-d64a-4ab4-afb5-ba439ffc8587"
+.TP
+Export credential type to JSON:
+.B multiflexi-cli credtype export-json --id=1 --file=exported.json
 .TP
 Create company-application relation:
 .B multiflexi-cli companyapp create --company_id=1 --app_id=5

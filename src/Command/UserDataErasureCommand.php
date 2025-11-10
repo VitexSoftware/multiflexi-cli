@@ -47,7 +47,10 @@ class UserDataErasureCommand extends Command
             ->addOption('notes', null, InputOption::VALUE_REQUIRED, 'Review notes for approval/rejection')
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force operation without confirmation')
             ->addOption('export-audit', 'e', InputOption::VALUE_OPTIONAL, 'Export audit trail to file')
-            ->addOption('status', 's', InputOption::VALUE_REQUIRED, 'Filter requests by status: pending, approved, rejected, completed');
+            ->addOption('status', 's', InputOption::VALUE_REQUIRED, 'Filter requests by status: pending, approved, rejected, completed')
+            ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit number of results for list action')
+            ->addOption('order', null, InputOption::VALUE_REQUIRED, 'Sort order for list action: A (ascending) or D (descending)')
+            ->addOption('format', 'F', InputOption::VALUE_REQUIRED, 'Output format: text or json', 'text');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -112,6 +115,25 @@ class UserDataErasureCommand extends Command
 
         if ($status) {
             $query->where('udr.status', $status);
+        }
+
+        // Handle order option
+        $order = $input->getOption('order');
+        if (!empty($order)) {
+            $orderBy = strtoupper($order) === 'D' ? 'DESC' : 'ASC';
+            $query = $query->orderBy('udr.id ' . $orderBy);
+        }
+        
+        // Handle limit option
+        $limit = $input->getOption('limit');
+        if (!empty($limit) && is_numeric($limit)) {
+            $query = $query->limit((int) $limit);
+        }
+        
+        // Handle offset option
+        $offset = $input->getOption('offset');
+        if (!empty($offset) && is_numeric($offset)) {
+            $query = $query->offset((int) $offset);
         }
 
         $requestList = $query->fetchAll();

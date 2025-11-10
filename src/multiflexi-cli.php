@@ -80,4 +80,5 @@ $application->add(new CompanyAppCommand());
 $application->add(new QueueCommand());
 $application->add(new PruneCommand());
 $application->getDefinition()->addOption(new InputOption('fields', null, InputOption::VALUE_OPTIONAL, 'Comma-separated list of fields to display'));
+$application->getDefinition()->addOption(new InputOption('offset', null, InputOption::VALUE_OPTIONAL, 'Number of records to skip for list action'));
 $application->run();

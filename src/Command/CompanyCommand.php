@@ -53,8 +53,9 @@ class CompanyCommand extends MultiFlexiCommand
             ->addOption('DatUpdate', null, InputOption::VALUE_REQUIRED, 'Updated date (date-time)')
             ->addOption('email', null, InputOption::VALUE_REQUIRED, 'Email')
             ->addOption('slug', null, InputOption::VALUE_REQUIRED, 'Company Slug')
-            ->addOption('fields', null, InputOption::VALUE_OPTIONAL, 'Comma-separated list of fields to display')
-            ->addOption('zabbix_host', null, InputOption::VALUE_OPTIONAL, 'Zabbix Host'); // Add the zabbix_host option
+            ->addOption('zabbix_host', null, InputOption::VALUE_OPTIONAL, 'Zabbix Host')
+            ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit number of results for list action')
+            ->addOption('order', null, InputOption::VALUE_REQUIRED, 'Sort order for list action: A (ascending) or D (descending)');
         // Add more options as needed
     }
 
@@ -77,7 +78,37 @@ class CompanyCommand extends MultiFlexiCommand
         switch ($action) {
             case 'list':
                 $company = new Company();
-                $companies = $company->listingQuery()->fetchAll();
+                $query = $company->listingQuery();
+                
+                // Handle order option
+                $order = $input->getOption('order');
+                if (!empty($order)) {
+                    $orderBy = strtoupper($order) === 'D' ? 'DESC' : 'ASC';
+                    $query = $query->orderBy('id ' . $orderBy);
+                }
+                
+                // Handle limit option
+                $limit = $input->getOption('limit');
+                if (!empty($limit) && is_numeric($limit)) {
+                    $query = $query->limit((int) $limit);
+                }
+                
+                // Handle offset option
+                $offset = $input->getOption('offset');
+                if (!empty($offset) && is_numeric($offset)) {
+                    $query = $query->offset((int) $offset);
+                }
+                
+                $companies = $query->fetchAll();
+                
+                // Handle fields option (for display, not for listing query)
+                $displayFields = $input->getOption('fields');
+                if (!empty($displayFields)) {
+                    $fieldList = array_map('trim', explode(',', $displayFields));
+                    $companies = array_map(function($company) use ($fieldList) {
+                        return array_intersect_key($company, array_flip($fieldList));
+                    }, $companies);
+                }
 
                 if ($format === 'json') {
                     $output->writeln(json_encode($companies, \JSON_PRETTY_PRINT));

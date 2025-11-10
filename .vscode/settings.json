@@ -13,8 +13,26 @@
         "editor.selectionBackground": "#33446688",
         "editorCursor.foreground": "#FFCC00",
         "editorIndentGuide.background": "#444466",
-        "editorIndentGuide.activeBackground": "#8888FF"
+        "editorIndentGuide.activeBackground": "#8888FF",
+        "activityBar.activeBackground": "#55c783",
+        "activityBar.background": "#55c783",
+        "activityBar.foreground": "#15202b",
+        "activityBar.inactiveForeground": "#15202b99",
+        "activityBarBadge.background": "#8557c8",
+        "activityBarBadge.foreground": "#e7e7e7",
+        "commandCenter.border": "#15202b99",
+        "sash.hoverBorder": "#55c783",
+        "statusBar.background": "#3aaf69",
+        "statusBar.foreground": "#15202b",
+        "statusBarItem.hoverBackground": "#2d8952",
+        "statusBarItem.remoteBackground": "#3aaf69",
+        "statusBarItem.remoteForeground": "#15202b",
+        "titleBar.activeBackground": "#3aaf69",
+        "titleBar.activeForeground": "#15202b",
+        "titleBar.inactiveBackground": "#3aaf6999",
+        "titleBar.inactiveForeground": "#15202b99"
     },
     // Terminal colors for better readability
-    "terminal.integrated.minimumContrastRatio": 4.5
+    "terminal.integrated.minimumContrastRatio": 4.5,
+    "peacock.color": "#3aaf69"
 }

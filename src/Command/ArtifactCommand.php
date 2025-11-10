@@ -57,7 +57,8 @@ class ArtifactCommand extends MultiFlexiCommand
             ->addOption('id', null, InputOption::VALUE_REQUIRED, 'Artifact ID')
             ->addOption('job_id', null, InputOption::VALUE_REQUIRED, 'Job ID to filter artifacts')
             ->addOption('file', null, InputOption::VALUE_REQUIRED, 'File path to save artifact content to')
-            ->addOption('fields', null, InputOption::VALUE_OPTIONAL, 'Comma-separated list of fields to display');
+            ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit number of results for list action')
+            ->addOption('order', null, InputOption::VALUE_REQUIRED, 'Sort order for list action: A (ascending) or D (descending)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -74,10 +75,38 @@ class ArtifactCommand extends MultiFlexiCommand
                 $jobId = $input->getOption('job_id');
 
                 if ($jobId !== null) {
-                    $query->where('job_id = ?', [(int) $jobId]);
+                    $query = $query->where('job_id = ?', [(int) $jobId]);
+                }
+                
+                // Handle order option
+                $order = $input->getOption('order');
+                if (!empty($order)) {
+                    $orderBy = strtoupper($order) === 'D' ? 'DESC' : 'ASC';
+                    $query = $query->orderBy('id ' . $orderBy);
+                }
+                
+                // Handle limit option
+                $limit = $input->getOption('limit');
+                if (!empty($limit) && is_numeric($limit)) {
+                    $query = $query->limit((int) $limit);
+                }
+                
+                // Handle offset option
+                $offset = $input->getOption('offset');
+                if (!empty($offset) && is_numeric($offset)) {
+                    $query = $query->offset((int) $offset);
                 }
 
                 $artifacts = $query->fetchAll();
+                
+                // Handle fields option
+                $fields = $input->getOption('fields');
+                if (!empty($fields)) {
+                    $fieldList = array_map('trim', explode(',', $fields));
+                    $artifacts = array_map(function($artifact) use ($fieldList) {
+                        return array_intersect_key($artifact, array_flip($fieldList));
+                    }, $artifacts);
+                }
 
                 if ($format === 'json') {
                     $output->writeln(json_encode($artifacts, \JSON_PRETTY_PRINT));

@@ -43,7 +43,9 @@ class TokenCommand extends MultiFlexiCommand
             ->addArgument('action', InputArgument::REQUIRED, 'Action: list|get|create|generate|update')
             ->addOption('id', null, InputOption::VALUE_REQUIRED, 'Token ID')
             ->addOption('user', null, InputOption::VALUE_REQUIRED, 'User ID')
-            ->addOption('token', null, InputOption::VALUE_REQUIRED, 'Token value');
+            ->addOption('token', null, InputOption::VALUE_REQUIRED, 'Token value')
+            ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit number of results for list action')
+            ->addOption('order', null, InputOption::VALUE_REQUIRED, 'Sort order for list action: A (ascending) or D (descending)');
         // Add more options as needed
     }
 
@@ -55,7 +57,37 @@ class TokenCommand extends MultiFlexiCommand
         switch ($action) {
             case 'list':
                 $token = new Token();
-                $tokens = $token->listingQuery()->fetchAll();
+                $query = $token->listingQuery();
+                
+                // Handle order option
+                $order = $input->getOption('order');
+                if (!empty($order)) {
+                    $orderBy = strtoupper($order) === 'D' ? 'DESC' : 'ASC';
+                    $query = $query->orderBy('id ' . $orderBy);
+                }
+                
+                // Handle limit option
+                $limit = $input->getOption('limit');
+                if (!empty($limit) && is_numeric($limit)) {
+                    $query = $query->limit((int) $limit);
+                }
+                
+                // Handle offset option
+                $offset = $input->getOption('offset');
+                if (!empty($offset) && is_numeric($offset)) {
+                    $query = $query->offset((int) $offset);
+                }
+                
+                $tokens = $query->fetchAll();
+                
+                // Handle fields option
+                $fields = $input->getOption('fields');
+                if (!empty($fields)) {
+                    $fieldList = array_map('trim', explode(',', $fields));
+                    $tokens = array_map(function($token) use ($fieldList) {
+                        return array_intersect_key($token, array_flip($fieldList));
+                    }, $tokens);
+                }
 
                 if ($format === 'json') {
                     $output->writeln(json_encode($tokens, \JSON_PRETTY_PRINT));

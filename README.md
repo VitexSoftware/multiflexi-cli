@@ -8,6 +8,7 @@ MultiFlexi CLI (`multiflexi-cli`) is a command-line tool for managing MultiFlexi
 - List, create, get, and delete entities such as applications, jobs, users, companies, and credentials.
 - Query application and job status.
 - Manage templates, tokens, and queues.
+- **JSON Import/Export**: Import applications and credential types from JSON files, export configurations to JSON.
 - **Encryption management**: Check status and initialize encryption keys for secure credential storage.
 - Prune obsolete data.
 - Internationalization support (i18n).
@@ -27,6 +28,8 @@ multiflexi-cli <command> [options]
 - `delete`: Delete an entity
 - `describe`: Show available commands and features
 - `status`: Show MultiFlexi status (includes encryption, Zabbix, OpenTelemetry)
+- `application import-json`: Import application from JSON file
+- `credtype import-json`: Import credential type from JSON file
 - `telemetry:test`: Test OpenTelemetry metrics export
 - `encryption`: Manage encryption keys (status, init)
 - `prune`: Remove obsolete data
@@ -51,9 +54,18 @@ multiflexi-cli create user --name "John Doe" --email "john@example.com"
 multiflexi-cli delete app 456
 multiflexi-cli describe
 
+# JSON Import/Export
+multiflexi-cli application import-json --file app-definition.json
+multiflexi-cli credtype import-json --file credential-type.json
+multiflexi-cli credtype validate-json --file credential-type.json
+
 # System status (includes encryption, Zabbix, OpenTelemetry)
 multiflexi-cli status
 multiflexi-cli status --format json
+
+# Credential type management
+multiflexi-cli credtype list
+multiflexi-cli credtype get --uuid "d3d3ae58-d64a-4ab4-afb5-ba439ffc8587"
 
 # Encryption management
 multiflexi-cli encryption status
