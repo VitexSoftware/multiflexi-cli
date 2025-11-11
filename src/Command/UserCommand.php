@@ -80,33 +80,37 @@ class UserCommand extends MultiFlexiCommand
             case 'list':
                 $user = new User();
                 $query = $user->listingQuery();
-                
+
                 // Handle order option
                 $order = $input->getOption('order');
+
                 if (!empty($order)) {
                     $orderBy = strtoupper($order) === 'D' ? 'DESC' : 'ASC';
-                    $query = $query->orderBy('id ' . $orderBy);
+                    $query = $query->orderBy('id '.$orderBy);
                 }
-                
+
                 // Handle limit option
                 $limit = $input->getOption('limit');
+
                 if (!empty($limit) && is_numeric($limit)) {
                     $query = $query->limit((int) $limit);
                 }
-                
+
                 // Handle offset option
                 $offset = $input->getOption('offset');
+
                 if (!empty($offset) && is_numeric($offset)) {
                     $query = $query->offset((int) $offset);
                 }
-                
+
                 $users = $query->fetchAll();
-                
+
                 // Handle fields option
                 $fields = $input->getOption('fields');
+
                 if (!empty($fields)) {
                     $fieldList = array_map('trim', explode(',', $fields));
-                    $users = array_map(function($user) use ($fieldList) {
+                    $users = array_map(static function ($user) use ($fieldList) {
                         return array_intersect_key($user, array_flip($fieldList));
                     }, $users);
                 }

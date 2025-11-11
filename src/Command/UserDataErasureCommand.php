@@ -119,19 +119,22 @@ class UserDataErasureCommand extends Command
 
         // Handle order option
         $order = $input->getOption('order');
+
         if (!empty($order)) {
             $orderBy = strtoupper($order) === 'D' ? 'DESC' : 'ASC';
-            $query = $query->orderBy('udr.id ' . $orderBy);
+            $query = $query->orderBy('udr.id '.$orderBy);
         }
-        
+
         // Handle limit option
         $limit = $input->getOption('limit');
+
         if (!empty($limit) && is_numeric($limit)) {
             $query = $query->limit((int) $limit);
         }
-        
+
         // Handle offset option
         $offset = $input->getOption('offset');
+
         if (!empty($offset) && is_numeric($offset)) {
             $query = $query->offset((int) $offset);
         }

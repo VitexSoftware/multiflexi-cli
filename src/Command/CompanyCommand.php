@@ -79,33 +79,37 @@ class CompanyCommand extends MultiFlexiCommand
             case 'list':
                 $company = new Company();
                 $query = $company->listingQuery();
-                
+
                 // Handle order option
                 $order = $input->getOption('order');
+
                 if (!empty($order)) {
                     $orderBy = strtoupper($order) === 'D' ? 'DESC' : 'ASC';
-                    $query = $query->orderBy('id ' . $orderBy);
+                    $query = $query->orderBy('id '.$orderBy);
                 }
-                
+
                 // Handle limit option
                 $limit = $input->getOption('limit');
+
                 if (!empty($limit) && is_numeric($limit)) {
                     $query = $query->limit((int) $limit);
                 }
-                
+
                 // Handle offset option
                 $offset = $input->getOption('offset');
+
                 if (!empty($offset) && is_numeric($offset)) {
                     $query = $query->offset((int) $offset);
                 }
-                
+
                 $companies = $query->fetchAll();
-                
+
                 // Handle fields option (for display, not for listing query)
                 $displayFields = $input->getOption('fields');
+
                 if (!empty($displayFields)) {
                     $fieldList = array_map('trim', explode(',', $displayFields));
-                    $companies = array_map(function($company) use ($fieldList) {
+                    $companies = array_map(static function ($company) use ($fieldList) {
                         return array_intersect_key($company, array_flip($fieldList));
                     }, $companies);
                 }

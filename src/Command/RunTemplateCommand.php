@@ -51,6 +51,52 @@ class RunTemplateCommand extends MultiFlexiCommand
         parent::__construct(self::$defaultName);
     }
 
+    public function setRuntemplateConfig(int $runtemplateId, array $overrideEnv)
+    {
+        $rt = new RunTemplate((int) $id);
+
+        if (!empty($overrideEnv)) {
+            if ($rt->setEnvironment($overrideEnv)) {
+                $configurator->addStatusMessage(_('Config fields Saved'), 'success');
+                // Optionally run setup command if defined
+                $setupCommand = $rt->getApplication()->getDataValue('setup');
+
+                if (!empty($setupCommand)) {
+                    $appEnvironment = $rt->getEnvironment()->getEnvArray();
+                    $process = new \Symfony\Component\Process\Process(
+                        explode(' ', $setupCommand),
+                        null,
+                        $appEnvironment,
+                        null,
+                        32767,
+                    );
+                    $result = $process->run();
+                    $outputText = $process->getOutput();
+                    $errorText = $process->getErrorOutput();
+
+                    if ($result === 0) {
+                        $configurator->addStatusMessage(_('Setup command executed successfully:'), 'success');
+
+                        if ($outputText) {
+                            $configurator->addStatusMessage($outputText, 'info');
+                        }
+                    } else {
+                        $configurator->addStatusMessage(_('Setup command failed:'), 'error');
+
+                        if ($errorText) {
+                            $configurator->addStatusMessage($errorText, 'error');
+                        }
+                    }
+                }
+            } else {
+                $configurator->addStatusMessage(_('Error saving Config fields'), 'error');
+                $output->writeln('<error>Error saving Config fields</error>');
+
+                return MultiFlexiCommand::FAILURE;
+            }
+        }
+    }
+
     /**
      * Validate a crontab expression (basic 5-field check).
      */
@@ -91,7 +137,6 @@ class RunTemplateCommand extends MultiFlexiCommand
             ->addOption('config', null, InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Application config key=value (repeatable)')
             ->addOption('schedule_time', null, InputOption::VALUE_OPTIONAL, 'Schedule time for launch (Y-m-d H:i:s or "now")', 'now')
             ->addOption('executor', null, InputOption::VALUE_OPTIONAL, 'Executor to use for launch', 'Native')
-            ->addOption('env', null, InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Environment override key=value (repeatable)')
             ->addOption('fields', null, InputOption::VALUE_OPTIONAL, 'Comma-separated list of fields to display')
             ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit number of results for list action')
             ->addOption('order', null, InputOption::VALUE_REQUIRED, 'Sort order for list action: A (ascending) or D (descending)');
@@ -120,6 +165,16 @@ class RunTemplateCommand extends MultiFlexiCommand
 
         // Resolve company_id from --company if provided
         $companyOption = $input->getOption('company');
+
+        $overrideEnv = $this->parseConfigOptions($input);
+        $overridedEnv = new ConfigFields('CommandlineOverride');
+
+        foreach ($overrideEnvironment as $item) {
+            if (str_contains($item, '=')) {
+                [$key, $value] = explode('=', $item, 2);
+                $overridedEnv->addField(new ConfigField($key, 'string', $key, '', '', $value));
+            }
+        }
 
         if ($companyOption !== null) {
             $companyId = null;
@@ -169,33 +224,37 @@ class RunTemplateCommand extends MultiFlexiCommand
                     $query->join('apps ON apps.id = runtemplate.app_id');
                     $query->where('apps.uuid', $appUuid);
                 }
-                
+
                 // Handle order option
                 $order = $input->getOption('order');
+
                 if (!empty($order)) {
                     $orderBy = strtoupper($order) === 'D' ? 'DESC' : 'ASC';
-                    $query = $query->orderBy('id ' . $orderBy);
+                    $query = $query->orderBy('id '.$orderBy);
                 }
-                
+
                 // Handle limit option
                 $limit = $input->getOption('limit');
+
                 if (!empty($limit) && is_numeric($limit)) {
                     $query = $query->limit((int) $limit);
                 }
-                
+
                 // Handle offset option
                 $offset = $input->getOption('offset');
+
                 if (!empty($offset) && is_numeric($offset)) {
                     $query = $query->offset((int) $offset);
                 }
 
                 $rts = $query->fetchAll();
-                
+
                 // Handle fields option
                 $fields = $input->getOption('fields');
+
                 if (!empty($fields)) {
                     $fieldList = array_map('trim', explode(',', $fields));
-                    $rts = array_map(function($rt) use ($fieldList) {
+                    $rts = array_map(static function ($rt) use ($fieldList) {
                         return array_intersect_key($rt, array_flip($fieldList));
                     }, $rts);
                 }
@@ -252,9 +311,13 @@ class RunTemplateCommand extends MultiFlexiCommand
                     }
                 } else {
                     if ($format === 'json') {
-                        $output->writeln(json_encode($runtemplate->getData(), \JSON_PRETTY_PRINT));
+                        $output->writeln(json_encode(array_merge($runtemplate->getData(), $runtemplate->getEnvironment()->getEnvArray()), \JSON_PRETTY_PRINT));
                     } else {
                         foreach ($runtemplate->getData() as $k => $v) {
+                            $output->writeln("{$k}: {$v}");
+                        }
+
+                        foreach ($runtemplate->getRuntemplateEnvironment()->getEnvArray() as $k => $v) {
                             $output->writeln("{$k}: {$v}");
                         }
                     }
@@ -335,8 +398,11 @@ class RunTemplateCommand extends MultiFlexiCommand
 
                 $rt = new \MultiFlexi\RunTemplate();
                 $rt->takeData($data);
-                $rtId = $rt->saveToSQL();
+                $rt->saveToSQL();
+                $rtId = $this->getMyKey();  
 
+                $this->setRuntemplateConfig($rtId, $overrideEnv);
+                
                 if ($output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
                     $full = (new \MultiFlexi\RunTemplate((int) $rtId))->getData();
 
@@ -409,64 +475,7 @@ class RunTemplateCommand extends MultiFlexiCommand
                     }
                 }
 
-                $rt = new RunTemplate((int) $id);
-
-                // Save config fields using MultiFlexi\Configuration if --config is provided
-                $configData = $this->parseConfigOptions($input);
-
-                if (!empty($configData)) {
-                    $app = new \MultiFlexi\Application($rt->getDataValue('app_id'));
-                    $venue = [
-                        'runtemplate_id' => $rt->getMyKey(),
-                        'app_id' => $app->getMyKey(),
-                        'company_id' => $rt->getCompany()->getMyKey(),
-                    ];
-                    $companies = new \MultiFlexi\Company($rt->getDataValue('company_id'));
-                    $configurator = new \MultiFlexi\Configuration($venue, ['autoload' => true]);
-
-                    $currentConfig = $configurator->getConfigFields()->getEnvArray();
-                    $updatedConfig = array_merge($currentConfig, $configData);
-                    $configurator->setData($venue);
-
-                    if ($configurator->takeData($updatedConfig) && null !== $configurator->saveToSQL($updatedConfig)) {
-                        $configurator->addStatusMessage(_('Config fields Saved'), 'success');
-                        // Optionally run setup command if defined
-                        $setupCommand = $app->getDataValue('setup');
-
-                        if (!empty($setupCommand)) {
-                            $appEnvironment = $rt->getEnvironment()->getEnvArray();
-                            $process = new \Symfony\Component\Process\Process(
-                                explode(' ', $setupCommand),
-                                null,
-                                $appEnvironment,
-                                null,
-                                32767,
-                            );
-                            $result = $process->run();
-                            $outputText = $process->getOutput();
-                            $errorText = $process->getErrorOutput();
-
-                            if ($result === 0) {
-                                $configurator->addStatusMessage(_('Setup command executed successfully:'), 'success');
-
-                                if ($outputText) {
-                                    $configurator->addStatusMessage($outputText, 'info');
-                                }
-                            } else {
-                                $configurator->addStatusMessage(_('Setup command failed:'), 'error');
-
-                                if ($errorText) {
-                                    $configurator->addStatusMessage($errorText, 'error');
-                                }
-                            }
-                        }
-                    } else {
-                        $configurator->addStatusMessage(_('Error saving Config fields'), 'error');
-                        $output->writeln('<error>Error saving Config fields</error>');
-
-                        return MultiFlexiCommand::FAILURE;
-                    }
-                }
+                $this->setRuntemplateConfig();
 
                 if (!empty($data)) {
                     try {
@@ -532,7 +541,6 @@ class RunTemplateCommand extends MultiFlexiCommand
 
                 $scheduleTime = $input->getOption('schedule_time') ?? 'now';
                 $executor = $input->getOption('executor') ?? 'Native';
-                $envOverrides = $input->getOption('env') ?? [];
 
                 try {
                     $rt = new \MultiFlexi\RunTemplate(is_numeric($id) ? (int) $id : $id);
@@ -550,18 +558,9 @@ class RunTemplateCommand extends MultiFlexiCommand
                     }
 
                     $jobber = new Job();
-                    // Prepare environment overrides as ConfigFields
-                    $uploadEnv = new ConfigFields('Overrides');
-
-                    foreach ($envOverrides as $item) {
-                        if (str_contains($item, '=')) {
-                            [$key, $value] = explode('=', $item, 2);
-                            $uploadEnv->addField(new ConfigField($key, 'string', $key, '', '', $value));
-                        }
-                    }
 
                     $when = $scheduleTime;
-                    $prepared = $jobber->prepareJob($rt->getMyKey(), $uploadEnv, new \DateTime($when), $executor);
+                    $prepared = $jobber->prepareJob($rt->getMyKey(), $overridedEnv, new \DateTime($when), $executor);
                     $scheduleId = $jobber->scheduleJobRun(new \DateTime($when));
 
                     if ($format === 'json') {

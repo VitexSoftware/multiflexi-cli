@@ -72,33 +72,37 @@ class CredentialCommand extends MultiFlexiCommand
             case 'list':
                 $credential = new Credential();
                 $query = $credential->listingQuery();
-                
+
                 // Handle order option
                 $order = $input->getOption('order');
+
                 if (!empty($order)) {
                     $orderBy = strtoupper($order) === 'D' ? 'DESC' : 'ASC';
-                    $query = $query->orderBy('id ' . $orderBy);
+                    $query = $query->orderBy('id '.$orderBy);
                 }
-                
+
                 // Handle limit option
                 $limit = $input->getOption('limit');
+
                 if (!empty($limit) && is_numeric($limit)) {
                     $query = $query->limit((int) $limit);
                 }
-                
+
                 // Handle offset option
                 $offset = $input->getOption('offset');
+
                 if (!empty($offset) && is_numeric($offset)) {
                     $query = $query->offset((int) $offset);
                 }
-                
+
                 $credentials = $query->fetchAll();
-                
+
                 // Handle fields option
                 $fields = $input->getOption('fields');
+
                 if (!empty($fields)) {
                     $fieldList = array_map('trim', explode(',', $fields));
-                    $credentials = array_map(function($credential) use ($fieldList) {
+                    $credentials = array_map(static function ($credential) use ($fieldList) {
                         return array_intersect_key($credential, array_flip($fieldList));
                     }, $credentials);
                 }

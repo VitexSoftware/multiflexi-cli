@@ -62,33 +62,37 @@ class CredentialTypeCommand extends MultiFlexiCommand
             case 'list':
                 $credType = new CredentialType();
                 $query = $credType->listingQuery();
-                
+
                 // Handle order option
                 $order = $input->getOption('order');
+
                 if (!empty($order)) {
                     $orderBy = strtoupper($order) === 'D' ? 'DESC' : 'ASC';
-                    $query = $query->orderBy('id ' . $orderBy);
+                    $query = $query->orderBy('id '.$orderBy);
                 }
-                
+
                 // Handle limit option
                 $limit = $input->getOption('limit');
+
                 if (!empty($limit) && is_numeric($limit)) {
                     $query = $query->limit((int) $limit);
                 }
-                
+
                 // Handle offset option
                 $offset = $input->getOption('offset');
+
                 if (!empty($offset) && is_numeric($offset)) {
                     $query = $query->offset((int) $offset);
                 }
-                
+
                 $types = $query->fetchAll();
-                
+
                 // Handle fields option
                 $fields = $input->getOption('fields');
+
                 if (!empty($fields)) {
                     $fieldList = array_map('trim', explode(',', $fields));
-                    $types = array_map(function($type) use ($fieldList) {
+                    $types = array_map(static function ($type) use ($fieldList) {
                         return array_intersect_key($type, array_flip($fieldList));
                     }, $types);
                 }
@@ -282,10 +286,10 @@ class CredentialTypeCommand extends MultiFlexiCommand
                         ], \JSON_PRETTY_PRINT));
                     } else {
                         $output->writeln('<error>JSON validation failed</error>');
-                        $output->writeln('<comment>Schema: ' . realpath(CredentialType::$credTypeSchema) . '</comment>');
+                        $output->writeln('<comment>Schema: '.realpath(CredentialType::$credTypeSchema).'</comment>');
 
                         foreach ($validationResult as $violation) {
-                            $output->writeln('<error> ' . $violation . ' </error>');
+                            $output->writeln('<error> '.$violation.' </error>');
                         }
                     }
 
@@ -308,35 +312,35 @@ class CredentialTypeCommand extends MultiFlexiCommand
                             ], \JSON_PRETTY_PRINT));
                         } else {
                             $output->writeln('<info>Credential type imported successfully</info>');
-                            $output->writeln('<info>ID: ' . $credType->getMyKey() . '</info>');
-                            $output->writeln('<info>UUID: ' . $credType->getDataValue('uuid') . '</info>');
+                            $output->writeln('<info>ID: '.$credType->getMyKey().'</info>');
+                            $output->writeln('<info>UUID: '.$credType->getDataValue('uuid').'</info>');
                         }
 
                         return MultiFlexiCommand::SUCCESS;
-                    } else {
-                        if ($format === 'json') {
-                            $output->writeln(json_encode([
-                                'status' => 'error',
-                                'message' => 'Failed to import credential type',
-                                'file' => $json,
-                                'imported' => false,
-                            ], \JSON_PRETTY_PRINT));
-                        } else {
-                            $output->writeln('<error>Failed to import credential type</error>');
-                        }
-
-                        return MultiFlexiCommand::FAILURE;
                     }
-                } catch (\Exception $e) {
+
                     if ($format === 'json') {
                         $output->writeln(json_encode([
                             'status' => 'error',
-                            'message' => 'Import failed: ' . $e->getMessage(),
+                            'message' => 'Failed to import credential type',
                             'file' => $json,
                             'imported' => false,
                         ], \JSON_PRETTY_PRINT));
                     } else {
-                        $output->writeln('<error>Import failed: ' . $e->getMessage() . '</error>');
+                        $output->writeln('<error>Failed to import credential type</error>');
+                    }
+
+                    return MultiFlexiCommand::FAILURE;
+                } catch (\Exception $e) {
+                    if ($format === 'json') {
+                        $output->writeln(json_encode([
+                            'status' => 'error',
+                            'message' => 'Import failed: '.$e->getMessage(),
+                            'file' => $json,
+                            'imported' => false,
+                        ], \JSON_PRETTY_PRINT));
+                    } else {
+                        $output->writeln('<error>Import failed: '.$e->getMessage().'</error>');
                     }
 
                     return MultiFlexiCommand::FAILURE;
