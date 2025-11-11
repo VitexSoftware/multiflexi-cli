@@ -1,75 +1,57 @@
-<!-- Use this file to provide workspace-specific custom instructions to Copilot. For more details, visit https://code.visualstudio.com/docs/copilot/copilot-customization#_use-a-githubcopilotinstructionsmd-file -->
 
-All code comments should be written in English.
+# MultiFlexi CLI Copilot Workspace Instructions
 
-All messages, including error messages, should be written in English.
+These instructions are designed to help Copilot generate code and documentation that matches the standards and requirements of the MultiFlexi CLI project. Please follow these rules for all code, tests, documentation, and messages:
 
-All code should be written in PHP 8.4 or later.
+## General Coding Standards
+- Write all code in **PHP 8.4 or later**.
+- Follow the **PSR-12 coding standard** for all PHP code.
+- Use **meaningful variable names** that clearly describe their purpose.
+- Avoid magic numbers and strings; define constants instead.
+- Always include **type hints** for function parameters and return types.
+- Handle exceptions properly and provide **clear, meaningful error messages** (in English).
+- Ensure code is **secure** and does not expose sensitive information.
+- Optimize for **performance** where necessary.
+- Ensure compatibility with the **latest version of PHP** and all used libraries, especially VitexSoftware libraries.
+- Use the **i18n library** for internationalization; wrap translatable strings with the `_()` function.
 
-All code should follow the PSR-12 coding standard.
+## Documentation and Comments
+- Write all code comments and messages in **English**.
+- Use complete sentences and proper grammar for comments.
+- Include a **docblock** for every function and class, describing its purpose, parameters, and return types.
+- Document complex logic or important decisions with inline comments.
 
-When writing code, always include a docblock for functions and classes, describing their purpose, parameters, and return types.
+## Output and Formatting
+- For all commands, the **default output format** is human-readable text.
+- When the user specifies `--format json`, return all output (including errors, status, and results) in **JSON format**.
+- Never return JSON by default unless `--format json` is explicitly requested.
 
-When writing or updating commands, always ensure that all output (including errors, status, and results) is returned in JSON format when the --format json option is requested, for all commands and operations.
+## Testing and Validation
+- Use **PHPUnit** for all tests and follow PSR-12 for test code.
+- When creating or updating a class, always create or update its PHPUnit test file.
+- After every PHP file edit, run `php -l` on the edited file to check for syntax errors before proceeding further.
 
-The default output format for all commands should be text/human-readable format unless explicitly requested otherwise with --format json. Never return JSON format as default output when --format json is not specified by the user.
+## Project Documentation
+- Write **README** files in **Markdown** format.
+- Write technical documentation in **reStructuredText (reST)** format.
+- Use **concise, imperative mood** for commit messages.
 
-When writing tests, use PHPUnit and follow the PSR-12 coding standard.
+## CLI Command Features
+- For all list, get, delete, and create commands, return a JSON response with the result when `--format json` is used.
+- Keep the `tests/test-cli.sh` file up to date with features provided by the `multiflexi-cli describe` command output.
+- In `tests/test-cli.sh`, keep delete action tests at the very bottom in a separate section.
+- Update `multiflexi-cli.rst` and `multiflexi-cli.1` files whenever CLI features change.
+- Keep `manpage/multiflexi-cli.1` up to date with the latest CLI changes.
+- Ensure `--help` output is clear, concise, and provides all necessary usage and option information.
 
-When writing README, use markdown format.
+## Development and Deployment
+- When developing or testing, always run the main script from the `src/` directory:
+	```bash
+	cd src/
+	php multiflexi-cli.php
+	```
+- Relative paths (e.g., `../vendor/autoload.php`, `../.env`) are intentional and resolved during Debian packaging.
 
-When writing documentation, use reStructuredText (reST) format.
-
-When writing commit messages, use the imperative mood and keep them concise.
-
-When writing code comments, use complete sentences and proper grammar.
-
-When writing code, always use meaningful variable names that describe their purpose.
-
-When writing code, avoid using magic numbers or strings; instead, define constants for them.
-
-When writing code, always handle exceptions properly and provide meaningful error messages.
-
-When writing code, always include type hints for function parameters and return types.
-
-We are using the i18n library for internationalization, so always use the _() functions for strings that need to be translated.
-
-When writing code, always ensure that it is secure and does not expose any sensitive information.
-
-When writing code, always consider performance and optimize where necessary.
-
-When writing code, always ensure that it is compatible with the latest version of PHP and the libraries we are using.
-
-When writing code, always ensure that it is well-tested and includes unit tests where applicable.
-
-When writing code, always ensure that it is maintainable and follows best practices.
-
-When create new class or update existing class, always create or update its phpunit test files.
-
-list, get, delete and create commands of multiflexi-cli should return a JSON response with the result of the operation when "--format json" is used.
-
-Always ensure that the tests/test-cli.sh file is kept up to date with the features provided by the "multiflexi-cli describe" command output.
-
-In the tests/test-cli.sh keep the delete action tests at very bottom of the file in separate section.
-
-Update the multiflexi-cli.rst and multiflexi-cli.1 files each time when the multiflexi-cli command features changes somehow
-
-Keep manpage/multiflexi-cli.1 file up to date with the latest changes in the multiflexi-cli command.
-
-When updating the multiflexi-cli command, ensure that the --help output is clear and concise, providing all necessary information about the command's usage and options.
-
-When writing code, always ensure that it is compatible with the latest version of the VitexSoftware libraries and follows their coding standards.
-
-When writing code, always ensure that it is properly documented, including inline comments where necessary to explain complex logic or important decisions.
-
-When developing or testing this application, always run the main script from the src/:
-```bash
-cd src/
-php multiflexi-cli.php
-```
-
-This ensures the relative paths (../vendor/autoload.php and ../.env) work correctly during development.
-
-The application uses relative paths intentionally - they are resolved during Debian packaging via sed commands in debian/rules file for production deployment.
-
-After every single edit to a PHP file, always run `php -l` on the edited file to lint it and ensure code sanity before proceeding further. This is mandatory for all PHP code changes.
+---
+**Summary:**
+Always write code that is maintainable, well-tested, secure, and follows best practices. Document your work clearly, validate all changes, and keep all related files and documentation up to date with feature changes.
