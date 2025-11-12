@@ -51,12 +51,12 @@ class RunTemplateCommand extends MultiFlexiCommand
         parent::__construct(self::$defaultName);
     }
 
-    public function setRuntemplateConfig(int $runtemplateId, array $overrideEnv)
+    public function setRuntemplateConfig(int $runtemplateId, ConfigFields $overrideEnv)
     {
         $rt = new RunTemplate((int) $id);
 
         if (!empty($overrideEnv)) {
-            if ($rt->setEnvironment($overrideEnv)) {
+            if ($rt->setEnvironment($overrideEnv->getEnvArray())) {
                 $configurator->addStatusMessage(_('Config fields Saved'), 'success');
                 // Optionally run setup command if defined
                 $setupCommand = $rt->getApplication()->getDataValue('setup');
@@ -401,7 +401,7 @@ class RunTemplateCommand extends MultiFlexiCommand
                 $rt->saveToSQL();
                 $rtId = $this->getMyKey();  
 
-                $this->setRuntemplateConfig($rtId, $overrideEnv);
+                $this->setRuntemplateConfig($rtId, $overridedEnv);
                 
                 if ($output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
                     $full = (new \MultiFlexi\RunTemplate((int) $rtId))->getData();
@@ -475,7 +475,7 @@ class RunTemplateCommand extends MultiFlexiCommand
                     }
                 }
 
-                $this->setRuntemplateConfig();
+                $this->setRuntemplateConfig($id, $overridedEnv);
 
                 if (!empty($data)) {
                     try {
