@@ -1,8 +1,14 @@
+multiflexi-cli (2.3.0) UNRELEASED; urgency=medium
+
+  * CredentialType json import added
+
+ -- vitex <info@vitexsoftware.cz>  Wed, 12 Nov 2025 09:21:27 +0100
+
 multiflexi-cli (2.2.1) unstable; urgency=medium
 
   * update for vitexsoftware/fluentpdo
 
- -- vitex <info@vitexsoftware.cz>  Thu, 23 Oct 2025 10:44:28 +0200
+ -- vitex <info@vitexsoftware.cz>  Wed, 12 Nov 2025 09:21:06 +0100
 
 multiflexi-cli (2.2.0) unstable; urgency=medium
 
