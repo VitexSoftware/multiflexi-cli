@@ -51,10 +51,8 @@ class RunTemplateCommand extends MultiFlexiCommand
         parent::__construct(self::$defaultName);
     }
 
-    public function setRuntemplateConfig(int $runtemplateId, ConfigFields $overrideEnv)
+    public function setRuntemplateConfig(RunTemplate $rt, ConfigFields $overrideEnv)
     {
-        $rt = new RunTemplate($runtemplateId);
-
         if ($overrideEnv->getEnvArray()) {
             if ($rt->setEnvironment($overrideEnv->getEnvArray())) {
                 $rt->addStatusMessage(_('Config fields Saved'), 'success');
@@ -169,11 +167,8 @@ class RunTemplateCommand extends MultiFlexiCommand
         $overrideEnv = $this->parseConfigOptions($input);
         $overridedEnv = new ConfigFields('CommandlineOverride');
 
-        foreach ($overrideEnv as $item) {
-            if (str_contains($item, '=')) {
-                [$key, $value] = explode('=', $item, 2);
+        foreach ($overrideEnv as $key => $value) {
                 $overridedEnv->addField(new ConfigField($key, 'string', $key, '', '', $value));
-            }
         }
 
         if ($companyOption !== null) {
@@ -401,7 +396,7 @@ class RunTemplateCommand extends MultiFlexiCommand
                 $rt->saveToSQL();
                 $rtId = $rt->getMyKey();
 
-                $this->setRuntemplateConfig($rtId, $overridedEnv);
+                $rt->setRuntemplateEnvironment($overridedEnv);
 
                 if ($output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
                     $full = (new RunTemplate((int) $rtId))->getData();
@@ -424,13 +419,13 @@ class RunTemplateCommand extends MultiFlexiCommand
                 return MultiFlexiCommand::SUCCESS;
             case 'update':
                 $id = $input->getOption('id');
-                $rt = new RunTemplate((int) $id);
 
                 if (empty($id)) {
                     $output->writeln('<error>Missing --id for runtemplate update</error>');
 
                     return MultiFlexiCommand::FAILURE;
                 }
+                $rt = new RunTemplate((int) $id);
 
                 $data = [];
 
@@ -476,7 +471,7 @@ class RunTemplateCommand extends MultiFlexiCommand
                     }
                 }
 
-                $this->setRuntemplateConfig((int) $id, $overridedEnv);
+                $rt->setRuntemplateEnvironment($overridedEnv);
 
                 if (!empty($data)) {
                     try {

@@ -1,8 +1,14 @@
-multiflexi-cli (2.3.1) UNRELEASED; urgency=medium
+multiflexi-cli (2.3.2) UNRELEASED; urgency=medium
+
+  * RunTemplate Configuration update fix
+
+ -- vitex <info@vitexsoftware.cz>  Wed, 12 Nov 2025 13:25:32 +0100
+
+multiflexi-cli (2.3.1) unstable; urgency=medium
 
   * Custom ENV fix
 
- -- vitex <info@vitexsoftware.cz>  Wed, 12 Nov 2025 12:25:53 +0100
+ -- vitex <info@vitexsoftware.cz>  Wed, 12 Nov 2025 13:25:08 +0100
 
 multiflexi-cli (2.3.0) unstable; urgency=medium
 
