@@ -1,8 +1,14 @@
-multiflexi-cli (2.3.0) UNRELEASED; urgency=medium
+multiflexi-cli (2.3.1) UNRELEASED; urgency=medium
+
+  * Custom ENV fix
+
+ -- vitex <info@vitexsoftware.cz>  Wed, 12 Nov 2025 12:25:53 +0100
+
+multiflexi-cli (2.3.0) unstable; urgency=medium
 
   * CredentialType json import added
 
- -- vitex <info@vitexsoftware.cz>  Wed, 12 Nov 2025 09:21:27 +0100
+ -- vitex <info@vitexsoftware.cz>  Wed, 12 Nov 2025 12:25:27 +0100
 
 multiflexi-cli (2.2.1) unstable; urgency=medium
 

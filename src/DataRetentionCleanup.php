@@ -38,9 +38,7 @@ class DataRetentionCleanup extends Command
      * @var string Command name
      */
     protected static string $defaultName = 'retention:cleanup';
-
     private RetentionService $retentionService;
-
     private DataArchiver $archiver;
 
     /**

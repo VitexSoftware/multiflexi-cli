@@ -53,11 +53,11 @@ class RunTemplateCommand extends MultiFlexiCommand
 
     public function setRuntemplateConfig(int $runtemplateId, ConfigFields $overrideEnv)
     {
-        $rt = new RunTemplate((int) $id);
+        $rt = new RunTemplate($runtemplateId);
 
-        if (!empty($overrideEnv)) {
+        if ($overrideEnv->getEnvArray()) {
             if ($rt->setEnvironment($overrideEnv->getEnvArray())) {
-                $configurator->addStatusMessage(_('Config fields Saved'), 'success');
+                $rt->addStatusMessage(_('Config fields Saved'), 'success');
                 // Optionally run setup command if defined
                 $setupCommand = $rt->getApplication()->getDataValue('setup');
 
@@ -75,22 +75,22 @@ class RunTemplateCommand extends MultiFlexiCommand
                     $errorText = $process->getErrorOutput();
 
                     if ($result === 0) {
-                        $configurator->addStatusMessage(_('Setup command executed successfully:'), 'success');
+                        $rt->addStatusMessage(_('Setup command executed successfully:'), 'success');
 
                         if ($outputText) {
-                            $configurator->addStatusMessage($outputText, 'info');
+                            $rt->addStatusMessage($outputText, 'info');
                         }
                     } else {
-                        $configurator->addStatusMessage(_('Setup command failed:'), 'error');
+                        $rt->addStatusMessage(_('Setup command failed:'), 'error');
 
                         if ($errorText) {
-                            $configurator->addStatusMessage($errorText, 'error');
+                            $rt->addStatusMessage($errorText, 'error');
                         }
                     }
                 }
             } else {
-                $configurator->addStatusMessage(_('Error saving Config fields'), 'error');
-                $output->writeln('<error>Error saving Config fields</error>');
+                $rt->addStatusMessage(_('Error saving Config fields'), 'error');
+                // TODO: $output->writeln('<error>Error saving Config fields</error>');
 
                 return MultiFlexiCommand::FAILURE;
             }
@@ -169,7 +169,7 @@ class RunTemplateCommand extends MultiFlexiCommand
         $overrideEnv = $this->parseConfigOptions($input);
         $overridedEnv = new ConfigFields('CommandlineOverride');
 
-        foreach ($overrideEnvironment as $item) {
+        foreach ($overrideEnv as $item) {
             if (str_contains($item, '=')) {
                 [$key, $value] = explode('=', $item, 2);
                 $overridedEnv->addField(new ConfigField($key, 'string', $key, '', '', $value));
@@ -396,15 +396,15 @@ class RunTemplateCommand extends MultiFlexiCommand
                     return MultiFlexiCommand::FAILURE;
                 }
 
-                $rt = new \MultiFlexi\RunTemplate();
+                $rt = new RunTemplate();
                 $rt->takeData($data);
                 $rt->saveToSQL();
-                $rtId = $this->getMyKey();  
+                $rtId = $rt->getMyKey();
 
                 $this->setRuntemplateConfig($rtId, $overridedEnv);
-                
+
                 if ($output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
-                    $full = (new \MultiFlexi\RunTemplate((int) $rtId))->getData();
+                    $full = (new RunTemplate((int) $rtId))->getData();
 
                     if ($format === 'json') {
                         $output->writeln(json_encode($full, \JSON_PRETTY_PRINT));
@@ -424,6 +424,7 @@ class RunTemplateCommand extends MultiFlexiCommand
                 return MultiFlexiCommand::SUCCESS;
             case 'update':
                 $id = $input->getOption('id');
+                $rt = new RunTemplate((int) $id);
 
                 if (empty($id)) {
                     $output->writeln('<error>Missing --id for runtemplate update</error>');
@@ -461,7 +462,7 @@ class RunTemplateCommand extends MultiFlexiCommand
                 $appUuid = $input->getOption('app_uuid');
 
                 if ($appUuid !== null) {
-                    $pdo = (new \MultiFlexi\RunTemplate())->getFluentPDO()->getPdo();
+                    $pdo = (new RunTemplate())->getFluentPDO()->getPdo();
                     $stmt = $pdo->prepare('SELECT id FROM apps WHERE uuid = :uuid');
                     $stmt->execute(['uuid' => $appUuid]);
                     $row = $stmt->fetch();
@@ -475,7 +476,7 @@ class RunTemplateCommand extends MultiFlexiCommand
                     }
                 }
 
-                $this->setRuntemplateConfig($id, $overridedEnv);
+                $this->setRuntemplateConfig((int) $id, $overridedEnv);
 
                 if (!empty($data)) {
                     try {
