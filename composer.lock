@@ -1240,12 +1240,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "13d3176cf8ad8ced24202844e9f95af11e2959fc"
+                "reference": "32d9216a85709f0f6bb0cf6a66073f18336fe99d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/13d3176cf8ad8ced24202844e9f95af11e2959fc",
-                "reference": "13d3176cf8ad8ced24202844e9f95af11e2959fc",
+                "url": "https://api.github.com/repos/symfony/console/zipball/32d9216a85709f0f6bb0cf6a66073f18336fe99d",
+                "reference": "32d9216a85709f0f6bb0cf6a66073f18336fe99d",
                 "shasum": ""
             },
             "require": {
@@ -1330,7 +1330,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-10-06T10:25:16+00:00"
+            "time": "2025-11-13T08:19:35+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
@@ -2255,12 +2255,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/VitexSoftware/php-vitexsoftware-multiflexi-core.git",
-                "reference": "effc8dea7cc43994e477c56c6ee9a59a6a534602"
+                "reference": "a6684304eaf683e96bf33293335650db76046ddb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/VitexSoftware/php-vitexsoftware-multiflexi-core/zipball/effc8dea7cc43994e477c56c6ee9a59a6a534602",
-                "reference": "effc8dea7cc43994e477c56c6ee9a59a6a534602",
+                "url": "https://api.github.com/repos/VitexSoftware/php-vitexsoftware-multiflexi-core/zipball/a6684304eaf683e96bf33293335650db76046ddb",
+                "reference": "a6684304eaf683e96bf33293335650db76046ddb",
                 "shasum": ""
             },
             "require": {
@@ -2304,7 +2304,7 @@
                 "issues": "https://github.com/VitexSoftware/php-vitexsoftware-multiflexi-core/issues",
                 "source": "https://github.com/VitexSoftware/php-vitexsoftware-multiflexi-core/tree/main"
             },
-            "time": "2025-11-11T23:09:55+00:00"
+            "time": "2025-11-13T13:38:17+00:00"
         }
     ],
     "packages-dev": [
@@ -2456,12 +2456,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/semver.git",
-                "reference": "b52829022cb18210bb84e44e457bd4e890f8d2a7"
+                "reference": "c9b06fa2f64d9aaf2785cd325742a41f27e290aa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/semver/zipball/b52829022cb18210bb84e44e457bd4e890f8d2a7",
-                "reference": "b52829022cb18210bb84e44e457bd4e890f8d2a7",
+                "url": "https://api.github.com/repos/composer/semver/zipball/c9b06fa2f64d9aaf2785cd325742a41f27e290aa",
+                "reference": "c9b06fa2f64d9aaf2785cd325742a41f27e290aa",
                 "shasum": ""
             },
             "require": {
@@ -2504,7 +2504,7 @@
                     "homepage": "http://robbast.nl"
                 }
             ],
-            "description": "Semver library that offers utilities, version constraint parsing and validation.",
+            "description": "Version comparison library that offers utilities, version constraint parsing and validation.",
             "keywords": [
                 "semantic",
                 "semver",
@@ -2526,7 +2526,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-09-03T06:59:12+00:00"
+            "time": "2025-11-12T10:20:59+00:00"
         },
         {
             "name": "composer/xdebug-handler",
@@ -3764,8 +3764,8 @@
             "version": "2.1.x-dev",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/e126cad1e30a99b137b8ed75a85a676450ebb227",
-                "reference": "e126cad1e30a99b137b8ed75a85a676450ebb227",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/7e742a0fb109cb4766f90ba2aa711b0f17946822",
+                "reference": "7e742a0fb109cb4766f90ba2aa711b0f17946822",
                 "shasum": ""
             },
             "require": {
@@ -3811,7 +3811,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-11-11T15:18:17+00:00"
+            "time": "2025-11-13T14:40:24+00:00"
         },
         {
             "name": "phpstan/phpstan-phpunit",
@@ -4260,12 +4260,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "45ff3e9bcd60c29a17e06f89a897edc8102cb512"
+                "reference": "6a9a4178269dfd0c20939f9350de53d6c2c06039"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/45ff3e9bcd60c29a17e06f89a897edc8102cb512",
-                "reference": "45ff3e9bcd60c29a17e06f89a897edc8102cb512",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/6a9a4178269dfd0c20939f9350de53d6c2c06039",
+                "reference": "6a9a4178269dfd0c20939f9350de53d6c2c06039",
                 "shasum": ""
             },
             "require": {
@@ -4358,7 +4358,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-11-11T15:58:56+00:00"
+            "time": "2025-11-13T11:27:46+00:00"
         },
         {
             "name": "psr/event-dispatcher",
@@ -6335,12 +6335,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/options-resolver.git",
-                "reference": "3324bca1ff334c8807a3968882edb76ea708b955"
+                "reference": "b38026df55197f9e39a44f3215788edf83187b80"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/options-resolver/zipball/3324bca1ff334c8807a3968882edb76ea708b955",
-                "reference": "3324bca1ff334c8807a3968882edb76ea708b955",
+                "url": "https://api.github.com/repos/symfony/options-resolver/zipball/b38026df55197f9e39a44f3215788edf83187b80",
+                "reference": "b38026df55197f9e39a44f3215788edf83187b80",
                 "shasum": ""
             },
             "require": {
@@ -6398,7 +6398,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-08-13T16:46:49+00:00"
+            "time": "2025-11-12T15:39:26+00:00"
         },
         {
             "name": "symfony/polyfill-php80",

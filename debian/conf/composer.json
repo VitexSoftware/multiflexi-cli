@@ -9,6 +9,7 @@
     "sensiolabs/ansi-to-html": "*",
     "zarplata/zabbix-sender": "dev-master",
     "rcubitto/json-pretty": "dev-master",
+    "justinrainbow/json-schema": "^6.0@dev",
     "phplucidframe/console-table": "dev-master"
   },
   "license": "MIT",
