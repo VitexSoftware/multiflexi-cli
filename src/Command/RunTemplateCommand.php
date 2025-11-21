@@ -556,7 +556,15 @@ class RunTemplateCommand extends MultiFlexiCommand
                     $jobber = new Job();
 
                     $when = $scheduleTime;
-                    $prepared = $jobber->prepareJob($rt->getMyKey(), $overridedEnv, new \DateTime($when), $executor);
+                    
+                    // Determine schedule type based on execution time
+                    // Immediate execution (now) = 'adhoc', future scheduled = 'cli'
+                    $scheduleDateTime = new \DateTime($when);
+                    $now = new \DateTime();
+                    $isImmediate = ($scheduleDateTime->getTimestamp() <= $now->getTimestamp() + 5); // 5 sec tolerance
+                    $scheduleType = $isImmediate ? 'adhoc' : 'cli';
+                    
+                    $prepared = $jobber->prepareJob($rt->getMyKey(), $overridedEnv, $scheduleDateTime, $executor, $scheduleType);
                     // scheduleJobRun() is now called automatically inside prepareJob()
 
                     if ($format === 'json') {
