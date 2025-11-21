@@ -557,14 +557,13 @@ class RunTemplateCommand extends MultiFlexiCommand
 
                     $when = $scheduleTime;
                     $prepared = $jobber->prepareJob($rt->getMyKey(), $overridedEnv, new \DateTime($when), $executor);
-                    $scheduleId = $jobber->scheduleJobRun(new \DateTime($when));
+                    // scheduleJobRun() is now called automatically inside prepareJob()
 
                     if ($format === 'json') {
                         $output->writeln(json_encode([
                             'runtemplate_id' => $id,
                             'scheduled' => (new \DateTime($when))->format('Y-m-d H:i:s'),
                             'executor' => $executor,
-                            'schedule_id' => $scheduleId,
                             'job_id' => $jobber->getMyKey(),
                         ], \JSON_PRETTY_PRINT));
                     } else {
@@ -572,7 +571,6 @@ class RunTemplateCommand extends MultiFlexiCommand
                         $output->writeln("RunTemplate {$id} scheduled for execution at {$scheduledTime}");
                         $output->writeln("Executor: {$executor}");
                         $output->writeln("Job ID: {$jobber->getMyKey()}");
-                        $output->writeln("Schedule ID: {$scheduleId}");
                     }
 
                     return MultiFlexiCommand::SUCCESS;
