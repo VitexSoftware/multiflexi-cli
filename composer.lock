@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3e355d5573a21927be573bc191e9eac4",
+    "content-hash": "896aaac16bd2fd38a1b80a028e945fca",
     "packages": [
         {
             "name": "confirm-it-solutions/php-zabbix-api",
@@ -1240,12 +1240,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "32d9216a85709f0f6bb0cf6a66073f18336fe99d"
+                "reference": "7f0dd9a0d4449e183d3976568dd1320e3d8dbb92"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/32d9216a85709f0f6bb0cf6a66073f18336fe99d",
-                "reference": "32d9216a85709f0f6bb0cf6a66073f18336fe99d",
+                "url": "https://api.github.com/repos/symfony/console/zipball/7f0dd9a0d4449e183d3976568dd1320e3d8dbb92",
+                "reference": "7f0dd9a0d4449e183d3976568dd1320e3d8dbb92",
                 "shasum": ""
             },
             "require": {
@@ -1330,7 +1330,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-11-13T08:19:35+00:00"
+            "time": "2025-11-16T19:10:44+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
@@ -3066,22 +3066,22 @@
         },
         {
             "name": "ergebnis/php-cs-fixer-config",
-            "version": "6.56.0",
+            "version": "6.56.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ergebnis/php-cs-fixer-config.git",
-                "reference": "517c4a0a5e36d26b56d460c351715511ba84ea18"
+                "reference": "cd1a63857912f7c92d852f88f2e76ad0fb9fa9c2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ergebnis/php-cs-fixer-config/zipball/517c4a0a5e36d26b56d460c351715511ba84ea18",
-                "reference": "517c4a0a5e36d26b56d460c351715511ba84ea18",
+                "url": "https://api.github.com/repos/ergebnis/php-cs-fixer-config/zipball/cd1a63857912f7c92d852f88f2e76ad0fb9fa9c2",
+                "reference": "cd1a63857912f7c92d852f88f2e76ad0fb9fa9c2",
                 "shasum": ""
             },
             "require": {
                 "erickskrauch/php-cs-fixer-custom-fixers": "~1.3.0",
                 "ext-filter": "*",
-                "friendsofphp/php-cs-fixer": "~3.89.1",
+                "friendsofphp/php-cs-fixer": "~3.89.2",
                 "kubawerlos/php-cs-fixer-custom-fixers": "~3.35.1",
                 "php": "~7.4.0 || ~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0"
             },
@@ -3091,12 +3091,12 @@
                 "ergebnis/license": "^2.7.0",
                 "ergebnis/phpstan-rules": "^2.12.0",
                 "ergebnis/phpunit-slow-test-detector": "^2.20.0",
-                "ergebnis/rector-rules": "^1.6.0",
+                "ergebnis/rector-rules": "^1.7.0",
                 "fakerphp/faker": "^1.24.1",
                 "phpstan/extension-installer": "^1.4.3",
                 "phpstan/phpstan": "^2.1.31",
                 "phpstan/phpstan-deprecation-rules": "^2.0.3",
-                "phpstan/phpstan-phpunit": "^2.0.7",
+                "phpstan/phpstan-phpunit": "^2.0.8",
                 "phpstan/phpstan-strict-rules": "^2.0.7",
                 "phpunit/phpunit": "^9.6.22",
                 "rector/rector": "^2.2.3",
@@ -3133,7 +3133,7 @@
                 "security": "https://github.com/ergebnis/php-cs-fixer-config/blob/main/.github/SECURITY.md",
                 "source": "https://github.com/ergebnis/php-cs-fixer-config"
             },
-            "time": "2025-11-08T09:35:27+00:00"
+            "time": "2025-11-19T12:48:17+00:00"
         },
         {
             "name": "erickskrauch/php-cs-fixer-custom-fixers",
@@ -4617,12 +4617,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/reactphp/dns.git",
-                "reference": "57a623adf5a97be31d1749cd069a813bf97bd786"
+                "reference": "7562c05391f42701c1fccf189c8225fece1cd7c3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/reactphp/dns/zipball/57a623adf5a97be31d1749cd069a813bf97bd786",
-                "reference": "57a623adf5a97be31d1749cd069a813bf97bd786",
+                "url": "https://api.github.com/repos/reactphp/dns/zipball/7562c05391f42701c1fccf189c8225fece1cd7c3",
+                "reference": "7562c05391f42701c1fccf189c8225fece1cd7c3",
                 "shasum": ""
             },
             "require": {
@@ -4677,7 +4677,7 @@
             ],
             "support": {
                 "issues": "https://github.com/reactphp/dns/issues",
-                "source": "https://github.com/reactphp/dns/tree/1.x"
+                "source": "https://github.com/reactphp/dns/tree/v1.14.0"
             },
             "funding": [
                 {
@@ -4685,7 +4685,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2025-10-19T20:50:30+00:00"
+            "time": "2025-11-18T19:34:28+00:00"
         },
         {
             "name": "react/event-loop",
@@ -4693,12 +4693,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/reactphp/event-loop.git",
-                "reference": "cfc7ad357661d59c3e3458d5250e39e6e68a8d70"
+                "reference": "ba276bda6083df7e0050fd9b33f66ad7a4ac747a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/reactphp/event-loop/zipball/cfc7ad357661d59c3e3458d5250e39e6e68a8d70",
-                "reference": "cfc7ad357661d59c3e3458d5250e39e6e68a8d70",
+                "url": "https://api.github.com/repos/reactphp/event-loop/zipball/ba276bda6083df7e0050fd9b33f66ad7a4ac747a",
+                "reference": "ba276bda6083df7e0050fd9b33f66ad7a4ac747a",
                 "shasum": ""
             },
             "require": {
@@ -4749,7 +4749,7 @@
             ],
             "support": {
                 "issues": "https://github.com/reactphp/event-loop/issues",
-                "source": "https://github.com/reactphp/event-loop/tree/1.x"
+                "source": "https://github.com/reactphp/event-loop/tree/v1.6.0"
             },
             "funding": [
                 {
@@ -4757,7 +4757,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2025-10-25T20:43:27+00:00"
+            "time": "2025-11-17T20:46:25+00:00"
         },
         {
             "name": "react/promise",
@@ -4839,12 +4839,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/reactphp/socket.git",
-                "reference": "def0730288b2a321db04f22caf86259ab2975cc7"
+                "reference": "ef5b17b81f6f60504c539313f94f2d826c5faa08"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/reactphp/socket/zipball/def0730288b2a321db04f22caf86259ab2975cc7",
-                "reference": "def0730288b2a321db04f22caf86259ab2975cc7",
+                "url": "https://api.github.com/repos/reactphp/socket/zipball/ef5b17b81f6f60504c539313f94f2d826c5faa08",
+                "reference": "ef5b17b81f6f60504c539313f94f2d826c5faa08",
                 "shasum": ""
             },
             "require": {
@@ -4903,7 +4903,7 @@
             ],
             "support": {
                 "issues": "https://github.com/reactphp/socket/issues",
-                "source": "https://github.com/reactphp/socket/tree/1.x"
+                "source": "https://github.com/reactphp/socket/tree/v1.17.0"
             },
             "funding": [
                 {
@@ -4911,7 +4911,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2025-10-19T20:51:52+00:00"
+            "time": "2025-11-19T20:47:34+00:00"
         },
         {
             "name": "react/stream",
