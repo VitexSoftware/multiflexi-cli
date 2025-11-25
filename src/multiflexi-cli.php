@@ -43,7 +43,7 @@ $globalOptions = getopt('e::', ['environment::']);
 
 Shared::init(
     ['DB_CONNECTION', 'DB_HOST', 'DB_PORT', 'DB_DATABASE', 'DB_USERNAME', 'DB_PASSWORD'],
-    \array_key_exists('environment', $globalOptions) ? $globalOptions['environment'] : (\array_key_exists('e', $globalOptions) ? $globalOptions['e'] : '../.env'),
+    array_key_exists('environment', $globalOptions) ? $globalOptions['environment'] : (array_key_exists('e', $globalOptions) ? $globalOptions['e'] : '../.env'),
 );
 
 $loggers = ['syslog', '\MultiFlexi\LogToSQL'];
@@ -58,6 +58,8 @@ if (Shared::cfg('APP_DEBUG') === 'true') {
 
 \define('EASE_LOGGER', implode('|', $loggers));
 \define('APP_NAME', 'MultiFlexiCLI');
+
+new \MultiFlexi\Defaults();
 
 Shared::user((Shared::cfg('DB_CONNECTION') === 'dummy') ? new Anonym() : new \MultiFlexi\UnixUser());
 

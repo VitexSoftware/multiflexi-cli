@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Loop through all JSON files in the specified directory
+for json_file in /usr/lib/*/multiflexi/*.app.json; 
+do
+    # Use multiflexi-json2app to install each JSON file
+    if [ -s "$json_file" ]; then
+        echo "Inporting $json_file"
+        EASE_LOGGER=console multiflexi-cli application import-json --file="$json_file"
+    else
+        echo "Skipping empty file $json_file"
+    fi
+done
+

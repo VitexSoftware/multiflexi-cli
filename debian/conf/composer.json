@@ -25,9 +25,9 @@
   "minimum-stability": "dev",
   "autoload": {
     "psr-4": {
-      "MultiFlexi\\": "./MultiFlexi",
-      "MultiFlexi\\Cli\\": ".",
-      "MultiFlexi\\Cli\\Command\\": "./Command"
+      "MultiFlexi\\": "./MultiFlexi/",
+      "MultiFlexi\\Cli\\": "./MultiFlexi/Cli/",
+      "MultiFlexi\\Cli\\Command\\": "./Command/"
     }
   },
   "repositories": [
