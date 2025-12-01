@@ -52,6 +52,9 @@ class QueueCommand extends MultiFlexiCommand
                 $lister = new ScheduleLister();
                 $query = $lister->listingQuery();
 
+                // Get queue statistics first
+                $totalJobsInQueue = $lister->listingQuery()->count();
+
                 // Handle order option
                 $order = $input->getOption('order');
 
@@ -87,9 +90,26 @@ class QueueCommand extends MultiFlexiCommand
                 }
 
                 if ($format === 'json') {
-                    $output->writeln(json_encode($rows, \JSON_PRETTY_PRINT));
+                    $result = [
+                        'queue_statistics' => [
+                            'total_jobs_in_queue' => $totalJobsInQueue,
+                        ],
+                        'jobs' => $rows,
+                    ];
+                    $output->writeln(json_encode($result, \JSON_PRETTY_PRINT));
                 } else {
-                    $output->writeln(self::outputTable($rows));
+                    // Display queue statistics in a table format
+                    $statsTable = [
+                        ['Queue Statistics', 'Total jobs in queue: '.$totalJobsInQueue],
+                    ];
+                    $output->writeln(self::outputTable($statsTable, 200, ['Metric', 'Value']));
+                    $output->writeln(''); // Add blank line before job list
+                    
+                    if (!empty($rows)) {
+                        $output->writeln(self::outputTable($rows));
+                    } else {
+                        $output->writeln('No jobs in queue.');
+                    }
                 }
 
                 return self::SUCCESS;
