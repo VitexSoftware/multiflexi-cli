@@ -74,6 +74,9 @@ class StatusCommand extends MultiFlexiCommand
         // Check Zabbix status
         $zabbixStatus = self::getZabbixStatus();
 
+        // Get job statistics
+        $jobStats = self::getJobStatistics($engine);
+
         $status = [
             'version-cli' => Shared::appVersion(),
             'db-migration' => $databaseVersion['migration_name'].' ('.$databaseVersion['version'].')',
@@ -87,6 +90,15 @@ class StatusCommand extends MultiFlexiCommand
             'topics' => $engine->getFluentPDO()->from('topic')->count(),
             'credentials' => $engine->getFluentPDO()->from('credentials')->count(),
             'credential_types' => $engine->getFluentPDO()->from('credential_type')->count(),
+            'jobs' => sprintf(
+                'total: %s, monthly: %s, weekly: %s, daily: %s, hourly: %s, minute avg: %s',
+                $jobStats['total'],
+                $jobStats['last_month'],
+                $jobStats['last_week'],
+                $jobStats['last_day'],
+                $jobStats['last_hour'],
+                $jobStats['per_minute_avg'],
+            ),
             'database' => $database,
             'encryption' => $encryptionStatus,
             'zabbix' => $zabbixStatus,
@@ -212,5 +224,111 @@ class StatusCommand extends MultiFlexiCommand
         }
 
         return sprintf('%s => %s', $monitoredHost, $zabbixServer);
+    }
+
+    /**
+     * Get job statistics from database.
+     *
+     * @param \MultiFlexi\Engine $engine Database engine
+     *
+     * @return array Job statistics
+     */
+    private static function getJobStatistics(\MultiFlexi\Engine $engine): array
+    {
+        try {
+            $pdo = $engine->getPdo();
+            $now = new \DateTime();
+
+            // First, try to determine what timestamp column exists
+            $timestampColumn = null;
+            $columns = ['created', 'created_at', 'timestamp', 'begin', 'started', 'launched'];
+
+            foreach ($columns as $col) {
+                try {
+                    $engine->getFluentPDO()->from('job')->where($col.' IS NOT NULL')->limit(1)->fetch();
+                    $timestampColumn = $col;
+
+                    break;
+                } catch (\Exception $e) {
+                    // Column doesn't exist, try next one
+                    continue;
+                }
+            }
+
+            // Total jobs
+            $totalJobs = $engine->getFluentPDO()->from('job')->count();
+
+            if ($timestampColumn === null) {
+                // No timestamp column found, return basic stats
+                return [
+                    'total' => $totalJobs,
+                    'last_month' => 'N/A',
+                    'last_week' => 'N/A',
+                    'last_day' => 'N/A',
+                    'last_hour' => 'N/A',
+                    'per_minute_avg' => 'N/A',
+                ];
+            }
+
+            // Jobs last month
+            $lastMonth = clone $now;
+            $lastMonth->modify('-1 month');
+            $jobsLastMonth = $engine->getFluentPDO()->from('job')
+                ->where($timestampColumn.' >= ?', $lastMonth->format('Y-m-d H:i:s'))
+                ->count();
+
+            // Jobs last week
+            $lastWeek = clone $now;
+            $lastWeek->modify('-1 week');
+            $jobsLastWeek = $engine->getFluentPDO()->from('job')
+                ->where($timestampColumn.' >= ?', $lastWeek->format('Y-m-d H:i:s'))
+                ->count();
+
+            // Jobs last day
+            $lastDay = clone $now;
+            $lastDay->modify('-1 day');
+            $jobsLastDay = $engine->getFluentPDO()->from('job')
+                ->where($timestampColumn.' >= ?', $lastDay->format('Y-m-d H:i:s'))
+                ->count();
+
+            // Jobs last hour
+            $lastHour = clone $now;
+            $lastHour->modify('-1 hour');
+            $jobsLastHour = $engine->getFluentPDO()->from('job')
+                ->where($timestampColumn.' >= ?', $lastHour->format('Y-m-d H:i:s'))
+                ->count();
+
+            // Average jobs per minute (based on last day)
+            $jobsPerMinuteAvg = 0;
+
+            if ($jobsLastDay > 0) {
+                $jobsPerMinuteAvg = round($jobsLastDay / (24 * 60), 2);
+            }
+
+            return [
+                'total' => $totalJobs,
+                'last_month' => $jobsLastMonth,
+                'last_week' => $jobsLastWeek,
+                'last_day' => $jobsLastDay,
+                'last_hour' => $jobsLastHour,
+                'per_minute_avg' => $jobsPerMinuteAvg,
+            ];
+        } catch (\Exception $e) {
+            // If any error occurs, return basic total count and N/A for time-based stats
+            try {
+                $totalJobs = $engine->getFluentPDO()->from('job')->count();
+            } catch (\Exception $e) {
+                $totalJobs = 'N/A';
+            }
+
+            return [
+                'total' => $totalJobs,
+                'last_month' => 'N/A',
+                'last_week' => 'N/A',
+                'last_day' => 'N/A',
+                'last_hour' => 'N/A',
+                'per_minute_avg' => 'N/A',
+            ];
+        }
     }
 }

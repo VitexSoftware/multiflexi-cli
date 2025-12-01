@@ -112,7 +112,7 @@ class QueueCommand extends MultiFlexiCommand
                 }
 
                 $pdo->exec('UPDATE runtemplate SET next_schedule=NULL');
-                
+
                 $msg = ($result !== false)
                     ? ("Queue truncated. Previously waiting jobs: {$waiting}.")
                     : 'Failed to truncate queue.';

@@ -324,7 +324,7 @@ class ApplicationCommand extends MultiFlexiCommand
                 if ($format === 'json') {
                     $output->writeln(json_encode(['imported' => $result], \JSON_PRETTY_PRINT));
                 } else {
-                    $output->writeln($result ? _('Application imported successfully').': '.$result['name'] : 'Failed to import application');
+                    $output->writeln($result ? _('MultiFlexi Application imported successfully').': '.$result['name'] : 'Failed to import application');
                 }
 
                 return MultiFlexiCommand::SUCCESS;

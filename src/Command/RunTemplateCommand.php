@@ -168,7 +168,7 @@ class RunTemplateCommand extends MultiFlexiCommand
         $overridedEnv = new ConfigFields('CommandlineOverride');
 
         foreach ($overrideEnv as $key => $value) {
-                $overridedEnv->addField(new ConfigField($key, 'string', $key, '', '', $value));
+            $overridedEnv->addField(new ConfigField($key, 'string', $key, '', '', $value));
         }
 
         if ($companyOption !== null) {
@@ -425,6 +425,7 @@ class RunTemplateCommand extends MultiFlexiCommand
 
                     return MultiFlexiCommand::FAILURE;
                 }
+
                 $rt = new RunTemplate((int) $id);
 
                 $data = [];
@@ -556,14 +557,14 @@ class RunTemplateCommand extends MultiFlexiCommand
                     $jobber = new Job();
 
                     $when = $scheduleTime;
-                    
+
                     // Determine schedule type based on execution time
                     // Immediate execution (now) = 'adhoc', future scheduled = 'cli'
                     $scheduleDateTime = new \DateTime($when);
                     $now = new \DateTime();
                     $isImmediate = ($scheduleDateTime->getTimestamp() <= $now->getTimestamp() + 5); // 5 sec tolerance
                     $scheduleType = $isImmediate ? 'adhoc' : 'cli';
-                    
+
                     $prepared = $jobber->prepareJob($rt->getMyKey(), $overridedEnv, $scheduleDateTime, $executor, $scheduleType);
                     // scheduleJobRun() is now called automatically inside prepareJob()
 

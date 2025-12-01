@@ -299,7 +299,7 @@ class CompanyCommand extends MultiFlexiCommand
                 $changed = false;
 
                 foreach ($data as $k => $v) {
-                    if (!array_key_exists($k, $current) || $current[$k] !== $v) {
+                    if (!\array_key_exists($k, $current) || $current[$k] !== $v) {
                         $changed = true;
 
                         break;
