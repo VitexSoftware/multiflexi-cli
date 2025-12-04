@@ -16,6 +16,7 @@ declare(strict_types=1);
 namespace MultiFlexi\Cli\Command;
 
 use MultiFlexi\CredentialType;
+use MultiFlexi\CredentialProtoType;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -35,7 +36,9 @@ class CredentialTypeCommand extends MultiFlexiCommand
      */
     public function validateCredTypeJson(string $jsonFile): array
     {
-        return self::validateJson($jsonFile, CredentialType::$credTypeSchema);
+        // For credential types, we might want to use a different schema
+        // For now, using the credential prototype schema as a base
+        return self::validateJson($jsonFile, \MultiFlexi\CredentialProtoType::$credTypeSchema);
     }
     protected function configure(): void
     {
@@ -53,7 +56,7 @@ class CredentialTypeCommand extends MultiFlexiCommand
             ->setHelp('This command manages Credential Types');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $format = strtolower($input->getOption('format'));
         $action = strtolower($input->getArgument('action'));
@@ -227,21 +230,43 @@ class CredentialTypeCommand extends MultiFlexiCommand
                 }
 
                 try {
-                    $credType = new CredentialType();
-                    $result = $credType->importCredTypeJson($file);
+                    $credProto = new CredentialProtoType();
+                    $result = $credProto->importJson($file);
 
-                    if ($format === 'json') {
-                        $output->writeln(json_encode([
-                            'status' => 'success',
-                            'message' => 'Credential type imported successfully',
-                            'file' => $file,
-                            'imported' => true,
-                        ], \JSON_PRETTY_PRINT));
-                    } else {
-                        $output->writeln('<info>Credential type imported successfully</info>');
+                    if ($result) {
+                        if ($format === 'json') {
+                            $output->writeln(json_encode([
+                                'status' => 'success',
+                                'message' => 'Credential type imported successfully',
+                                'file' => $file,
+                                'credential_type_id' => $credProto->getMyKey(),
+                                'uuid' => $credProto->getDataValue('uuid'),
+                                'code' => $credProto->getDataValue('code'),
+                                'imported' => true,
+                            ], \JSON_PRETTY_PRINT));
+                        } else {
+                            $output->writeln('<info>Credential type imported successfully</info>');
+                            $output->writeln('<info>ID: '.$credProto->getMyKey().'</info>');
+                            $output->writeln('<info>UUID: '.$credProto->getDataValue('uuid').'</info>');
+                            $output->writeln('<info>Code: '.$credProto->getDataValue('code').'</info>');
+                        }
+
+                        return MultiFlexiCommand::SUCCESS;
                     }
 
-                    return MultiFlexiCommand::SUCCESS;
+                    // Handle import failure
+                    if ($format === 'json') {
+                        $output->writeln(json_encode([
+                            'status' => 'error',
+                            'message' => 'Failed to import credential type',
+                            'file' => $file,
+                            'imported' => false,
+                        ], \JSON_PRETTY_PRINT));
+                    } else {
+                        $output->writeln('<error>Failed to import credential type</error>');
+                    }
+
+                    return MultiFlexiCommand::FAILURE;
                 } catch (\Exception $e) {
                     if ($format === 'json') {
                         $output->writeln(json_encode([
@@ -282,11 +307,11 @@ class CredentialTypeCommand extends MultiFlexiCommand
                             'message' => 'JSON validation failed',
                             'violations' => $validationResult,
                             'file' => $json,
-                            'schema' => realpath(CredentialType::$credTypeSchema),
+                            'schema' => realpath(CredentialProtoType::$credTypeSchema),
                         ], \JSON_PRETTY_PRINT));
                     } else {
                         $output->writeln('<error>JSON validation failed</error>');
-                        $output->writeln('<comment>Schema: '.realpath(CredentialType::$credTypeSchema).'</comment>');
+                        $output->writeln('<comment>Schema: '.realpath(CredentialProtoType::$credTypeSchema).'</comment>');
 
                         foreach ($validationResult as $violation) {
                             $output->writeln('<error> '.$violation.' </error>');
@@ -297,8 +322,8 @@ class CredentialTypeCommand extends MultiFlexiCommand
                 }
 
                 try {
-                    $credType = new CredentialType();
-                    $result = $credType->importCredTypeJson($json);
+                    $credProto = new CredentialProtoType();
+                    $result = $credProto->importJson($json);
 
                     if ($result) {
                         if ($format === 'json') {
@@ -306,19 +331,22 @@ class CredentialTypeCommand extends MultiFlexiCommand
                                 'status' => 'success',
                                 'message' => 'Credential type imported successfully',
                                 'file' => $json,
-                                'credential_type_id' => $credType->getMyKey(),
-                                'uuid' => $credType->getDataValue('uuid'),
+                                'credential_type_id' => $credProto->getMyKey(),
+                                'uuid' => $credProto->getDataValue('uuid'),
+                                'code' => $credProto->getDataValue('code'),
                                 'imported' => true,
                             ], \JSON_PRETTY_PRINT));
                         } else {
                             $output->writeln('<info>Credential type imported successfully</info>');
-                            $output->writeln('<info>ID: '.$credType->getMyKey().'</info>');
-                            $output->writeln('<info>UUID: '.$credType->getDataValue('uuid').'</info>');
+                            $output->writeln('<info>ID: '.$credProto->getMyKey().'</info>');
+                            $output->writeln('<info>UUID: '.$credProto->getDataValue('uuid').'</info>');
+                            $output->writeln('<info>Code: '.$credProto->getDataValue('code').'</info>');
                         }
 
                         return MultiFlexiCommand::SUCCESS;
                     }
 
+                    // Handle import failure with error details from status messages
                     if ($format === 'json') {
                         $output->writeln(json_encode([
                             'status' => 'error',
@@ -369,7 +397,7 @@ class CredentialTypeCommand extends MultiFlexiCommand
                         $output->writeln(json_encode([
                             'status' => 'success',
                             'file' => $json,
-                            'schema' => realpath(CredentialType::$credTypeSchema),
+                            'schema' => realpath(\MultiFlexi\CredentialProtoType::$credTypeSchema),
                             'message' => 'JSON is valid',
                         ], \JSON_PRETTY_PRINT));
                     } else {
@@ -377,7 +405,7 @@ class CredentialTypeCommand extends MultiFlexiCommand
                             'status' => 'error',
                             'file' => $json,
                             'violations' => $result,
-                            'schema' => realpath(CredentialType::$credTypeSchema),
+                            'schema' => realpath(\MultiFlexi\CredentialProtoType::$credTypeSchema),
                             'message' => 'JSON validation failed',
                         ], \JSON_PRETTY_PRINT));
                     }
