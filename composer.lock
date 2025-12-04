@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3e355d5573a21927be573bc191e9eac4",
+    "content-hash": "8407b59581ed40c00135181e3ea96cb2",
     "packages": [
         {
             "name": "confirm-it-solutions/php-zabbix-api",
@@ -2252,16 +2252,10 @@
         {
             "name": "vitexsoftware/multiflexi-core",
             "version": "dev-main",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/VitexSoftware/php-vitexsoftware-multiflexi-core.git",
-                "reference": "69a48aab95080a73d924e9bae28edf6868c2355a"
-            },
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/VitexSoftware/php-vitexsoftware-multiflexi-core/zipball/69a48aab95080a73d924e9bae28edf6868c2355a",
-                "reference": "69a48aab95080a73d924e9bae28edf6868c2355a",
-                "shasum": ""
+                "type": "path",
+                "url": "../php-vitexsoftware-multiflexi-core",
+                "reference": "205a17dd9f38d81090b3f9ea1c953324b354bc3b"
             },
             "require": {
                 "jalismrs/bitwarden-php": "^1.1",
@@ -2278,7 +2272,6 @@
                 "phpunit/phpunit": "^12.3@dev",
                 "rector/rector": "dev-main"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -2290,7 +2283,11 @@
                     "MultiFlexi\\CredentialType\\": "src/MultiFlexi/CredentialType"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "Test\\MultiFlexi\\": "tests/src/MultiFlexi/"
+                }
+            },
             "license": [
                 "MIT"
             ],
@@ -2300,11 +2297,10 @@
                     "email": "info@vitexsoftware.cz"
                 }
             ],
-            "support": {
-                "issues": "https://github.com/VitexSoftware/php-vitexsoftware-multiflexi-core/issues",
-                "source": "https://github.com/VitexSoftware/php-vitexsoftware-multiflexi-core/tree/main"
-            },
-            "time": "2025-12-01T05:31:31+00:00"
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
         }
     ],
     "packages-dev": [

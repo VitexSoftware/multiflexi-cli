@@ -43,7 +43,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
         $this
             ->setName('crprototype')
             ->setDescription('Credential prototype operations')
-            ->addArgument('action', InputArgument::REQUIRED, 'Action: list|get|create|update|delete|import-json|export-json|validate-json')
+            ->addArgument('action', InputArgument::REQUIRED, 'Action: list|get|create|update|delete|import-json|export-json|validate-json|sync')
             ->addOption('id', null, InputOption::VALUE_REQUIRED, 'Credential Prototype ID')
             ->addOption('uuid', null, InputOption::VALUE_REQUIRED, 'Credential Prototype UUID')
             ->addOption('code', null, InputOption::VALUE_REQUIRED, 'Credential Prototype Code')
@@ -144,11 +144,32 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                 $credProto = new \MultiFlexi\CredentialProtoType((int) $id);
                 $data = $credProto->getData();
 
+                // Get fields for this prototype
+                $fieldEngine = new \MultiFlexi\CredentialProtoTypeField();
+                $fields = $fieldEngine->listingQuery()->where(['credential_prototype_id' => $id])->fetchAll();
+
                 if ($format === 'json') {
+                    $data['fields'] = $fields;
                     $output->writeln(json_encode($data, \JSON_PRETTY_PRINT));
                 } else {
                     foreach ($data as $k => $v) {
                         $output->writeln("{$k}: {$v}");
+                    }
+                    
+                    if (!empty($fields)) {
+                        $output->writeln("\nFields:");
+                        foreach ($fields as $fieldData) {
+                            $output->writeln("  - {$fieldData['name']} ({$fieldData['type']})");
+                            if (!empty($fieldData['description'])) {
+                                $output->writeln("    Description: {$fieldData['description']}");
+                            }
+                            if (!empty($fieldData['default_value'])) {
+                                $output->writeln("    Default: {$fieldData['default_value']}");
+                            }
+                            if ($fieldData['required']) {
+                                $output->writeln("    Required: Yes");
+                            }
+                        }
                     }
                 }
 
@@ -556,6 +577,9 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                 }
                 return MultiFlexiCommand::FAILURE;
 
+            case 'sync':
+                return $this->syncCredentialPrototypesFromFilesystem($input, $output);
+
             default:
                 $output->writeln("<error>Unknown action: {$action}</error>");
                 return MultiFlexiCommand::FAILURE;
@@ -618,5 +642,273 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
         }
 
         return $prototypes;
+    }
+
+    /**
+     * Synchronize credential prototypes from filesystem to database
+     *
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     * @return int
+     */
+    private function syncCredentialPrototypesFromFilesystem(InputInterface $input, OutputInterface $output): int
+    {
+        $format = strtolower($input->getOption('format'));
+        $credentialTypeDir = '/home/vitex/Projects/Multi/php-vitexsoftware-multiflexi-core/src/MultiFlexi/CredentialType';
+        
+        if (!is_dir($credentialTypeDir)) {
+            $output->writeln('<error>Credential type directory not found: '.$credentialTypeDir.'</error>');
+            return MultiFlexiCommand::FAILURE;
+        }
+
+        $files = glob($credentialTypeDir . '/*.php');
+        if ($files === false) {
+            $output->writeln('<error>Failed to scan credential type directory</error>');
+            return MultiFlexiCommand::FAILURE;
+        }
+
+        $syncStats = [
+            'processed' => 0,
+            'created' => 0,
+            'updated' => 0,
+            'errors' => 0,
+            'skipped' => 0
+        ];
+
+        $output->writeln('<info>Starting synchronization of credential prototypes...</info>');
+
+        foreach ($files as $file) {
+            $className = basename($file, '.php');
+            
+            // Skip Common.php as it's likely a base class
+            if ($className === 'Common') {
+                $syncStats['skipped']++;
+                continue;
+            }
+            
+            $fullClassName = "\\MultiFlexi\\CredentialType\\{$className}";
+            $syncStats['processed']++;
+            
+            try {
+                if (!class_exists($fullClassName)) {
+                    $output->writeln("<comment>Class {$fullClassName} not found, skipping</comment>");
+                    $syncStats['skipped']++;
+                    continue;
+                }
+
+                $reflection = new \ReflectionClass($fullClassName);
+                
+                // Check if class implements credentialTypeInterface
+                if (!$reflection->implementsInterface('\\MultiFlexi\\credentialTypeInterface')) {
+                    $output->writeln("<comment>Class {$fullClassName} doesn't implement credentialTypeInterface, skipping</comment>");
+                    $syncStats['skipped']++;
+                    continue;
+                }
+
+                // Get UUID from class
+                $uuid = $fullClassName::uuid();
+                if (empty($uuid)) {
+                    $output->writeln("<error>Class {$fullClassName} has no UUID, skipping</error>");
+                    $syncStats['errors']++;
+                    continue;
+                }
+
+                // Check if prototype already exists in database
+                $credProto = new \MultiFlexi\CredentialProtoType();
+                $existing = $credProto->listingQuery()->where(['uuid' => $uuid])->fetch();
+
+                // Prepare data for sync
+                $prototypeData = [
+                    'uuid' => $uuid,
+                    'code' => $className,
+                    'name' => $this->getLocalizedString($fullClassName::name()),
+                    'description' => $this->getLocalizedString($fullClassName::description()),
+                    'version' => '1.0',
+                    'logo' => $fullClassName::logo(),
+                    'url' => '',
+                ];
+
+                if ($existing) {
+                    // Update existing prototype
+                    $credProto = new \MultiFlexi\CredentialProtoType((int)$existing['id']);
+                    $credProto->setData($prototypeData);
+                    
+                    if ($credProto->save()) {
+                        $output->writeln("<info>Updated prototype: {$className} (UUID: {$uuid})</info>");
+                        $this->syncPrototypeFields($credProto, $fullClassName, $output);
+                        $syncStats['updated']++;
+                    } else {
+                        $output->writeln("<error>Failed to update prototype: {$className}</error>");
+                        $syncStats['errors']++;
+                    }
+                } else {
+                    // Create new prototype
+                    $credProto->setData($prototypeData);
+                    
+                    if ($credProto->insertToSQL()) {
+                        $output->writeln("<info>Created prototype: {$className} (UUID: {$uuid})</info>");
+                        $this->syncPrototypeFields($credProto, $fullClassName, $output);
+                        $syncStats['created']++;
+                    } else {
+                        $output->writeln("<error>Failed to create prototype: {$className}</error>");
+                        $syncStats['errors']++;
+                    }
+                }
+
+            } catch (\Exception $e) {
+                $output->writeln("<error>Error processing {$className}: ".$e->getMessage()."</error>");
+                $syncStats['errors']++;
+                continue;
+            }
+        }
+
+        // Output summary
+        if ($format === 'json') {
+            $output->writeln(json_encode($syncStats, \JSON_PRETTY_PRINT));
+        } else {
+            $output->writeln('<info>Synchronization completed:</info>');
+            $output->writeln("  Processed: {$syncStats['processed']}");
+            $output->writeln("  Created: {$syncStats['created']}");
+            $output->writeln("  Updated: {$syncStats['updated']}");
+            $output->writeln("  Skipped: {$syncStats['skipped']}");
+            $output->writeln("  Errors: {$syncStats['errors']}");
+        }
+
+        return $syncStats['errors'] > 0 ? MultiFlexiCommand::FAILURE : MultiFlexiCommand::SUCCESS;
+    }
+
+    /**
+     * Synchronize credential prototype fields from class to database
+     *
+     * @param \MultiFlexi\CredentialProtoType $credProto
+     * @param string $fullClassName
+     * @param OutputInterface $output
+     * @return void
+     */
+    private function syncPrototypeFields(\MultiFlexi\CredentialProtoType $credProto, string $fullClassName, OutputInterface $output): void
+    {
+        try {
+            $prototypeId = $credProto->getMyKey();
+            
+            // Get instance to access field configuration
+            $instance = new $fullClassName();
+            
+            // Get configuration fields from the instance
+            if (!method_exists($instance, 'fieldsProvided')) {
+                return;
+            }
+
+            $configFields = $instance->fieldsProvided();
+            if (empty($configFields)) {
+                return;
+            }
+
+            $fieldsData = $configFields->getFields();
+            if (empty($fieldsData)) {
+                return;
+            }
+
+            // Get existing fields for this prototype
+            $existingFields = [];
+            $fieldEngine = new \MultiFlexi\CredentialProtoTypeField();
+            $fieldResults = $fieldEngine->listingQuery()
+                ->where(['credential_prototype_id' => $credProto->getMyKey()])
+                ->fetchAll();
+            
+            foreach ($fieldResults as $field) {
+                $existingFields[$field['keyword']] = $field;
+            }
+
+            $fieldsProcessed = [];
+
+            // Process each field from the class
+            foreach ($fieldsData as $fieldName => $fieldObject) {
+                $fieldsProcessed[] = $fieldName;
+                
+                // Extract field configuration from ConfigField object
+                $fieldData = [
+                    'credential_prototype_id' => $credProto->getMyKey(),
+                    'keyword' => $fieldName,
+                    'type' => method_exists($fieldObject, 'getType') ? $fieldObject->getType() : 'string',
+                    'name' => method_exists($fieldObject, 'getName') ? $this->getLocalizedString($fieldObject->getName()) : $fieldName,
+                    'description' => method_exists($fieldObject, 'getDescription') ? $this->getLocalizedString($fieldObject->getDescription()) : '',
+                    'hint' => method_exists($fieldObject, 'getHint') ? $fieldObject->getHint() : null,
+                    'default_value' => method_exists($fieldObject, 'getValue') ? $fieldObject->getValue() : null,
+                    'required' => method_exists($fieldObject, 'isRequired') ? (bool)$fieldObject->isRequired() : false,
+                    'options' => '{}', // ConfigField options would need additional implementation
+                ];
+
+                if (isset($existingFields[$fieldName])) {
+                    // Update existing field
+                    $fieldEngine = new \MultiFlexi\CredentialProtoTypeField($existingFields[$fieldName]['id']);
+                    $fieldEngine->setData($fieldData);
+                    $fieldEngine->saveToSQL();
+                } else {
+                    // Insert new field
+                    $fieldEngine = new \MultiFlexi\CredentialProtoTypeField();
+                    $fieldEngine->setData($fieldData);
+                    $fieldEngine->insertToSQL();
+                }
+            }
+
+            // Remove fields that no longer exist in the class
+            foreach ($existingFields as $fieldName => $fieldData) {
+                if (!in_array($fieldName, $fieldsProcessed, true)) {
+                    $fieldEngine = new \MultiFlexi\CredentialProtoTypeField($fieldData['id']);
+                    $fieldEngine->deleteFromSQL();
+                    $output->writeln("<comment>Removed obsolete field: {$fieldName}</comment>");
+                }
+            }
+
+        } catch (\Exception $e) {
+            $output->writeln("<error>Failed to sync fields for {$fullClassName}: ".$e->getMessage()."</error>");
+        }
+    }
+
+    /**
+     * Get localized string using i18n
+     *
+     * @param string $key
+     * @param string $locale
+     * @return string
+     */
+    private function getLocalizedString(string $key, string $locale = 'cs_CZ'): string
+    {
+        // Set up gettext for localization
+        $i18nDir = '/home/vitex/Projects/Multi/MultiFlexi/i18n';
+        $domain = 'multiflexi';
+        
+        if (!is_dir($i18nDir)) {
+            return $key;
+        }
+        
+        // Save current locale
+        $originalLocale = setlocale(LC_MESSAGES, null);
+        
+        try {
+            // Set locale
+            if (setlocale(LC_MESSAGES, $locale) === false) {
+                return $key;
+            }
+            
+            // Bind text domain
+            if (bindtextdomain($domain, $i18nDir) === false) {
+                return $key;
+            }
+            
+            if (textdomain($domain) === false) {
+                return $key;
+            }
+            
+            // Get translation
+            $translated = gettext($key);
+            
+            // If no translation found, return original key
+            return ($translated !== $key) ? $translated : $key;
+            
+        } finally {
+            // Restore original locale
+            setlocale(LC_MESSAGES, $originalLocale);
+        }
     }
 }
