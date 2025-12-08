@@ -20,7 +20,7 @@
         "confirm-it-solutions/php-zabbix-api": "^3.0",
         "vitexsoftware/ease-html": "^1.40",
         "symfony/console": "^6.4",
-        "justinrainbow/json-schema": "^6.0@dev"
+        "justinrainbow/json-schema": "^6.6@dev"
     },
     "autoload": {
         "psr-4": {
