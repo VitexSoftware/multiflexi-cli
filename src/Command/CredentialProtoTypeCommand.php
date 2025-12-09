@@ -71,6 +71,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
 
                 // Handle order option for database results
                 $order = $input->getOption('order');
+
                 if (!empty($order)) {
                     $orderBy = strtoupper($order) === 'D' ? 'DESC' : 'ASC';
                     $query = $query->orderBy('id '.$orderBy);
@@ -80,23 +81,24 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                 $dbPrototypes = $query->fetchAll();
 
                 // Add filesystem-based credential prototypes
-                $filesystemPrototypes = $this->getFilesystemCredentialPrototypes();
+                $filesystemPrototypes = self::getFilesystemCredentialPrototypes();
                 $allPrototypes = array_merge($dbPrototypes, $filesystemPrototypes);
 
                 // Apply limit and offset after merging both sources
                 $limit = $input->getOption('limit');
                 $offset = $input->getOption('offset');
-                
+
                 if (!empty($offset) && is_numeric($offset)) {
-                    $allPrototypes = array_slice($allPrototypes, (int) $offset);
+                    $allPrototypes = \array_slice($allPrototypes, (int) $offset);
                 }
-                
+
                 if (!empty($limit) && is_numeric($limit)) {
-                    $allPrototypes = array_slice($allPrototypes, 0, (int) $limit);
+                    $allPrototypes = \array_slice($allPrototypes, 0, (int) $limit);
                 }
 
                 // Handle fields option
                 $fields = $input->getOption('fields');
+
                 if (!empty($fields)) {
                     $fieldList = array_map('trim', explode(',', $fields));
                     $allPrototypes = array_map(static function ($prototype) use ($fieldList) {
@@ -111,7 +113,6 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                 }
 
                 return MultiFlexiCommand::SUCCESS;
-
             case 'get':
                 $id = $input->getOption('id');
                 $uuid = $input->getOption('uuid');
@@ -119,6 +120,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
 
                 if (empty($id) && empty($uuid) && empty($code)) {
                     $output->writeln('<error>Missing --id, --uuid, or --code for crprototype get</error>');
+
                     return MultiFlexiCommand::FAILURE;
                 }
 
@@ -127,17 +129,23 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                 // Find by UUID or code first
                 if (!empty($uuid)) {
                     $found = $credProto->listingQuery()->where(['uuid' => $uuid])->fetch();
+
                     if (!$found) {
                         $output->writeln('<error>No credential prototype found with given UUID</error>');
+
                         return MultiFlexiCommand::FAILURE;
                     }
+
                     $id = $found['id'];
                 } elseif (!empty($code)) {
                     $found = $credProto->listingQuery()->where(['code' => $code])->fetch();
+
                     if (!$found) {
                         $output->writeln('<error>No credential prototype found with given code</error>');
+
                         return MultiFlexiCommand::FAILURE;
                     }
+
                     $id = $found['id'];
                 }
 
@@ -155,43 +163,51 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                     foreach ($data as $k => $v) {
                         $output->writeln("{$k}: {$v}");
                     }
-                    
+
                     if (!empty($fields)) {
                         $output->writeln("\nFields:");
+
                         foreach ($fields as $fieldData) {
                             $output->writeln("  - {$fieldData['name']} ({$fieldData['type']})");
+
                             if (!empty($fieldData['description'])) {
                                 $output->writeln("    Description: {$fieldData['description']}");
                             }
+
                             if (!empty($fieldData['default_value'])) {
                                 $output->writeln("    Default: {$fieldData['default_value']}");
                             }
+
                             if ($fieldData['required']) {
-                                $output->writeln("    Required: Yes");
+                                $output->writeln('    Required: Yes');
                             }
                         }
                     }
                 }
 
                 return MultiFlexiCommand::SUCCESS;
-
             case 'create':
                 $data = [];
                 $requiredFields = ['code', 'name', 'uuid'];
 
                 foreach ($requiredFields as $field) {
                     $val = $input->getOption($field);
+
                     if ($val === null) {
                         $output->writeln("<error>Missing required field: --{$field}</error>");
+
                         return MultiFlexiCommand::FAILURE;
                     }
+
                     $data[$field] = $val;
                 }
 
                 // Optional fields
                 $optionalFields = ['description', 'prototype-version', 'logo', 'url'];
+
                 foreach ($optionalFields as $field) {
                     $val = $input->getOption($field);
+
                     if ($val !== null) {
                         if ($field === 'prototype-version') {
                             $data['version'] = $val;
@@ -207,9 +223,10 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                 }
 
                 $credProto = new \MultiFlexi\CredentialProtoType();
-                
+
                 // Validate code format
                 $codeValidation = $credProto->validateCodeFormat($data['code']);
+
                 if (!$codeValidation['valid']) {
                     if ($format === 'json') {
                         $output->writeln(json_encode([
@@ -219,10 +236,12 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                         ], \JSON_PRETTY_PRINT));
                     } else {
                         $output->writeln('<error>Code validation failed:</error>');
+
                         foreach ($codeValidation['errors'] as $error) {
                             $output->writeln('<error> '.$error.'</error>');
                         }
                     }
+
                     return MultiFlexiCommand::FAILURE;
                 }
 
@@ -244,6 +263,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                         $output->writeln('<info>Code: '.$data['code'].'</info>');
                         $output->writeln('<info>UUID: '.$data['uuid'].'</info>');
                     }
+
                     return MultiFlexiCommand::SUCCESS;
                 }
 
@@ -255,8 +275,8 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                 } else {
                     $output->writeln('<error>Failed to create credential prototype</error>');
                 }
-                return MultiFlexiCommand::FAILURE;
 
+                return MultiFlexiCommand::FAILURE;
             case 'update':
                 $id = $input->getOption('id');
                 $uuid = $input->getOption('uuid');
@@ -264,6 +284,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
 
                 if (empty($id) && empty($uuid) && empty($code)) {
                     $output->writeln('<error>Missing --id, --uuid, or --code for crprototype update</error>');
+
                     return MultiFlexiCommand::FAILURE;
                 }
 
@@ -272,24 +293,32 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                 // Find by UUID or code first
                 if (!empty($uuid)) {
                     $found = $credProto->listingQuery()->where(['uuid' => $uuid])->fetch();
+
                     if (!$found) {
                         $output->writeln('<error>No credential prototype found with given UUID</error>');
+
                         return MultiFlexiCommand::FAILURE;
                     }
+
                     $id = $found['id'];
                 } elseif (!empty($code)) {
                     $found = $credProto->listingQuery()->where(['code' => $code])->fetch();
+
                     if (!$found) {
                         $output->writeln('<error>No credential prototype found with given code</error>');
+
                         return MultiFlexiCommand::FAILURE;
                     }
+
                     $id = $found['id'];
                 }
 
                 $data = [];
                 $updateFields = ['name', 'description', 'prototype-version', 'logo', 'url'];
+
                 foreach ($updateFields as $field) {
                     $val = $input->getOption($field);
+
                     if ($val !== null) {
                         if ($field === 'prototype-version') {
                             $data['version'] = $val;
@@ -301,6 +330,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
 
                 if (empty($data)) {
                     $output->writeln('<error>No fields to update</error>');
+
                     return MultiFlexiCommand::FAILURE;
                 }
 
@@ -314,7 +344,6 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                 }
 
                 return MultiFlexiCommand::SUCCESS;
-
             case 'delete':
                 $id = $input->getOption('id');
                 $uuid = $input->getOption('uuid');
@@ -322,6 +351,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
 
                 if (empty($id) && empty($uuid) && empty($code)) {
                     $output->writeln('<error>Missing --id, --uuid, or --code for crprototype delete</error>');
+
                     return MultiFlexiCommand::FAILURE;
                 }
 
@@ -330,17 +360,23 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                 // Find by UUID or code first
                 if (!empty($uuid)) {
                     $found = $credProto->listingQuery()->where(['uuid' => $uuid])->fetch();
+
                     if (!$found) {
                         $output->writeln('<error>No credential prototype found with given UUID</error>');
+
                         return MultiFlexiCommand::FAILURE;
                     }
+
                     $id = $found['id'];
                 } elseif (!empty($code)) {
                     $found = $credProto->listingQuery()->where(['code' => $code])->fetch();
+
                     if (!$found) {
                         $output->writeln('<error>No credential prototype found with given code</error>');
+
                         return MultiFlexiCommand::FAILURE;
                     }
+
                     $id = $found['id'];
                 }
 
@@ -353,6 +389,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                     } else {
                         $output->writeln('Credential prototype deleted successfully');
                     }
+
                     return MultiFlexiCommand::SUCCESS;
                 }
 
@@ -364,8 +401,8 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                 } else {
                     $output->writeln('<error>Failed to delete credential prototype</error>');
                 }
-                return MultiFlexiCommand::FAILURE;
 
+                return MultiFlexiCommand::FAILURE;
             case 'import-json':
                 $json = $input->getOption('file');
 
@@ -378,11 +415,13 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                     } else {
                         $output->writeln('<error>Missing or invalid --file for import-json</error>');
                     }
+
                     return MultiFlexiCommand::FAILURE;
                 }
 
                 // Validate JSON first
                 $validationResult = $this->validateCredPrototypeJson($json);
+
                 if (!empty($validationResult)) {
                     if ($format === 'json') {
                         $output->writeln(json_encode([
@@ -395,10 +434,12 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                     } else {
                         $output->writeln('<error>JSON validation failed</error>');
                         $output->writeln('<comment>Schema: '.realpath(\MultiFlexi\CredentialProtoType::$credTypeSchema).'</comment>');
+
                         foreach ($validationResult as $violation) {
                             $output->writeln('<error> '.$violation.' </error>');
                         }
                     }
+
                     return MultiFlexiCommand::FAILURE;
                 }
 
@@ -423,6 +464,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                             $output->writeln('<info>UUID: '.$credProto->getDataValue('uuid').'</info>');
                             $output->writeln('<info>Code: '.$credProto->getDataValue('code').'</info>');
                         }
+
                         return MultiFlexiCommand::SUCCESS;
                     }
 
@@ -437,8 +479,8 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                     } else {
                         $output->writeln('<error>Failed to import credential prototype</error>');
                     }
-                    return MultiFlexiCommand::FAILURE;
 
+                    return MultiFlexiCommand::FAILURE;
                 } catch (\Exception $e) {
                     if ($format === 'json') {
                         $output->writeln(json_encode([
@@ -450,6 +492,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                     } else {
                         $output->writeln('<error>Import failed: '.$e->getMessage().'</error>');
                     }
+
                     return MultiFlexiCommand::FAILURE;
                 }
 
@@ -465,6 +508,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                     } else {
                         $output->writeln('<error>Missing or invalid --file for validate-json</error>');
                     }
+
                     return MultiFlexiCommand::FAILURE;
                 }
 
@@ -492,6 +536,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                         $output->writeln('<info>JSON is valid</info>');
                     } else {
                         $output->writeln('<error>JSON validation failed</error>');
+
                         foreach ($result as $violation) {
                             $output->writeln('<error> '.$violation.' </error>');
                         }
@@ -499,7 +544,6 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                 }
 
                 return empty($result) ? MultiFlexiCommand::SUCCESS : MultiFlexiCommand::FAILURE;
-
             case 'export-json':
                 $id = $input->getOption('id');
                 $uuid = $input->getOption('uuid');
@@ -508,11 +552,13 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
 
                 if (empty($id) && empty($uuid) && empty($code)) {
                     $output->writeln('<error>Missing --id, --uuid, or --code for crprototype export-json</error>');
+
                     return MultiFlexiCommand::FAILURE;
                 }
 
                 if (empty($file)) {
                     $output->writeln('<error>Missing --file for export-json</error>');
+
                     return MultiFlexiCommand::FAILURE;
                 }
 
@@ -521,17 +567,23 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                 // Find by UUID or code first
                 if (!empty($uuid)) {
                     $found = $credProto->listingQuery()->where(['uuid' => $uuid])->fetch();
+
                     if (!$found) {
                         $output->writeln('<error>No credential prototype found with given UUID</error>');
+
                         return MultiFlexiCommand::FAILURE;
                     }
+
                     $id = $found['id'];
                 } elseif (!empty($code)) {
                     $found = $credProto->listingQuery()->where(['code' => $code])->fetch();
+
                     if (!$found) {
                         $output->writeln('<error>No credential prototype found with given code</error>');
+
                         return MultiFlexiCommand::FAILURE;
                     }
+
                     $id = $found['id'];
                 }
 
@@ -563,6 +615,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                     } else {
                         $output->writeln('<info>Credential prototype exported to: '.$file.'</info>');
                     }
+
                     return MultiFlexiCommand::SUCCESS;
                 }
 
@@ -575,13 +628,14 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                 } else {
                     $output->writeln('<error>Failed to export credential prototype to: '.$file.'</error>');
                 }
-                return MultiFlexiCommand::FAILURE;
 
+                return MultiFlexiCommand::FAILURE;
             case 'sync':
-                return $this->syncCredentialPrototypesFromFilesystem($input, $output);
+                return self::syncCredentialPrototypesFromFilesystem($input, $output);
 
             default:
                 $output->writeln("<error>Unknown action: {$action}</error>");
+
                 return MultiFlexiCommand::FAILURE;
         }
     }
@@ -589,40 +643,41 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
     /**
      * Scan filesystem for credential prototype classes and return them as array.
      *
-     * @return array<array<string,mixed>>
+     * @return array<array<string, mixed>>
      */
-    private function getFilesystemCredentialPrototypes(): array
+    private static function getFilesystemCredentialPrototypes(): array
     {
         $prototypes = [];
-        $credentialTypeDir = dirname(__DIR__, 3) . '/php-vitexsoftware-multiflexi-core/src/MultiFlexi/CredentialType';
-        
+        $credentialTypeDir = \dirname(__DIR__, 3).'/php-vitexsoftware-multiflexi-core/src/MultiFlexi/CredentialType';
+
         if (!is_dir($credentialTypeDir)) {
             return $prototypes;
         }
 
-        $files = glob($credentialTypeDir . '/*.php');
+        $files = glob($credentialTypeDir.'/*.php');
+
         if ($files === false) {
             return $prototypes;
         }
 
         foreach ($files as $file) {
             $className = basename($file, '.php');
-            
+
             // Skip Common.php as it's likely a base class
             if ($className === 'Common') {
                 continue;
             }
-            
+
             $fullClassName = "\\MultiFlexi\\CredentialType\\{$className}";
-            
+
             try {
                 if (class_exists($fullClassName)) {
                     $reflection = new \ReflectionClass($fullClassName);
-                    
+
                     // Check if class implements credentialTypeInterface
                     if ($reflection->implementsInterface('\\MultiFlexi\\credentialTypeInterface')) {
                         $prototypes[] = [
-                            'id' => 'fs_' . strtolower($className), // Filesystem prefix to distinguish
+                            'id' => 'fs_'.strtolower($className), // Filesystem prefix to distinguish
                             'uuid' => $fullClassName::uuid(),
                             'code' => $className,
                             'name' => $fullClassName::name(),
@@ -645,25 +700,24 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
     }
 
     /**
-     * Synchronize credential prototypes from filesystem to database
-     *
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     * @return int
+     * Synchronize credential prototypes from filesystem to database.
      */
-    private function syncCredentialPrototypesFromFilesystem(InputInterface $input, OutputInterface $output): int
+    private static function syncCredentialPrototypesFromFilesystem(InputInterface $input, OutputInterface $output): int
     {
         $format = strtolower($input->getOption('format'));
         $credentialTypeDir = '/home/vitex/Projects/Multi/php-vitexsoftware-multiflexi-core/src/MultiFlexi/CredentialType';
-        
+
         if (!is_dir($credentialTypeDir)) {
             $output->writeln('<error>Credential type directory not found: '.$credentialTypeDir.'</error>');
+
             return MultiFlexiCommand::FAILURE;
         }
 
-        $files = glob($credentialTypeDir . '/*.php');
+        $files = glob($credentialTypeDir.'/*.php');
+
         if ($files === false) {
             $output->writeln('<error>Failed to scan credential type directory</error>');
+
             return MultiFlexiCommand::FAILURE;
         }
 
@@ -672,44 +726,49 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
             'created' => 0,
             'updated' => 0,
             'errors' => 0,
-            'skipped' => 0
+            'skipped' => 0,
         ];
 
         $output->writeln('<info>Starting synchronization of credential prototypes...</info>');
 
         foreach ($files as $file) {
             $className = basename($file, '.php');
-            
+
             // Skip Common.php as it's likely a base class
             if ($className === 'Common') {
-                $syncStats['skipped']++;
+                ++$syncStats['skipped'];
+
                 continue;
             }
-            
+
             $fullClassName = "\\MultiFlexi\\CredentialType\\{$className}";
-            $syncStats['processed']++;
-            
+            ++$syncStats['processed'];
+
             try {
                 if (!class_exists($fullClassName)) {
                     $output->writeln("<comment>Class {$fullClassName} not found, skipping</comment>");
-                    $syncStats['skipped']++;
+                    ++$syncStats['skipped'];
+
                     continue;
                 }
 
                 $reflection = new \ReflectionClass($fullClassName);
-                
+
                 // Check if class implements credentialTypeInterface
                 if (!$reflection->implementsInterface('\\MultiFlexi\\credentialTypeInterface')) {
                     $output->writeln("<comment>Class {$fullClassName} doesn't implement credentialTypeInterface, skipping</comment>");
-                    $syncStats['skipped']++;
+                    ++$syncStats['skipped'];
+
                     continue;
                 }
 
                 // Get UUID from class
                 $uuid = $fullClassName::uuid();
+
                 if (empty($uuid)) {
                     $output->writeln("<error>Class {$fullClassName} has no UUID, skipping</error>");
-                    $syncStats['errors']++;
+                    ++$syncStats['errors'];
+
                     continue;
                 }
 
@@ -721,8 +780,8 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                 $prototypeData = [
                     'uuid' => $uuid,
                     'code' => $className,
-                    'name' => $this->getLocalizedString($fullClassName::name()),
-                    'description' => $this->getLocalizedString($fullClassName::description()),
+                    'name' => self::getLocalizedString($fullClassName::name()),
+                    'description' => self::getLocalizedString($fullClassName::description()),
                     'version' => '1.0',
                     'logo' => $fullClassName::logo(),
                     'url' => '',
@@ -730,34 +789,34 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
 
                 if ($existing) {
                     // Update existing prototype
-                    $credProto = new \MultiFlexi\CredentialProtoType((int)$existing['id']);
+                    $credProto = new \MultiFlexi\CredentialProtoType((int) $existing['id']);
                     $credProto->setData($prototypeData);
-                    
+
                     if ($credProto->save()) {
                         $output->writeln("<info>Updated prototype: {$className} (UUID: {$uuid})</info>");
-                        $this->syncPrototypeFields($credProto, $fullClassName, $output);
-                        $syncStats['updated']++;
+                        self::syncPrototypeFields($credProto, $fullClassName, $output);
+                        ++$syncStats['updated'];
                     } else {
                         $output->writeln("<error>Failed to update prototype: {$className}</error>");
-                        $syncStats['errors']++;
+                        ++$syncStats['errors'];
                     }
                 } else {
                     // Create new prototype
                     $credProto->setData($prototypeData);
-                    
+
                     if ($credProto->insertToSQL()) {
                         $output->writeln("<info>Created prototype: {$className} (UUID: {$uuid})</info>");
-                        $this->syncPrototypeFields($credProto, $fullClassName, $output);
-                        $syncStats['created']++;
+                        self::syncPrototypeFields($credProto, $fullClassName, $output);
+                        ++$syncStats['created'];
                     } else {
                         $output->writeln("<error>Failed to create prototype: {$className}</error>");
-                        $syncStats['errors']++;
+                        ++$syncStats['errors'];
                     }
                 }
-
             } catch (\Exception $e) {
-                $output->writeln("<error>Error processing {$className}: ".$e->getMessage()."</error>");
-                $syncStats['errors']++;
+                $output->writeln("<error>Error processing {$className}: ".$e->getMessage().'</error>');
+                ++$syncStats['errors'];
+
                 continue;
             }
         }
@@ -778,32 +837,29 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
     }
 
     /**
-     * Synchronize credential prototype fields from class to database
-     *
-     * @param \MultiFlexi\CredentialProtoType $credProto
-     * @param string $fullClassName
-     * @param OutputInterface $output
-     * @return void
+     * Synchronize credential prototype fields from class to database.
      */
-    private function syncPrototypeFields(\MultiFlexi\CredentialProtoType $credProto, string $fullClassName, OutputInterface $output): void
+    private static function syncPrototypeFields(\MultiFlexi\CredentialProtoType $credProto, string $fullClassName, OutputInterface $output): void
     {
         try {
             $prototypeId = $credProto->getMyKey();
-            
+
             // Get instance to access field configuration
             $instance = new $fullClassName();
-            
+
             // Get configuration fields from the instance
             if (!method_exists($instance, 'fieldsProvided')) {
                 return;
             }
 
             $configFields = $instance->fieldsProvided();
+
             if (empty($configFields)) {
                 return;
             }
 
             $fieldsData = $configFields->getFields();
+
             if (empty($fieldsData)) {
                 return;
             }
@@ -814,7 +870,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
             $fieldResults = $fieldEngine->listingQuery()
                 ->where(['credential_prototype_id' => $credProto->getMyKey()])
                 ->fetchAll();
-            
+
             foreach ($fieldResults as $field) {
                 $existingFields[$field['keyword']] = $field;
             }
@@ -824,17 +880,17 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
             // Process each field from the class
             foreach ($fieldsData as $fieldName => $fieldObject) {
                 $fieldsProcessed[] = $fieldName;
-                
+
                 // Extract field configuration from ConfigField object
                 $fieldData = [
                     'credential_prototype_id' => $credProto->getMyKey(),
                     'keyword' => $fieldName,
                     'type' => method_exists($fieldObject, 'getType') ? $fieldObject->getType() : 'string',
-                    'name' => method_exists($fieldObject, 'getName') ? $this->getLocalizedString($fieldObject->getName()) : $fieldName,
-                    'description' => method_exists($fieldObject, 'getDescription') ? $this->getLocalizedString($fieldObject->getDescription()) : '',
+                    'name' => method_exists($fieldObject, 'getName') ? self::getLocalizedString($fieldObject->getName()) : $fieldName,
+                    'description' => method_exists($fieldObject, 'getDescription') ? self::getLocalizedString($fieldObject->getDescription()) : '',
                     'hint' => method_exists($fieldObject, 'getHint') ? $fieldObject->getHint() : null,
                     'default_value' => method_exists($fieldObject, 'getValue') ? $fieldObject->getValue() : null,
-                    'required' => method_exists($fieldObject, 'isRequired') ? (bool)$fieldObject->isRequired() : false,
+                    'required' => method_exists($fieldObject, 'isRequired') ? (bool) $fieldObject->isRequired() : false,
                     'options' => '{}', // ConfigField options would need additional implementation
                 ];
 
@@ -853,62 +909,56 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
 
             // Remove fields that no longer exist in the class
             foreach ($existingFields as $fieldName => $fieldData) {
-                if (!in_array($fieldName, $fieldsProcessed, true)) {
+                if (!\in_array($fieldName, $fieldsProcessed, true)) {
                     $fieldEngine = new \MultiFlexi\CredentialProtoTypeField($fieldData['id']);
                     $fieldEngine->deleteFromSQL();
                     $output->writeln("<comment>Removed obsolete field: {$fieldName}</comment>");
                 }
             }
-
         } catch (\Exception $e) {
-            $output->writeln("<error>Failed to sync fields for {$fullClassName}: ".$e->getMessage()."</error>");
+            $output->writeln("<error>Failed to sync fields for {$fullClassName}: ".$e->getMessage().'</error>');
         }
     }
 
     /**
-     * Get localized string using i18n
-     *
-     * @param string $key
-     * @param string $locale
-     * @return string
+     * Get localized string using i18n.
      */
-    private function getLocalizedString(string $key, string $locale = 'cs_CZ'): string
+    private static function getLocalizedString(string $key, string $locale = 'cs_CZ'): string
     {
         // Set up gettext for localization
         $i18nDir = '/home/vitex/Projects/Multi/MultiFlexi/i18n';
         $domain = 'multiflexi';
-        
+
         if (!is_dir($i18nDir)) {
             return $key;
         }
-        
+
         // Save current locale
-        $originalLocale = setlocale(LC_MESSAGES, null);
-        
+        $originalLocale = setlocale(\LC_MESSAGES, null);
+
         try {
             // Set locale
-            if (setlocale(LC_MESSAGES, $locale) === false) {
+            if (setlocale(\LC_MESSAGES, $locale) === false) {
                 return $key;
             }
-            
+
             // Bind text domain
             if (bindtextdomain($domain, $i18nDir) === false) {
                 return $key;
             }
-            
+
             if (textdomain($domain) === false) {
                 return $key;
             }
-            
+
             // Get translation
             $translated = gettext($key);
-            
+
             // If no translation found, return original key
             return ($translated !== $key) ? $translated : $key;
-            
         } finally {
             // Restore original locale
-            setlocale(LC_MESSAGES, $originalLocale);
+            setlocale(\LC_MESSAGES, $originalLocale);
         }
     }
 }

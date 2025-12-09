@@ -15,8 +15,8 @@ declare(strict_types=1);
 
 namespace MultiFlexi\Cli\Command;
 
-use MultiFlexi\CredentialType;
 use MultiFlexi\CredentialProtoType;
+use MultiFlexi\CredentialType;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;

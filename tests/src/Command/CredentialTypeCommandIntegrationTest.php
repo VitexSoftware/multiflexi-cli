@@ -16,7 +16,6 @@ declare(strict_types=1);
 namespace Tests\MultiFlexi\Cli\Command;
 
 use MultiFlexi\Cli\Command\CredentialTypeCommand;
-use MultiFlexi\CredentialProtoType;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -52,18 +51,18 @@ final class CredentialTypeCommandIntegrationTest extends TestCase
             'name' => 'Test Credential Type',
             'description' => 'A test credential type',
             'version' => '1.0',
-            'fields' => []
+            'fields' => [],
         ];
 
         $tempFile = tempnam(sys_get_temp_dir(), 'credtype_test_valid_');
-        file_put_contents($tempFile, json_encode($testData, JSON_PRETTY_PRINT));
+        file_put_contents($tempFile, json_encode($testData, \JSON_PRETTY_PRINT));
 
         try {
             $commandTester = new CommandTester($this->command);
             $commandTester->execute([
                 'command' => $this->command->getName(),
                 'action' => 'validate-json',
-                'json' => $tempFile
+                'json' => $tempFile,
             ]);
 
             $output = $commandTester->getDisplay();
@@ -86,14 +85,14 @@ final class CredentialTypeCommandIntegrationTest extends TestCase
         ];
 
         $tempFile = tempnam(sys_get_temp_dir(), 'credtype_test_invalid_');
-        file_put_contents($tempFile, json_encode($testData, JSON_PRETTY_PRINT));
+        file_put_contents($tempFile, json_encode($testData, \JSON_PRETTY_PRINT));
 
         try {
             $commandTester = new CommandTester($this->command);
             $commandTester->execute([
                 'command' => $this->command->getName(),
                 'action' => 'validate-json',
-                'json' => $tempFile
+                'json' => $tempFile,
             ]);
 
             $output = $commandTester->getDisplay();
@@ -116,11 +115,11 @@ final class CredentialTypeCommandIntegrationTest extends TestCase
             'name' => 'Test Credential Type',
             'description' => 'A test credential type',
             'version' => '1.0',
-            'fields' => []
+            'fields' => [],
         ];
 
         $tempFile = tempnam(sys_get_temp_dir(), 'credtype_test_json_format_');
-        file_put_contents($tempFile, json_encode($testData, JSON_PRETTY_PRINT));
+        file_put_contents($tempFile, json_encode($testData, \JSON_PRETTY_PRINT));
 
         try {
             $commandTester = new CommandTester($this->command);
@@ -128,12 +127,12 @@ final class CredentialTypeCommandIntegrationTest extends TestCase
                 'command' => $this->command->getName(),
                 'action' => 'validate-json',
                 'json' => $tempFile,
-                '--format' => 'json'
+                '--format' => 'json',
             ]);
 
             $output = $commandTester->getDisplay();
             $outputData = json_decode($output, true);
-            
+
             $this->assertIsArray($outputData, 'Output should be valid JSON');
             $this->assertArrayHasKey('status', $outputData);
             $this->assertArrayHasKey('file', $outputData);
@@ -152,7 +151,7 @@ final class CredentialTypeCommandIntegrationTest extends TestCase
         $commandTester->execute([
             'command' => $this->command->getName(),
             'action' => 'validate-json',
-            'json' => '/nonexistent/file.json'
+            'json' => '/nonexistent/file.json',
         ]);
 
         $output = $commandTester->getDisplay();
@@ -166,12 +165,12 @@ final class CredentialTypeCommandIntegrationTest extends TestCase
     public function testValidateCredTypeJsonUsesCorrectSchema(): void
     {
         $command = new CredentialTypeCommand();
-        
+
         // Create a reflection to access the private method
         $reflection = new \ReflectionClass($command);
         $method = $reflection->getMethod('validateCredTypeJson');
         $method->setAccessible(true);
-        
+
         // Create temporary valid JSON file
         $testData = [
             'code' => 'TestCredType',
@@ -179,11 +178,11 @@ final class CredentialTypeCommandIntegrationTest extends TestCase
             'name' => 'Test Credential Type',
             'description' => 'A test credential type',
             'version' => '1.0',
-            'fields' => []
+            'fields' => [],
         ];
 
         $tempFile = tempnam(sys_get_temp_dir(), 'credtype_schema_test_');
-        file_put_contents($tempFile, json_encode($testData, JSON_PRETTY_PRINT));
+        file_put_contents($tempFile, json_encode($testData, \JSON_PRETTY_PRINT));
 
         try {
             $result = $method->invoke($command, $tempFile);

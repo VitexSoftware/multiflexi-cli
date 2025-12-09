@@ -104,7 +104,7 @@ class QueueCommand extends MultiFlexiCommand
                     ];
                     $output->writeln(self::outputTable($statsTable, 200, ['Metric', 'Value']));
                     $output->writeln(''); // Add blank line before job list
-                    
+
                     if (!empty($rows)) {
                         $output->writeln(self::outputTable($rows));
                     } else {
