@@ -5,8 +5,10 @@ debian/debhelper-build-stamp
 debian/multiflexi-cli.debhelper.log
 debian/.debhelper/
 debian/multiflexi-cli.substvars
+debian/files
 tests/bootstrap.php
 .gitignore
 .build/php-cs-fixer/.php-cs-fixer.cache
 /nbproject/
 /.build/
+debian/tmp/

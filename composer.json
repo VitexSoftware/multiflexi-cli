@@ -9,15 +9,6 @@
             "email": "info@vitexsoftware.cz"
         }
     ],
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../php-vitexsoftware-multiflexi-core",
-            "options": {
-                "symlink": true
-            }
-        }
-    ],
     "minimum-stability": "dev",
     "require": {
         "ext-yaml": "*",
