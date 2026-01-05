@@ -35,7 +35,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
      */
     public function validateCredPrototypeJson(string $jsonFile): array
     {
-        return self::validateJson($jsonFile, \MultiFlexi\CredentialProtoType::$credTypeSchema);
+        return self::validateJson($jsonFile, CredentialProtoType::$credTypeSchema);
     }
 
     protected function configure(): void
@@ -66,7 +66,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
 
         switch ($action) {
             case 'list':
-                $credProto = new \MultiFlexi\CredentialProtoType();
+                $credProto = new CredentialProtoType();
                 $query = $credProto->listingQuery();
 
                 // Handle order option for database results
@@ -124,7 +124,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                     return MultiFlexiCommand::FAILURE;
                 }
 
-                $credProto = new \MultiFlexi\CredentialProtoType();
+                $credProto = new CredentialProtoType();
 
                 // Find by UUID or code first
                 if (!empty($uuid)) {
@@ -149,11 +149,11 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                     $id = $found['id'];
                 }
 
-                $credProto = new \MultiFlexi\CredentialProtoType((int) $id);
+                $credProto = new CredentialProtoType((int) $id);
                 $data = $credProto->getData();
 
                 // Get fields for this prototype
-                $fieldEngine = new \MultiFlexi\CredentialProtoTypeField();
+                $fieldEngine = new CredentialProtoTypeField();
                 $fields = $fieldEngine->listingQuery()->where(['credential_prototype_id' => $id])->fetchAll();
 
                 if ($format === 'json') {
@@ -334,7 +334,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                     return MultiFlexiCommand::FAILURE;
                 }
 
-                $credProto = new \MultiFlexi\CredentialProtoType((int) $id);
+                $credProto = new CredentialProtoType((int) $id);
                 $credProto->updateToSQL($data, ['id' => $id]);
 
                 if ($format === 'json') {
@@ -355,7 +355,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                     return MultiFlexiCommand::FAILURE;
                 }
 
-                $credProto = new \MultiFlexi\CredentialProtoType();
+                $credProto = new CredentialProtoType();
 
                 // Find by UUID or code first
                 if (!empty($uuid)) {
@@ -380,7 +380,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                     $id = $found['id'];
                 }
 
-                $credProto = new \MultiFlexi\CredentialProtoType((int) $id);
+                $credProto = new CredentialProtoType((int) $id);
                 $result = $credProto->deleteFromSQL();
 
                 if ($result) {
@@ -419,8 +419,30 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                     return MultiFlexiCommand::FAILURE;
                 }
 
-                // Validate JSON first
-                $validationResult = $this->validateCredPrototypeJson($json);
+                // Load and normalize JSON (flatten localized fields, ensure version)
+                $rawContent = file_get_contents($json);
+                $decoded = $rawContent !== false ? json_decode($rawContent, true) : null;
+
+                if (!\is_array($decoded)) {
+                    if ($format === 'json') {
+                        $output->writeln(json_encode([
+                            'status' => 'error',
+                            'message' => 'Invalid JSON content',
+                            'file' => $json,
+                        ], \JSON_PRETTY_PRINT));
+                    } else {
+                        $output->writeln('<error>Invalid JSON content</error>');
+                    }
+
+                    return MultiFlexiCommand::FAILURE;
+                }
+
+                $normalized = self::normalizePrototypeJson($decoded, 'en', 'cs');
+                $normalizedPath = sys_get_temp_dir().'/crprototype.normalized.'.md5($json).'.json';
+                file_put_contents($normalizedPath, json_encode($normalized, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE));
+
+                // Validate normalized JSON
+                $validationResult = $this->validateCredPrototypeJson($normalizedPath);
 
                 if (!empty($validationResult)) {
                     if ($format === 'json') {
@@ -429,12 +451,12 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                             'message' => 'JSON validation failed',
                             'violations' => $validationResult,
                             'file' => $json,
-                            'schema' => realpath(\MultiFlexi\CredentialProtoType::$credTypeSchema),
+                            'normalized' => $normalizedPath,
+                            'schema' => realpath(CredentialProtoType::$credTypeSchema),
                         ], \JSON_PRETTY_PRINT));
                     } else {
                         $output->writeln('<error>JSON validation failed</error>');
-                        $output->writeln('<comment>Schema: '.realpath(\MultiFlexi\CredentialProtoType::$credTypeSchema).'</comment>');
-
+                        $output->writeln('<comment>Schema: '.realpath(CredentialProtoType::$credTypeSchema).'</comment>');
                         foreach ($validationResult as $violation) {
                             $output->writeln('<error> '.$violation.' </error>');
                         }
@@ -444,8 +466,9 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                 }
 
                 try {
-                    $credProto = new \MultiFlexi\CredentialProtoType();
-                    $result = $credProto->importJson($json);
+                    $credProto = new CredentialProtoType();
+                    // Import normalized JSON (array)
+                    $result = $credProto->importJson($normalized);
 
                     if ($result) {
                         if ($format === 'json') {
@@ -519,7 +542,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                         $output->writeln(json_encode([
                             'status' => 'success',
                             'file' => $json,
-                            'schema' => realpath(\MultiFlexi\CredentialProtoType::$credTypeSchema),
+                            'schema' => realpath(CredentialProtoType::$credTypeSchema),
                             'message' => 'JSON is valid',
                         ], \JSON_PRETTY_PRINT));
                     } else {
@@ -527,7 +550,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                             'status' => 'error',
                             'file' => $json,
                             'violations' => $result,
-                            'schema' => realpath(\MultiFlexi\CredentialProtoType::$credTypeSchema),
+                            'schema' => realpath(CredentialProtoType::$credTypeSchema),
                             'message' => 'JSON validation failed',
                         ], \JSON_PRETTY_PRINT));
                     }
@@ -562,7 +585,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                     return MultiFlexiCommand::FAILURE;
                 }
 
-                $credProto = new \MultiFlexi\CredentialProtoType();
+                $credProto = new CredentialProtoType();
 
                 // Find by UUID or code first
                 if (!empty($uuid)) {
@@ -587,7 +610,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                     $id = $found['id'];
                 }
 
-                $credProto = new \MultiFlexi\CredentialProtoType((int) $id);
+                $credProto = new CredentialProtoType((int) $id);
                 $data = $credProto->getData();
 
                 // Create export structure - this is simplified, full implementation would include fields and translations
@@ -789,7 +812,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
 
                 if ($existing) {
                     // Update existing prototype
-                    $credProto = new \MultiFlexi\CredentialProtoType((int) $existing['id']);
+                    $credProto = new CredentialProtoType((int) $existing['id']);
                     $credProto->setData($prototypeData);
 
                     if ($credProto->save()) {
@@ -839,7 +862,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
     /**
      * Synchronize credential prototype fields from class to database.
      */
-    private static function syncPrototypeFields(\MultiFlexi\CredentialProtoType $credProto, string $fullClassName, OutputInterface $output): void
+    private static function syncPrototypeFields(CredentialProtoType $credProto, string $fullClassName, OutputInterface $output): void
     {
         try {
             $prototypeId = $credProto->getMyKey();
@@ -960,5 +983,63 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
             // Restore original locale
             setlocale(\LC_MESSAGES, $originalLocale);
         }
+    }
+
+    /**
+     * Normalize credential prototype JSON:
+     * - Ensure string values for name/description at root and in fields
+     * - Ensure version exists (default '1.0')
+     *
+     * @param array<string,mixed> $data
+     * @return array<string,mixed>
+     */
+    private static function normalizePrototypeJson(array $data, string $primaryLocale = 'en', string $fallbackLocale = 'cs'): array
+    {
+        // Ensure version
+        if (!isset($data['version']) || !\is_string($data['version']) || $data['version'] === '') {
+            $data['version'] = '1.0';
+        }
+
+        // Helper to extract localized string
+        $extract = static function ($value) use ($primaryLocale, $fallbackLocale) {
+            if (\is_array($value)) {
+                if (isset($value[$primaryLocale]) && \is_string($value[$primaryLocale])) {
+                    return $value[$primaryLocale];
+                }
+                if (isset($value[$fallbackLocale]) && \is_string($value[$fallbackLocale])) {
+                    return $value[$fallbackLocale];
+                }
+                foreach ($value as $v) {
+                    if (\is_string($v)) {
+                        return $v;
+                    }
+                }
+                return '';
+            }
+
+            return \is_string($value) ? $value : '';
+        };
+
+        // Root name/description
+        if (isset($data['name'])) {
+            $data['name'] = $extract($data['name']);
+        }
+        if (isset($data['description'])) {
+            $data['description'] = $extract($data['description']);
+        }
+
+        // Fields
+        if (isset($data['fields']) && \is_array($data['fields'])) {
+            foreach ($data['fields'] as $idx => $field) {
+                if (isset($field['name'])) {
+                    $data['fields'][$idx]['name'] = $extract($field['name']);
+                }
+                if (isset($field['description'])) {
+                    $data['fields'][$idx]['description'] = $extract($field['description']);
+                }
+            }
+        }
+
+        return $data;
     }
 }
