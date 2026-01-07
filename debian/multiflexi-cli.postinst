@@ -41,7 +41,7 @@ configure)
     [ -z "$SERVER_GROUP" ] && SERVER_GROUP=multiflexi
 
     # Groups that the user will be added to, if undefined, then none.
-    ADDGROUP="multiflexi"
+    ADDGROUP="multiflexi www-data"
 
     # create user to avoid running server as root
     # 1. create group if not existing
@@ -73,12 +73,14 @@ configure)
         chown $SERVER_USER:adm $SERVER_HOME
         chmod u=rwx,g=rxs,o= $SERVER_HOME
     fi
-    # 6. Add the user to the ADDGROUP group
-    if test -n $ADDGROUP; then
-        if ! groups $SERVER_USER | cut -d: -f2 |
-            grep -qw $ADDGROUP; then
-            adduser $SERVER_USER $ADDGROUP
-        fi
+    # 6. Add the user to the ADDGROUP groups
+    if test -n "$ADDGROUP"; then
+        for group in $ADDGROUP; do
+            if ! groups $SERVER_USER | cut -d: -f2 |
+                grep -qw $group; then
+                adduser $SERVER_USER $group
+            fi
+        done
     fi
 
     ;;
