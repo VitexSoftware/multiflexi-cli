@@ -35,7 +35,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
      */
     public function validateCredPrototypeJson(string $jsonFile): array
     {
-        return self::validateJson($jsonFile, CredentialProtoType::$credTypeSchema);
+        return self::validateJson($jsonFile, CredentialProtoType::$credProtoTypeSchema);
     }
 
     protected function configure(): void
@@ -404,9 +404,9 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
 
                 return MultiFlexiCommand::FAILURE;
             case 'import-json':
-                $json = $input->getOption('file');
+                $jsonFile = $input->getOption('file');
 
-                if (empty($json) || !file_exists($json)) {
+                if (empty($jsonFile) || !file_exists($jsonFile)) {
                     if ($format === 'json') {
                         $output->writeln(json_encode([
                             'status' => 'error',
@@ -420,7 +420,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                 }
 
                 // Load and normalize JSON (flatten localized fields, ensure version)
-                $rawContent = file_get_contents($json);
+                $rawContent = file_get_contents($jsonFile);
                 $decoded = $rawContent !== false ? json_decode($rawContent, true) : null;
 
                 if (!\is_array($decoded)) {
@@ -428,7 +428,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                         $output->writeln(json_encode([
                             'status' => 'error',
                             'message' => 'Invalid JSON content',
-                            'file' => $json,
+                            'file' => $jsonFile,
                         ], \JSON_PRETTY_PRINT));
                     } else {
                         $output->writeln('<error>Invalid JSON content</error>');
@@ -438,7 +438,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                 }
 
                 $normalized = self::normalizePrototypeJson($decoded, 'en', 'cs');
-                $normalizedPath = sys_get_temp_dir().'/crprototype.normalized.'.md5($json).'.json';
+                $normalizedPath = sys_get_temp_dir().'/crprototype.normalized.'.md5($jsonFile).'.json';
                 file_put_contents($normalizedPath, json_encode($normalized, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE));
 
                 // Validate normalized JSON
@@ -450,13 +450,14 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                             'status' => 'error',
                             'message' => 'JSON validation failed',
                             'violations' => $validationResult,
-                            'file' => $json,
+                            'file' => $jsonFile,
                             'normalized' => $normalizedPath,
                             'schema' => realpath(CredentialProtoType::$credTypeSchema),
                         ], \JSON_PRETTY_PRINT));
                     } else {
-                        $output->writeln('<error>JSON validation failed</error>');
+                        $output->writeln('<error>JSON validation failed: '.$jsonFile.'</error>');
                         $output->writeln('<comment>Schema: '.realpath(CredentialProtoType::$credTypeSchema).'</comment>');
+
                         foreach ($validationResult as $violation) {
                             $output->writeln('<error> '.$violation.' </error>');
                         }
@@ -475,7 +476,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                             $output->writeln(json_encode([
                                 'status' => 'success',
                                 'message' => 'Credential prototype imported successfully',
-                                'file' => $json,
+                                'file' => $jsonFile,
                                 'credential_prototype_id' => $credProto->getMyKey(),
                                 'uuid' => $credProto->getDataValue('uuid'),
                                 'code' => $credProto->getDataValue('code'),
@@ -496,7 +497,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                         $output->writeln(json_encode([
                             'status' => 'error',
                             'message' => 'Failed to import credential prototype',
-                            'file' => $json,
+                            'file' => $jsonFile,
                             'imported' => false,
                         ], \JSON_PRETTY_PRINT));
                     } else {
@@ -509,7 +510,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                         $output->writeln(json_encode([
                             'status' => 'error',
                             'message' => 'Import failed: '.$e->getMessage(),
-                            'file' => $json,
+                            'file' => $jsonFile,
                             'imported' => false,
                         ], \JSON_PRETTY_PRINT));
                     } else {
@@ -520,9 +521,9 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                 }
 
             case 'validate-json':
-                $json = $input->getOption('file');
+                $jsonFile = $input->getOption('file');
 
-                if (empty($json) || !file_exists($json)) {
+                if (empty($jsonFile) || !file_exists($jsonFile)) {
                     if ($format === 'json') {
                         $output->writeln(json_encode([
                             'status' => 'error',
@@ -535,20 +536,20 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                     return MultiFlexiCommand::FAILURE;
                 }
 
-                $result = $this->validateCredPrototypeJson($json);
+                $result = $this->validateCredPrototypeJson($jsonFile);
 
                 if ($format === 'json') {
                     if (empty($result)) {
                         $output->writeln(json_encode([
                             'status' => 'success',
-                            'file' => $json,
+                            'file' => $jsonFile,
                             'schema' => realpath(CredentialProtoType::$credTypeSchema),
                             'message' => 'JSON is valid',
                         ], \JSON_PRETTY_PRINT));
                     } else {
                         $output->writeln(json_encode([
                             'status' => 'error',
-                            'file' => $json,
+                            'file' => $jsonFile,
                             'violations' => $result,
                             'schema' => realpath(CredentialProtoType::$credTypeSchema),
                             'message' => 'JSON validation failed',
@@ -990,8 +991,9 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
      * - Ensure string values for name/description at root and in fields
      * - Ensure version exists (default '1.0')
      *
-     * @param array<string,mixed> $data
-     * @return array<string,mixed>
+     * @param array<string, mixed> $data
+     *
+     * @return array<string, mixed>
      */
     private static function normalizePrototypeJson(array $data, string $primaryLocale = 'en', string $fallbackLocale = 'cs'): array
     {
@@ -1006,14 +1008,17 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                 if (isset($value[$primaryLocale]) && \is_string($value[$primaryLocale])) {
                     return $value[$primaryLocale];
                 }
+
                 if (isset($value[$fallbackLocale]) && \is_string($value[$fallbackLocale])) {
                     return $value[$fallbackLocale];
                 }
+
                 foreach ($value as $v) {
                     if (\is_string($v)) {
                         return $v;
                     }
                 }
+
                 return '';
             }
 
@@ -1024,6 +1029,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
         if (isset($data['name'])) {
             $data['name'] = $extract($data['name']);
         }
+
         if (isset($data['description'])) {
             $data['description'] = $extract($data['description']);
         }
@@ -1034,6 +1040,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                 if (isset($field['name'])) {
                     $data['fields'][$idx]['name'] = $extract($field['name']);
                 }
+
                 if (isset($field['description'])) {
                     $data['fields'][$idx]['description'] = $extract($field['description']);
                 }
