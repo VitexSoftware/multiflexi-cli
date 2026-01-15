@@ -373,7 +373,7 @@ Manage users (list, get, create, update, delete).
 Actions:
 - list:   List all users.
 - get:    Get user details by ID.
-- create: Create a new user (requires --login, --firstname, --lastname, --email, --password).
+- create: Create a new user (requires --login and --email).
 - update: Update an existing user (requires --id).
 - delete: Delete a user (requires --id).
 
@@ -383,7 +383,8 @@ Options:
   --firstname    First name
   --lastname     Last name
   --email        Email
-  --password     Password
+  --password     Password (hashed)
+  --plaintext    Plaintext password
   --enabled      Enabled (true/false)
   -f, --format   Output format: text or json (default: text)
 
@@ -393,7 +394,7 @@ Examples:
 
     multiflexi-cli user list
     multiflexi-cli user get --id=1
-    multiflexi-cli user create --login="jsmith" --firstname="John" --lastname="Smith" --email="jsmith@example.com" --password="secret"
+    multiflexi-cli user create --login="jsmith" --firstname="John" --lastname="Smith" --email="jsmith@example.com" --plaintext="secret"
     multiflexi-cli user update --id=1 --email="john.smith@example.com"
     multiflexi-cli user delete --id=1
 

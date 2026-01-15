@@ -50,7 +50,7 @@ By default, all commands output human-readable text format suitable for terminal
 ```bash
 multiflexi-cli list apps --format json
 multiflexi-cli get job 123
-multiflexi-cli create user --name "John Doe" --email "john@example.com"
+multiflexi-cli create user --login "jsmith" --email "john@example.com"
 multiflexi-cli delete app 456
 multiflexi-cli describe
 
