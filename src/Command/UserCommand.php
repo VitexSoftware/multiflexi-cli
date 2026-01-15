@@ -200,8 +200,14 @@ class UserCommand extends MultiFlexiCommand
                     }
                 }
 
-                if (empty($data['login']) || empty($data['email'])) {
-                    $output->writeln('<error>Missing --login or --email for user create</error>');
+                if (empty($data['login'])) {
+                    $output->writeln('<error>Missing --login for user create</error>');
+
+                    return MultiFlexiCommand::FAILURE;
+                }
+
+                if (empty($data['email'])) {
+                    $output->writeln('<error>Missing --email for user create</error>');
 
                     return MultiFlexiCommand::FAILURE;
                 }
