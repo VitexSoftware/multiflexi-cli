@@ -724,26 +724,21 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
     }
 
     /**
-     * Synchronize credential prototypes from filesystem to database.
+     * Synchronize credential prototypes from file system to database.
      */
     private static function syncCredentialPrototypesFromFilesystem(InputInterface $input, OutputInterface $output): int
     {
         $format = strtolower($input->getOption('format'));
-        $credentialTypeDir = '/home/vitex/Projects/Multi/php-vitexsoftware-multiflexi-core/src/MultiFlexi/CredentialType';
+        \Ease\Functions::loadClassesInNamespace('MultiFlexi\\CredentialProtoType');
+        $classesToProcess =  \Ease\Functions::classesInNamespace('MultiFlexi\\CredentialProtoType');
+        
 
-        if (!is_dir($credentialTypeDir)) {
-            $output->writeln('<error>Credential type directory not found: '.$credentialTypeDir.'</error>');
-
-            return MultiFlexiCommand::FAILURE;
-        }
-
-        $files = glob($credentialTypeDir.'/*.php');
-
-        if ($files === false) {
-            $output->writeln('<error>Failed to scan credential type directory</error>');
+        if (empty($classesToProcess)) {
+            $output->writeln('<error>No CredentialProtoType Classess found</error>');
 
             return MultiFlexiCommand::FAILURE;
         }
+
 
         $syncStats = [
             'processed' => 0,
@@ -755,9 +750,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
 
         $output->writeln('<info>Starting synchronization of credential prototypes...</info>');
 
-        foreach ($files as $file) {
-            $className = basename($file, '.php');
-
+        foreach ($classesToProcess as $className) {
             // Skip Common.php as it's likely a base class
             if ($className === 'Common') {
                 ++$syncStats['skipped'];
@@ -765,7 +758,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                 continue;
             }
 
-            $fullClassName = "\\MultiFlexi\\CredentialType\\{$className}";
+            $fullClassName = "\\MultiFlexi\\CredentialProtoType\\{$className}";
             ++$syncStats['processed'];
 
             try {
