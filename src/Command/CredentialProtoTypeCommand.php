@@ -153,7 +153,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                 $data = $credProto->getData();
 
                 // Get fields for this prototype
-                $fieldEngine = new CredentialProtoTypeField();
+                $fieldEngine = new \MultiFlexi\CredentialProtoTypeField();
                 $fields = $fieldEngine->listingQuery()->where(['credential_prototype_id' => $id])->fetchAll();
 
                 if ($format === 'json') {
@@ -419,6 +419,20 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                     return MultiFlexiCommand::FAILURE;
                 }
 
+                if (!is_file($jsonFile)) {
+                    if ($format === 'json') {
+                        $output->writeln(json_encode([
+                            'status' => 'error',
+                            'message' => 'The --file parameter must be a file, not a directory',
+                            'path' => $jsonFile,
+                        ], \JSON_PRETTY_PRINT));
+                    } else {
+                        $output->writeln('<error>The --file parameter must be a file, not a directory: ' . $jsonFile . '</error>');
+                    }
+
+                    return MultiFlexiCommand::FAILURE;
+                }
+
                 // Load and normalize JSON (flatten localized fields, ensure version)
                 $rawContent = file_get_contents($jsonFile);
                 $decoded = $rawContent !== false ? json_decode($rawContent, true) : null;
@@ -531,6 +545,20 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                         ], \JSON_PRETTY_PRINT));
                     } else {
                         $output->writeln('<error>Missing or invalid --file for validate-json</error>');
+                    }
+
+                    return MultiFlexiCommand::FAILURE;
+                }
+
+                if (!is_file($jsonFile)) {
+                    if ($format === 'json') {
+                        $output->writeln(json_encode([
+                            'status' => 'error',
+                            'message' => 'The --file parameter must be a file, not a directory',
+                            'path' => $jsonFile,
+                        ], \JSON_PRETTY_PRINT));
+                    } else {
+                        $output->writeln('<error>The --file parameter must be a file, not a directory: ' . $jsonFile . '</error>');
                     }
 
                     return MultiFlexiCommand::FAILURE;
