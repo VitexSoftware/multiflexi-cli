@@ -452,11 +452,11 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                             'violations' => $validationResult,
                             'file' => $jsonFile,
                             'normalized' => $normalizedPath,
-                            'schema' => realpath(CredentialProtoType::$credTypeSchema),
+                            'schema' => realpath(CredentialProtoType::$credProtoTypeSchema),
                         ], \JSON_PRETTY_PRINT));
                     } else {
                         $output->writeln('<error>JSON validation failed: '.$jsonFile.'</error>');
-                        $output->writeln('<comment>Schema: '.realpath(CredentialProtoType::$credTypeSchema).'</comment>');
+                        $output->writeln('<comment>Schema: '.realpath(CredentialProtoType::$credProtoTypeSchema).'</comment>');
 
                         foreach ($validationResult as $violation) {
                             $output->writeln('<error> '.$violation.' </error>');
@@ -543,7 +543,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                         $output->writeln(json_encode([
                             'status' => 'success',
                             'file' => $jsonFile,
-                            'schema' => realpath(CredentialProtoType::$credTypeSchema),
+                            'schema' => realpath(CredentialProtoType::$credProtoTypeSchema),
                             'message' => 'JSON is valid',
                         ], \JSON_PRETTY_PRINT));
                     } else {
@@ -551,7 +551,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                             'status' => 'error',
                             'file' => $jsonFile,
                             'violations' => $result,
-                            'schema' => realpath(CredentialProtoType::$credTypeSchema),
+                            'schema' => realpath(CredentialProtoType::$credProtoTypeSchema),
                             'message' => 'JSON validation failed',
                         ], \JSON_PRETTY_PRINT));
                     }
