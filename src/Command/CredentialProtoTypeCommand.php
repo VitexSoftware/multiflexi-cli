@@ -482,27 +482,40 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
 
                 try {
                     $credProto = new CredentialProtoType();
-                    // Import normalized JSON (array)
-                    $result = $credProto->importJson($normalized);
+                    $uuid = $normalized['uuid'] ?? null;
+                    $existing = null;
+                    if ($uuid) {
+                        $existing = $credProto->listingQuery()->where(['uuid' => $uuid])->fetch();
+                    }
+                    if ($existing && isset($existing['id'])) {
+                        // Update existing record
+                        $credProto = new CredentialProtoType((int)$existing['id']);
+                        $result = $credProto->importJson($normalized);
+                        $actionType = 'updated';
+                    } else {
+                        // Insert new record
+                        $credProto = new CredentialProtoType();
+                        $result = $credProto->importJson($normalized);
+                        $actionType = 'imported';
+                    }
 
                     if ($result) {
                         if ($format === 'json') {
                             $output->writeln(json_encode([
                                 'status' => 'success',
-                                'message' => 'Credential prototype imported successfully',
+                                'message' => 'Credential prototype ' . $actionType . ' successfully',
                                 'file' => $jsonFile,
                                 'credential_prototype_id' => $credProto->getMyKey(),
                                 'uuid' => $credProto->getDataValue('uuid'),
                                 'code' => $credProto->getDataValue('code'),
-                                'imported' => true,
+                                $actionType => true,
                             ], \JSON_PRETTY_PRINT));
                         } else {
-                            $output->writeln('<info>Credential prototype imported successfully</info>');
+                            $output->writeln('<info>Credential prototype ' . $actionType . ' successfully</info>');
                             $output->writeln('<info>ID: '.$credProto->getMyKey().'</info>');
                             $output->writeln('<info>UUID: '.$credProto->getDataValue('uuid').'</info>');
                             $output->writeln('<info>Code: '.$credProto->getDataValue('code').'</info>');
                         }
-
                         return MultiFlexiCommand::SUCCESS;
                     }
 
@@ -517,7 +530,6 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                     } else {
                         $output->writeln('<error>Failed to import credential prototype</error>');
                     }
-
                     return MultiFlexiCommand::FAILURE;
                 } catch (\Exception $e) {
                     if ($format === 'json') {
@@ -530,7 +542,6 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                     } else {
                         $output->writeln('<error>Import failed: '.$e->getMessage().'</error>');
                     }
-
                     return MultiFlexiCommand::FAILURE;
                 }
 
