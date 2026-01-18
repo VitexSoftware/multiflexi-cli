@@ -313,7 +313,7 @@ class ApplicationCommand extends MultiFlexiCommand
                 $json = $input->getOption('file');
 
                 if (empty($json) || !file_exists($json)) {
-                    $output->writeln('<error>Missing or invalid --file for import-json</error>');
+                    $output->writeln('<error>Missing or invalid --file '.$json.' for import-json</error>');
 
                     return MultiFlexiCommand::FAILURE;
                 }

@@ -411,9 +411,10 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                         $output->writeln(json_encode([
                             'status' => 'error',
                             'message' => 'Missing or invalid --file for import-json',
+                            'file' => $jsonFile,
                         ], \JSON_PRETTY_PRINT));
                     } else {
-                        $output->writeln('<error>Missing or invalid --file for import-json</error>');
+                        $output->writeln('<error>Missing or invalid --file for import-json: '.$jsonFile.'</error>');
                     }
 
                     return MultiFlexiCommand::FAILURE;
@@ -427,7 +428,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                             'path' => $jsonFile,
                         ], \JSON_PRETTY_PRINT));
                     } else {
-                        $output->writeln('<error>The --file parameter must be a file, not a directory: ' . $jsonFile . '</error>');
+                        $output->writeln('<error>The --file parameter must be a file, not a directory: '.$jsonFile.'</error>');
                     }
 
                     return MultiFlexiCommand::FAILURE;
@@ -484,12 +485,14 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                     $credProto = new CredentialProtoType();
                     $uuid = $normalized['uuid'] ?? null;
                     $existing = null;
+
                     if ($uuid) {
                         $existing = $credProto->listingQuery()->where(['uuid' => $uuid])->fetch();
                     }
+
                     if ($existing && isset($existing['id'])) {
                         // Update existing record
-                        $credProto = new CredentialProtoType((int)$existing['id']);
+                        $credProto = new CredentialProtoType((int) $existing['id']);
                         $result = $credProto->importJson($normalized);
                         $actionType = 'updated';
                     } else {
@@ -503,7 +506,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                         if ($format === 'json') {
                             $output->writeln(json_encode([
                                 'status' => 'success',
-                                'message' => 'Credential prototype ' . $actionType . ' successfully',
+                                'message' => 'Credential prototype '.$actionType.' successfully',
                                 'file' => $jsonFile,
                                 'credential_prototype_id' => $credProto->getMyKey(),
                                 'uuid' => $credProto->getDataValue('uuid'),
@@ -511,11 +514,12 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                                 $actionType => true,
                             ], \JSON_PRETTY_PRINT));
                         } else {
-                            $output->writeln('<info>Credential prototype ' . $actionType . ' successfully</info>');
+                            $output->writeln('<info>Credential prototype '.$actionType.' successfully</info>');
                             $output->writeln('<info>ID: '.$credProto->getMyKey().'</info>');
                             $output->writeln('<info>UUID: '.$credProto->getDataValue('uuid').'</info>');
                             $output->writeln('<info>Code: '.$credProto->getDataValue('code').'</info>');
                         }
+
                         return MultiFlexiCommand::SUCCESS;
                     }
 
@@ -530,6 +534,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                     } else {
                         $output->writeln('<error>Failed to import credential prototype</error>');
                     }
+
                     return MultiFlexiCommand::FAILURE;
                 } catch (\Exception $e) {
                     if ($format === 'json') {
@@ -542,6 +547,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                     } else {
                         $output->writeln('<error>Import failed: '.$e->getMessage().'</error>');
                     }
+
                     return MultiFlexiCommand::FAILURE;
                 }
 
@@ -553,9 +559,10 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                         $output->writeln(json_encode([
                             'status' => 'error',
                             'message' => 'Missing or invalid --file for validate-json',
+                            'file' => $jsonFile,
                         ], \JSON_PRETTY_PRINT));
                     } else {
-                        $output->writeln('<error>Missing or invalid --file for validate-json</error>');
+                        $output->writeln('<error>Missing or invalid --file '.$jsonFile.' for validate-json</error>');
                     }
 
                     return MultiFlexiCommand::FAILURE;
@@ -569,7 +576,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                             'path' => $jsonFile,
                         ], \JSON_PRETTY_PRINT));
                     } else {
-                        $output->writeln('<error>The --file parameter must be a file, not a directory: ' . $jsonFile . '</error>');
+                        $output->writeln('<error>The --file parameter must be a file, not a directory: '.$jsonFile.'</error>');
                     }
 
                     return MultiFlexiCommand::FAILURE;
@@ -769,15 +776,13 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
     {
         $format = strtolower($input->getOption('format'));
         \Ease\Functions::loadClassesInNamespace('MultiFlexi\\CredentialProtoType');
-        $classesToProcess =  \Ease\Functions::classesInNamespace('MultiFlexi\\CredentialProtoType');
-        
+        $classesToProcess = \Ease\Functions::classesInNamespace('MultiFlexi\\CredentialProtoType');
 
         if (empty($classesToProcess)) {
             $output->writeln('<error>No CredentialProtoType Classess found</error>');
 
             return MultiFlexiCommand::FAILURE;
         }
-
 
         $syncStats = [
             'processed' => 0,
