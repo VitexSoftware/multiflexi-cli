@@ -135,6 +135,41 @@ abstract class MultiFlexiCommand extends \Symfony\Component\Console\Command\Comm
         return $violations;
     }
 
+    public function readFileStrict(string $path): string
+    {
+        if (!is_file($path)) {
+            throw new RuntimeException("File does not exist: {$path}");
+        }
+
+        if (!is_readable($path)) {
+            throw new RuntimeException("File is not readable: {$path}");
+        }
+
+        $fh = fopen($path, 'rb');
+
+        if ($fh === false) {
+            throw new RuntimeException("Unable to open file: {$path}");
+        }
+
+        $data = '';
+
+        while (!feof($fh)) {
+            $chunk = fread($fh, 8192);
+
+            if ($chunk === false) {
+                fclose($fh);
+
+                throw new RuntimeException("Read error: {$path}");
+            }
+
+            $data .= $chunk;
+        }
+
+        fclose($fh);
+
+        return $data;
+    }
+
     /**
      * Output a JSON error response with status and message fields.
      */
