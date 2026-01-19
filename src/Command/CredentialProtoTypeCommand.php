@@ -434,6 +434,12 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                     return MultiFlexiCommand::FAILURE;
                 }
 
+                if (is_dir($jsonFile)) {
+                    throw new RuntimeException(
+                        "{$jsonFile} is directory – filesystem corrupted",
+                    );
+                }
+
                 $output->writeln('Importing '.$jsonFile.' ');
 
                 // Load and normalize JSON (flatten localized fields, ensure version)
