@@ -454,12 +454,8 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                     return MultiFlexiCommand::FAILURE;
                 }
 
-                $normalized = self::normalizePrototypeJson($decoded, 'en', 'cs');
-                $normalizedPath = sys_get_temp_dir().'/crprototype.normalized.'.md5($jsonFile).'.json';
-                file_put_contents($normalizedPath, json_encode($normalized, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE));
-
                 // Validate normalized JSON
-                $validationResult = $this->validateCredPrototypeJson($normalizedPath);
+                $validationResult = $this->validateCredPrototypeJson($jsonFile);
 
                 if (!empty($validationResult)) {
                     if ($format === 'json') {
