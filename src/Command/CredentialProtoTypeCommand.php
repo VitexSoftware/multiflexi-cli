@@ -434,7 +434,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                     return MultiFlexiCommand::FAILURE;
                 }
 
-                $output->writeln('Importing '.$jsonFile.' ');
+                $output->writeln('Importing '.$jsonFile.' '.filesize($jsonFile).'b');
 
                 // Load and normalize JSON (flatten localized fields, ensure version)
                 $rawContent = $this->readFileStrict($jsonFile);
