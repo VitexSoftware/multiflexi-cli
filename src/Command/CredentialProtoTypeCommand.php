@@ -440,6 +440,10 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                     );
                 }
 
+                $finfo = finfo_open();
+                echo 'File Info: '. finfo_file($finfo, $jsonFile)."\n";
+                finfo_close($finfo);
+
                 $output->writeln('Importing '.$jsonFile.' ');
 
                 // Load and normalize JSON (flatten localized fields, ensure version)
