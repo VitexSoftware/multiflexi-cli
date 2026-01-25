@@ -7,14 +7,7 @@
   <summary>Command-line interface for MultiFlexi system management</summary>
   <description>
     <p>
-      MultiFlexi CLI is a powerful command-line interface tool for managing and interacting 
-      with the MultiFlexi system. It allows administrators and users to list, create, get, 
-      and delete MultiFlexi resources directly from the terminal.
-    </p>
-    <p>
-      The CLI supports JSON output for easy integration with other tools and scripts, and 
-      provides internationalization support. This package is intended for users who prefer 
-      or require command-line access to MultiFlexi's features.
+      MultiFlexi CLI is a powerful command-line interface tool for managing and interacting with the MultiFlexi system. It allows administrators and users to list, create, get, and delete MultiFlexi resources directly from the terminal. </p> <p> The CLI supports JSON output for easy integration with other tools and scripts, and provides internationalization support. This package is intended for users who prefer or require command-line access to MultiFlexi's features.
     </p>
   </description>
   <categories>
