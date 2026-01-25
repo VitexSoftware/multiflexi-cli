@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="console-application">
+  <id>cz.vitexsoftware.multiflexi-cli</id>
+  <metadata_license>MIT</metadata_license>
+  <project_license>MIT</project_license>
+  <name>MultiFlexi CLI</name>
+  <summary>Command-line interface for MultiFlexi system management</summary>
+  <description>
+    <p>
+      MultiFlexi CLI is a powerful command-line interface tool for managing and interacting 
+      with the MultiFlexi system. It allows administrators and users to list, create, get, 
+      and delete MultiFlexi resources directly from the terminal.
+    </p>
+    <p>
+      The CLI supports JSON output for easy integration with other tools and scripts, and 
+      provides internationalization support. This package is intended for users who prefer 
+      or require command-line access to MultiFlexi's features.
+    </p>
+  </description>
+  <categories>
+    <category>System</category>
+    <category>ConsoleOnly</category>
+  </categories>
+  <url type="homepage">https://github.com/VitexSoftware/multiflexi-cli</url>
+  <url type="bugtracker">https://github.com/VitexSoftware/multiflexi-cli/issues</url>
+  <developer id="cz.vitexsoftware">
+    <name>VitexSoftware</name>
+  </developer>
+  <provides>
+    <binary>multiflexi-cli</binary>
+  </provides>
+  <releases>
+    <release version="2.3.2" date="2026-01-24"/>
+  </releases>
+  <content_rating type="oars-1.1"/>
+</component>
