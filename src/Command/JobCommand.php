@@ -143,6 +143,30 @@ EOD;
 
                 $jobs = $query->fetchAll();
 
+                // Process env column: unserialize and convert to key-value pairs
+                foreach ($jobs as &$jobData) {
+                    if (isset($jobData['env']) && \Ease\Functions::isSerialized($jobData['env'])) {
+                        $envUnserialized = unserialize($jobData['env']);
+                        
+                        if ($envUnserialized instanceof \MultiFlexi\ConfigFields) {
+                            // New format: ConfigFields object
+                            $jobData['env'] = $envUnserialized->getEnvArray();
+                        } elseif (\is_array($envUnserialized)) {
+                            // Old format: array with metadata - extract just values
+                            $envArray = [];
+                            foreach ($envUnserialized as $key => $envInfo) {
+                                if (\is_array($envInfo) && isset($envInfo['value'])) {
+                                    $envArray[$key] = $envInfo['value'];
+                                } elseif (\is_object($envInfo) && method_exists($envInfo, 'getValue')) {
+                                    $envArray[$key] = $envInfo->getValue();
+                                }
+                            }
+                            $jobData['env'] = $envArray;
+                        }
+                    }
+                }
+                unset($jobData); // Break reference
+
                 // Handle fields option
                 $fields = $input->getOption('fields');
 
@@ -157,7 +181,11 @@ EOD;
                     $output->writeln(json_encode($jobs, \JSON_PRETTY_PRINT));
                 } else {
                     foreach ($jobs as $row) {
-                        $output->writeln(implode(' | ', $row));
+                        // Convert array values (like env) to JSON for text output
+                        $displayRow = array_map(static function ($value) {
+                            return \is_array($value) ? json_encode($value) : $value;
+                        }, $row);
+                        $output->writeln(implode(' | ', $displayRow));
                     }
                 }
 
