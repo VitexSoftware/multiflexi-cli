@@ -19,7 +19,7 @@
         "phplucidframe/console-table": "^1.4",
         "confirm-it-solutions/php-zabbix-api": "^3.0",
         "vitexsoftware/ease-html": "^1.40",
-        "symfony/console": "^6.4",
+        "symfony/console": "^8.0",
         "justinrainbow/json-schema": "^6.0@dev"
     },
     "autoload": {
