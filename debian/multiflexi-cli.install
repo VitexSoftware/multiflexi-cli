@@ -1,1 +1,7 @@
+bin/*                       usr/bin/
+src/*.php                   usr/share/multiflexi-cli/
+src/Command/*.php           usr/lib/multiflexi-cli/Command/
+src/MultiFlexi/*.php        usr/lib/multiflexi-cli/MultiFlexi/
+src/MultiFlexi/Cli/*.php    usr/lib/multiflexi-cli/MultiFlexi/Cli/
+debian/tmp/composer.json    usr/lib/multiflexi-cli
 debian/cz.vitexsoftware.multiflexi-cli.metainfo.xml usr/share/metainfo/
