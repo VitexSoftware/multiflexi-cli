@@ -822,12 +822,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/pear/PEAR_Exception.git",
-                "reference": "e244d44b2774f1fb6b4c911c2a39ba1ec2d93e14"
+                "reference": "0deb3294a128e2a8139c7366195577c2f8a59a6e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pear/PEAR_Exception/zipball/e244d44b2774f1fb6b4c911c2a39ba1ec2d93e14",
-                "reference": "e244d44b2774f1fb6b4c911c2a39ba1ec2d93e14",
+                "url": "https://api.github.com/repos/pear/PEAR_Exception/zipball/0deb3294a128e2a8139c7366195577c2f8a59a6e",
+                "reference": "0deb3294a128e2a8139c7366195577c2f8a59a6e",
                 "shasum": ""
             },
             "require": {
@@ -874,7 +874,7 @@
                 "issues": "https://pear.php.net/bugs/search.php?cmd=display&package_name%5B%5D=PEAR_Exception",
                 "source": "https://github.com/pear/PEAR_Exception"
             },
-            "time": "2026-01-25T18:06:17+00:00"
+            "time": "2026-01-31T21:47:38+00:00"
         },
         {
             "name": "phplucidframe/console-table",
@@ -1989,16 +1989,16 @@
         },
         {
             "name": "vitexsoftware/ease-core",
-            "version": "1.49.0",
+            "version": "v1.50.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/VitexSoftware/php-ease-core.git",
-                "reference": "0bd73be2a42d53d6fb67e9f97f30c05dea8d116d"
+                "reference": "37271007e14cf7ee44dc68485106236f03b6619e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/VitexSoftware/php-ease-core/zipball/0bd73be2a42d53d6fb67e9f97f30c05dea8d116d",
-                "reference": "0bd73be2a42d53d6fb67e9f97f30c05dea8d116d",
+                "url": "https://api.github.com/repos/VitexSoftware/php-ease-core/zipball/37271007e14cf7ee44dc68485106236f03b6619e",
+                "reference": "37271007e14cf7ee44dc68485106236f03b6619e",
                 "shasum": ""
             },
             "require": {
@@ -2012,12 +2012,12 @@
                 "vitexsoftware/ease-framework": "*"
             },
             "require-dev": {
-                "ergebnis/composer-normalize": "^2.47",
-                "ergebnis/php-cs-fixer-config": "^6.51",
-                "friendsofphp/php-cs-fixer": "^3.85",
+                "ergebnis/composer-normalize": "^2.48",
+                "ergebnis/php-cs-fixer-config": "^6.58",
+                "friendsofphp/php-cs-fixer": "^3.92",
                 "phpstan/phpstan": "*",
                 "phpunit/phpunit": "*",
-                "rector/rector": "^2.1",
+                "rector/rector": "^2.3",
                 "roave/security-advisories": "dev-latest"
             },
             "type": "library",
@@ -2042,7 +2042,7 @@
             "homepage": "http://v.s.cz/ease.php",
             "support": {
                 "issues": "https://github.com/VitexSoftware/php-ease-core/issues",
-                "source": "https://github.com/VitexSoftware/php-ease-core/tree/1.49.0"
+                "source": "https://github.com/VitexSoftware/php-ease-core/tree/v1.50.0"
             },
             "funding": [
                 {
@@ -2050,7 +2050,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2025-08-11T09:34:34+00:00"
+            "time": "2026-01-31T21:27:31+00:00"
         },
         {
             "name": "vitexsoftware/ease-fluentpdo",
@@ -2255,17 +2255,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/VitexSoftware/php-vitexsoftware-multiflexi-core.git",
-                "reference": "d7552e518dfe2a758010240d29e63fd6dc8b70c8"
+                "reference": "59bb3ca90239e405f5eb3263b274ed7b0504bda8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/VitexSoftware/php-vitexsoftware-multiflexi-core/zipball/d7552e518dfe2a758010240d29e63fd6dc8b70c8",
-                "reference": "d7552e518dfe2a758010240d29e63fd6dc8b70c8",
+                "url": "https://api.github.com/repos/VitexSoftware/php-vitexsoftware-multiflexi-core/zipball/59bb3ca90239e405f5eb3263b274ed7b0504bda8",
+                "reference": "59bb3ca90239e405f5eb3263b274ed7b0504bda8",
                 "shasum": ""
             },
             "require": {
                 "jalismrs/bitwarden-php": "^1.1",
                 "justinrainbow/json-schema": "^6.6@dev",
+                "vitexsoftware/ease-core": "^1.50",
                 "vitexsoftware/ease-fluentpdo": "dev-main",
                 "vitexsoftware/ease-html": "^1.40"
             },
@@ -2304,7 +2305,7 @@
                 "issues": "https://github.com/VitexSoftware/php-vitexsoftware-multiflexi-core/issues",
                 "source": "https://github.com/VitexSoftware/php-vitexsoftware-multiflexi-core/tree/main"
             },
-            "time": "2026-01-30T16:32:51+00:00"
+            "time": "2026-02-01T00:19:02+00:00"
         }
     ],
     "packages-dev": [
@@ -4256,12 +4257,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "972bbd09a129127730432c6b4648b048fa472d15"
+                "reference": "ef5f7f14af02e701f57639e1eac61495c2140e1a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/972bbd09a129127730432c6b4648b048fa472d15",
-                "reference": "972bbd09a129127730432c6b4648b048fa472d15",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/ef5f7f14af02e701f57639e1eac61495c2140e1a",
+                "reference": "ef5f7f14af02e701f57639e1eac61495c2140e1a",
                 "shasum": ""
             },
             "require": {
@@ -4287,6 +4288,7 @@
                 "sebastian/exporter": "^7.0.2",
                 "sebastian/global-state": "^8.0.2",
                 "sebastian/object-enumerator": "^7.0.0",
+                "sebastian/recursion-context": "^7.0.1",
                 "sebastian/type": "^6.0.3",
                 "sebastian/version": "^6.0.0",
                 "staabm/side-effects-detector": "^1.0.5"
@@ -4353,7 +4355,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-01-27T06:31:20+00:00"
+            "time": "2026-02-01T08:35:41+00:00"
         },
         {
             "name": "psr/event-dispatcher",

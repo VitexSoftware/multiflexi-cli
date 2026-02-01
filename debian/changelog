@@ -1,9 +1,10 @@
-multiflexi-cli (2.3.2+nmu1) UNRELEASED; urgency=medium
+multiflexi-cli (2.3.3) UNRELEASED; urgency=medium
 
   * cred prototype import
   * Add AppStream metadata for software center discovery
+  * Require latest database package versions with SQLite preference
 
- -- vitex <vitex@krax.vitexsoftware.brevnov.czf>  Sun, 25 Jan 2026 01:10:24 +0100
+ -- vitex <info@vitexsoftware.cz>  Sun, 01 Feb 2026 19:29:10 +0100
 
 multiflexi-cli (2.3.2) unstable; urgency=medium
 
