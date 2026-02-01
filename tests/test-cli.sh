@@ -47,6 +47,32 @@ $CLI_CMD company list
 # $CLI_CMD runtemplate create --name "Test Template" --uuid 868a8085-03e5-4f9b-899d-2084e1de7d3b --company-slug testco --company-id 1
 $CLI_CMD runtemplate list
 
+# Credential Prototype tests
+echo "Testing credential prototype operations..."
+
+# Test list
+$CLI_CMD crprototype list
+$CLI_CMD crprototype list --format json
+
+# Test create with proper validation
+$CLI_CMD crprototype create --code TestCred123 --name "Test Credential" --uuid "12345678-1234-5678-9abc-123456789abc" --description "Test credential prototype"
+$CLI_CMD crprototype list
+
+# Test get operations
+$CLI_CMD crprototype get --code TestCred123
+$CLI_CMD crprototype get --uuid "12345678-1234-5678-9abc-123456789abc" --format json
+
+# Test update
+$CLI_CMD crprototype update --code TestCred123 --description "Updated test credential prototype"
+$CLI_CMD crprototype get --code TestCred123
+
+# Test import-json functionality (if test file exists)
+if [ -f "/usr/lib/multiflexi/crprototype/subreg.crprototype.json" ]; then
+    echo "Testing JSON import functionality..."
+    $CLI_CMD crprototype import-json --file /usr/lib/multiflexi/crprototype/subreg.crprototype.json
+    $CLI_CMD crprototype import-json --file /usr/lib/multiflexi/crprototype/subreg.crprototype.json --format json
+fi
+
 echo '###################################################'
 $CLI_CMD appstatus
 echo '###################################################'
@@ -81,6 +107,15 @@ else
     exit 1
 fi
 
+echo "Testing crprototype commands format compliance"
+CRPROTO_JSON=$($CLI_CMD crprototype list --format json)
+if echo "$CRPROTO_JSON" | jq . >/dev/null 2>&1; then
+    echo "✓ Credential Prototype list JSON format works"
+else
+    echo "ERROR: Credential Prototype list JSON format broken!"
+    exit 1
+fi
+
 # Run template with parameters
 # multiflexi-run-template --uuid 868a8085-03e5-4f9b-899d-2084e1de7d3b --company-slug testco --company-id 1 --run-params '{"param1":"value1","param2":"value2"}'
 
@@ -90,6 +125,9 @@ fi
 echo "All format compliance tests passed! ✓"
 
 # Delete action tests
+$CLI_CMD crprototype delete --code TestCred123 --format json
+$CLI_CMD crprototype list
+
 $CLI_CMD user delete --login test --format json
 $CLI_CMD user list
 

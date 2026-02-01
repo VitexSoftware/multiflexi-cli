@@ -227,19 +227,16 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                 // Validate code format
                 $codeValidation = $credProto->validateCodeFormat($data['code']);
 
-                if (!$codeValidation['valid']) {
+                if (!$codeValidation) {
                     if ($format === 'json') {
                         $output->writeln(json_encode([
                             'status' => 'error',
                             'message' => 'Code validation failed',
-                            'errors' => $codeValidation['errors'],
+                            'errors' => _('Code must contain only letters, numbers, underscores, or hyphens. Length between 2 and 64 characters.'),
                         ], \JSON_PRETTY_PRINT));
                     } else {
                         $output->writeln('<error>Code validation failed:</error>');
-
-                        foreach ($codeValidation['errors'] as $error) {
-                            $output->writeln('<error> '.$error.'</error>');
-                        }
+                        $output->writeln('<error> '._('Code must contain only letters, numbers, underscores, or hyphens. Length between 2 and 64 characters.').'</error>');
                     }
 
                     return MultiFlexiCommand::FAILURE;
@@ -437,7 +434,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                 $output->writeln('Importing '.$jsonFile.' '.filesize($jsonFile).'b');
 
                 // Load and normalize JSON (flatten localized fields, ensure version)
-                $rawContent = $this->readFileStrict($jsonFile);
+                $rawContent = file_get_contents($jsonFile);
                 $decoded = $rawContent !== false ? json_decode($rawContent, true) : null;
 
                 if (!\is_array($decoded)) {
@@ -454,8 +451,12 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                     return MultiFlexiCommand::FAILURE;
                 }
 
+                $normalized = self::normalizePrototypeJson($decoded, 'en', 'cs');
+                $normalizedPath = sys_get_temp_dir().'/crprototype.normalized.'.md5($jsonFile).'.json';
+                file_put_contents($normalizedPath, json_encode($normalized, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE));
+
                 // Validate normalized JSON
-                $validationResult = $this->validateCredPrototypeJson($jsonFile);
+                $validationResult = $this->validateCredPrototypeJson($normalizedPath);
 
                 if (!empty($validationResult)) {
                     if ($format === 'json') {

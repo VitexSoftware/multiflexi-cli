@@ -219,7 +219,7 @@ class CredentialTypeCommand extends MultiFlexiCommand
                             'file' => $file,
                         ], \JSON_PRETTY_PRINT));
                     } else {
-                        $output->writeln('<error>JSON  '.$jsonFile.' validation failed</error>');
+                        $output->writeln('<error>JSON  '.$file.' validation failed</error>');
 
                         foreach ($validationResult as $violation) {
                             $output->writeln('<error> '.$violation.' </error>');
