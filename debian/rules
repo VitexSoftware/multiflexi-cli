@@ -21,6 +21,10 @@ override_dh_install:
 	mkdir -p debian/tmp/
 	jq '.version = "'`dpkg-parsechangelog | sed -n 's/^Version: //p'| sed 's/~.*//'`'"'  debian/conf/composer.json |sponge debian/tmp/composer.json
 	dh_install
+	# Ensure sudoers snippets have correct permissions
+	if [ -d debian/multiflexi-cli/etc/sudoers.d ]; then chmod 0440 debian/multiflexi-cli/etc/sudoers.d/*; fi
+	# Ensure wrapper script is executable
+	if [ -f debian/multiflexi-cli/usr/bin/multiflexi ]; then chmod 0755 debian/multiflexi-cli/usr/bin/multiflexi; fi
 	sed -i "s|require_once __DIR__.'/../vendor/autoload.php';|require_once '/var/lib/composer/multiflexi-cli/autoload.php';|" debian/multiflexi-cli/usr/share/multiflexi-cli/multiflexi-cli.php
 	sed -i 's/\.\.\//\/etc\/multiflexi\/multiflexi/' debian/multiflexi-cli/usr/share/multiflexi-cli/multiflexi-cli.php
 	sed -i "20i require_once '/usr/share/php/Symfony/Component/Console/autoload.php';" debian/multiflexi-cli/usr/share/multiflexi-cli/multiflexi-cli.php

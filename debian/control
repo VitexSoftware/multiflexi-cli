@@ -16,6 +16,7 @@ Depends: ${misc:Depends},
  adduser (>= 3.11),
  php-symfony-console,
  php-json-schema,
+ sudo,
 Suggests: multiflexi-all
 Pre-Depends: multiflexi-database (>= 2.4.1)
 Architecture: all

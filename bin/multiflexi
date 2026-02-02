@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Allow only members of the 'multiflexi' group (or root) to run
+if [[ $EUID -ne 0 ]]; then
+	if ! id -nG "$USER" | grep -qw multiflexi; then
+		echo "You must be a member of the 'multiflexi' group to run this command." >&2
+		echo "Ask an administrator to add you: sudo usermod -aG multiflexi $USER" >&2
+		exit 1
+	fi
+fi
+
+exec sudo -u multiflexi /usr/bin/multiflexi-cli "$@"

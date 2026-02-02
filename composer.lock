@@ -645,6 +645,7 @@
                 "issues": "http://pear.php.net/bugs/search.php?cmd=display&package_name[]=Console_Getopt",
                 "source": "https://github.com/pear/Console_Getopt"
             },
+            "abandoned": true,
             "time": "2019-11-20T18:27:48+00:00"
         },
         {
@@ -2255,12 +2256,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/VitexSoftware/php-vitexsoftware-multiflexi-core.git",
-                "reference": "59bb3ca90239e405f5eb3263b274ed7b0504bda8"
+                "reference": "9d79558edeaa5784cbe605d3ed0302497bd2871a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/VitexSoftware/php-vitexsoftware-multiflexi-core/zipball/59bb3ca90239e405f5eb3263b274ed7b0504bda8",
-                "reference": "59bb3ca90239e405f5eb3263b274ed7b0504bda8",
+                "url": "https://api.github.com/repos/VitexSoftware/php-vitexsoftware-multiflexi-core/zipball/9d79558edeaa5784cbe605d3ed0302497bd2871a",
+                "reference": "9d79558edeaa5784cbe605d3ed0302497bd2871a",
                 "shasum": ""
             },
             "require": {
@@ -2305,7 +2306,7 @@
                 "issues": "https://github.com/VitexSoftware/php-vitexsoftware-multiflexi-core/issues",
                 "source": "https://github.com/VitexSoftware/php-vitexsoftware-multiflexi-core/tree/main"
             },
-            "time": "2026-02-01T00:19:02+00:00"
+            "time": "2026-02-02T02:59:48+00:00"
         }
     ],
     "packages-dev": [
@@ -3766,8 +3767,8 @@
             "version": "2.1.x-dev",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/451b54250f5a7c2db596da8b5251b1ab6dbb4f4a",
-                "reference": "451b54250f5a7c2db596da8b5251b1ab6dbb4f4a",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/e85a2013d740c65b8a4a04447bff9efbf6f7c915",
+                "reference": "e85a2013d740c65b8a4a04447bff9efbf6f7c915",
                 "shasum": ""
             },
             "require": {
@@ -3813,7 +3814,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-01-31T10:48:09+00:00"
+            "time": "2026-02-02T10:11:41+00:00"
         },
         {
             "name": "phpstan/phpstan-phpunit",

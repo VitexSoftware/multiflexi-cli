@@ -5,3 +5,4 @@ src/MultiFlexi/*.php        usr/lib/multiflexi-cli/MultiFlexi/
 src/MultiFlexi/Cli/*.php    usr/lib/multiflexi-cli/MultiFlexi/Cli/
 debian/tmp/composer.json    usr/lib/multiflexi-cli
 debian/cz.vitexsoftware.multiflexi-cli.metainfo.xml usr/share/metainfo/
+debian/sudoers.d/*          etc/sudoers.d/
