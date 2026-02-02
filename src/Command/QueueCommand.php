@@ -57,47 +57,47 @@ class QueueCommand extends MultiFlexiCommand
                 $rows = $query->fetchAll();
 
                 // Calculate comprehensive metrics
-                $uniqueApps = !empty($rows) ? count(array_unique(array_column($rows, 'app_id'))) : 0;
-                $uniqueCompanies = !empty($rows) ? count(array_unique(array_column($rows, 'company_id'))) : 0;
-                $uniqueRuntemplates = !empty($rows) ? count(array_unique(array_column($rows, 'runtemplate_id'))) : 0;
-                
+                $uniqueApps = !empty($rows) ? \count(array_unique(array_column($rows, 'app_id'))) : 0;
+                $uniqueCompanies = !empty($rows) ? \count(array_unique(array_column($rows, 'company_id'))) : 0;
+                $uniqueRuntemplates = !empty($rows) ? \count(array_unique(array_column($rows, 'runtemplate_id'))) : 0;
+
                 // Count jobs by schedule timing
                 $now = new \DateTime();
                 $today = $now->format('Y-m-d');
                 $tomorrow = (clone $now)->add(new \DateInterval('P1D'))->format('Y-m-d');
                 $thisWeek = (clone $now)->add(new \DateInterval('P7D'))->format('Y-m-d');
                 $thisMonth = (clone $now)->add(new \DateInterval('P30D'))->format('Y-m-d');
-                
+
                 $jobsToday = 0;
                 $jobsTomorrow = 0;
                 $jobsThisWeek = 0;
                 $jobsThisMonth = 0;
                 $overdueJobs = 0;
                 $jobsIn2027 = 0;
-                
+
                 foreach ($rows as $row) {
                     if (!empty($row['after'])) {
                         $afterDate = substr($row['after'], 0, 10);
                         $afterYear = substr($row['after'], 0, 4);
-                        
+
                         if ($afterDate < $today) {
-                            $overdueJobs++;
+                            ++$overdueJobs;
                         } elseif ($afterDate === $today) {
-                            $jobsToday++;
+                            ++$jobsToday;
                         } elseif ($afterDate === $tomorrow) {
-                            $jobsTomorrow++;
+                            ++$jobsTomorrow;
                         }
-                        
+
                         if ($afterDate <= $thisWeek && $afterDate >= $today) {
-                            $jobsThisWeek++;
+                            ++$jobsThisWeek;
                         }
-                        
+
                         if ($afterDate <= $thisMonth && $afterDate >= $today) {
-                            $jobsThisMonth++;
+                            ++$jobsThisMonth;
                         }
-                        
+
                         if ($afterYear === '2027') {
-                            $jobsIn2027++;
+                            ++$jobsIn2027;
                         }
                     }
                 }
@@ -167,37 +167,39 @@ class QueueCommand extends MultiFlexiCommand
                 }
 
                 $rows = $query->fetchAll();
-                
+
                 // For each row, populate missing fields by joining manually
                 foreach ($rows as &$row) {
                     // Initialize missing fields with empty values
-                    $row['schedule_type'] = $row['schedule_type'] ?? '';
+                    $row['schedule_type'] ??= '';
                     $row['runtemplate_name'] = '';
                     $row['runtemplate_id'] = '';
                     $row['app_name'] = '';
                     $row['app_id'] = '';
                     $row['company_name'] = '';
                     $row['company_id'] = '';
-                    
+
                     // If we have job ID, try to get related data
                     if (!empty($row['job'])) {
                         try {
                             $job = new \MultiFlexi\Job((int) $row['job']);
                             $runtimeTemplateId = $job->getDataValue('runtemplate_id');
-                            
+
                             if ($runtimeTemplateId) {
                                 $runTemplate = new \MultiFlexi\RunTemplate((int) $runtimeTemplateId);
                                 $row['runtemplate_name'] = $runTemplate->getDataValue('name') ?: '';
                                 $row['runtemplate_id'] = $runtimeTemplateId;
-                                
+
                                 $appId = $runTemplate->getDataValue('app_id');
+
                                 if ($appId) {
                                     $app = new \MultiFlexi\Application((int) $appId);
                                     $row['app_name'] = $app->getDataValue('name') ?: '';
                                     $row['app_id'] = $appId;
                                 }
-                                
+
                                 $companyId = $runTemplate->getDataValue('company_id');
+
                                 if ($companyId) {
                                     $company = new \MultiFlexi\Company((int) $companyId);
                                     $row['company_name'] = $company->getDataValue('name') ?: '';

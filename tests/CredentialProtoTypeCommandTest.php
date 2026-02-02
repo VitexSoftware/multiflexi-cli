@@ -34,15 +34,15 @@ class CredentialProtoTypeCommandTest extends TestCase
         $application->add(new CredentialProtoTypeCommand());
         $command = $application->find('crprototype');
         $tester = new CommandTester($command);
-        
+
         $tester->execute([
             'action' => 'list',
             '--format' => 'json',
         ]);
-        
+
         $output = $tester->getDisplay();
         $this->assertJson($output);
-        
+
         $data = json_decode($output, true);
         $this->assertIsArray($data);
     }
@@ -56,15 +56,15 @@ class CredentialProtoTypeCommandTest extends TestCase
         $application->add(new CredentialProtoTypeCommand());
         $command = $application->find('crprototype');
         $tester = new CommandTester($command);
-        
+
         $tester->execute([
             'action' => 'list',
         ]);
-        
+
         $output = $tester->getDisplay();
         // Should not be valid JSON (default is text format)
         $this->expectException(JsonException::class);
-        json_decode($output, true, 512, JSON_THROW_ON_ERROR);
+        json_decode($output, true, 512, \JSON_THROW_ON_ERROR);
     }
 
     /**
@@ -76,7 +76,7 @@ class CredentialProtoTypeCommandTest extends TestCase
         $application->add(new CredentialProtoTypeCommand());
         $command = $application->find('crprototype');
         $tester = new CommandTester($command);
-        
+
         $tester->execute([
             'action' => 'create',
             '--code' => 'TestCred123',
@@ -84,10 +84,10 @@ class CredentialProtoTypeCommandTest extends TestCase
             '--uuid' => '12345678-1234-5678-9abc-123456789abc',
             '--format' => 'json',
         ]);
-        
+
         $output = $tester->getDisplay();
         $this->assertJson($output);
-        
+
         $data = json_decode($output, true);
         $this->assertArrayHasKey('status', $data);
         $this->assertEquals('success', $data['status']);
@@ -103,15 +103,15 @@ class CredentialProtoTypeCommandTest extends TestCase
         $application->add(new CredentialProtoTypeCommand());
         $command = $application->find('crprototype');
         $tester = new CommandTester($command);
-        
+
         $tester->execute([
             'action' => 'create',
             '--name' => 'Test Credential',
             '--format' => 'json',
         ]);
-        
+
         $this->assertEquals(1, $tester->getStatusCode()); // Should fail
-        
+
         $output = $tester->getDisplay();
         $this->assertStringContainsString('Missing required field', $output);
     }
@@ -125,18 +125,18 @@ class CredentialProtoTypeCommandTest extends TestCase
         $application->add(new CredentialProtoTypeCommand());
         $command = $application->find('crprototype');
         $tester = new CommandTester($command);
-        
+
         $tester->execute([
             'action' => 'import-json',
             '--file' => '/nonexistent/file.json',
             '--format' => 'json',
         ]);
-        
+
         $this->assertEquals(1, $tester->getStatusCode()); // Should fail
-        
+
         $output = $tester->getDisplay();
         $this->assertJson($output);
-        
+
         $data = json_decode($output, true);
         $this->assertEquals('error', $data['status']);
         $this->assertStringContainsString('Missing or invalid', $data['message']);
@@ -151,19 +151,19 @@ class CredentialProtoTypeCommandTest extends TestCase
         $application->add(new CredentialProtoTypeCommand());
         $command = $application->find('crprototype');
         $tester = new CommandTester($command);
-        
+
         // Use /tmp as an existing directory
         $tester->execute([
             'action' => 'import-json',
             '--file' => '/tmp',
             '--format' => 'json',
         ]);
-        
+
         $this->assertEquals(1, $tester->getStatusCode()); // Should fail
-        
+
         $output = $tester->getDisplay();
         $this->assertJson($output);
-        
+
         $data = json_decode($output, true);
         $this->assertEquals('error', $data['status']);
         $this->assertStringContainsString('must be a file, not a directory', $data['message']);
@@ -178,18 +178,18 @@ class CredentialProtoTypeCommandTest extends TestCase
         $application->add(new CredentialProtoTypeCommand());
         $command = $application->find('crprototype');
         $tester = new CommandTester($command);
-        
+
         $tester->execute([
             'action' => 'validate-json',
             '--file' => '/nonexistent/file.json',
             '--format' => 'json',
         ]);
-        
+
         $this->assertEquals(1, $tester->getStatusCode()); // Should fail
-        
+
         $output = $tester->getDisplay();
         $this->assertJson($output);
-        
+
         $data = json_decode($output, true);
         $this->assertEquals('error', $data['status']);
         $this->assertStringContainsString('Missing or invalid', $data['message']);
@@ -204,13 +204,13 @@ class CredentialProtoTypeCommandTest extends TestCase
         $application->add(new CredentialProtoTypeCommand());
         $command = $application->find('crprototype');
         $tester = new CommandTester($command);
-        
+
         $tester->execute([
             'action' => 'get',
         ]);
-        
+
         $this->assertEquals(1, $tester->getStatusCode()); // Should fail
-        
+
         $output = $tester->getDisplay();
         $this->assertStringContainsString('Missing --id, --uuid, or --code', $output);
     }

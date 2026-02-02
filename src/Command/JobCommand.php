@@ -147,13 +147,14 @@ EOD;
                 foreach ($jobs as &$jobData) {
                     if (isset($jobData['env']) && \Ease\Functions::isSerialized($jobData['env'])) {
                         $envUnserialized = unserialize($jobData['env']);
-                        
+
                         if ($envUnserialized instanceof \MultiFlexi\ConfigFields) {
                             // New format: ConfigFields object
                             $jobData['env'] = $envUnserialized->getEnvArray();
                         } elseif (\is_array($envUnserialized)) {
                             // Old format: array with metadata - extract just values
                             $envArray = [];
+
                             foreach ($envUnserialized as $key => $envInfo) {
                                 if (\is_array($envInfo) && isset($envInfo['value'])) {
                                     $envArray[$key] = $envInfo['value'];
@@ -161,10 +162,12 @@ EOD;
                                     $envArray[$key] = $envInfo->getValue();
                                 }
                             }
+
                             $jobData['env'] = $envArray;
                         }
                     }
                 }
+
                 unset($jobData); // Break reference
 
                 // Handle fields option
