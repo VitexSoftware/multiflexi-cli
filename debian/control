@@ -7,7 +7,6 @@ Standards-Version: 4.1.4
 Homepage: https://github.com/VitexSoftware/multiflexi-cli
 
 Package: multiflexi-cli
-Multi-Arch: foreign
 Depends: ${misc:Depends},
  multiflexi-common,
  php-vitexsoftware-multiflexi-core (>= 2.7.0),
@@ -18,8 +17,12 @@ Depends: ${misc:Depends},
  php-json-schema,
  sudo,
  multiflexi-database
+Recommends:
+ multiflexi-sqlite
+Suggests:
+ multiflexi-mysql,
+ multiflexi-pgsql
 Architecture: all
-Suggests: multiflexi-all
 Description: commandline interface for MultiFlexi
  MultiFlexi CLI is a command-line interface tool for managing and
  interacting with the MultiFlexi system. It allows administrators and
