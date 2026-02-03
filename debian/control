@@ -17,8 +17,9 @@ Depends: ${misc:Depends},
  php-symfony-console,
  php-json-schema,
  sudo,
+ multiflexi-database
+
 Suggests: multiflexi-all
-Pre-Depends: multiflexi-database
 Architecture: all
 Description: commandline interface for MultiFlexi
  MultiFlexi CLI is a command-line interface tool for managing and
