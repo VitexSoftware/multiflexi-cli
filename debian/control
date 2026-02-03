@@ -18,9 +18,8 @@ Depends: ${misc:Depends},
  php-json-schema,
  sudo,
  multiflexi-database
-
-Suggests: multiflexi-all
 Architecture: all
+Suggests: multiflexi-all
 Description: commandline interface for MultiFlexi
  MultiFlexi CLI is a command-line interface tool for managing and
  interacting with the MultiFlexi system. It allows administrators and
