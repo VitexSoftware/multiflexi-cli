@@ -630,25 +630,58 @@ If ``ENCRYPTION_MASTER_KEY`` is not configured, the init command will fail:
 queue
 -----
 
-Queue operations (list, truncate).
+Queue operations (list, truncate). When no action is specified, shows comprehensive queue metrics overview.
 
 .. code-block:: bash
 
     multiflexi-cli queue <action> [options]
 
 Actions:
-- list:     Show all scheduled jobs in the queue.
+- list:     Show all scheduled jobs in the queue with detailed information.
 - truncate: Remove all scheduled jobs from the queue.
+- (no action): Show queue overview with metrics and statistics.
 
 Options:
-  -f, --format   Output format: text or json (default: text)
+  -f, --format     Output format: text or json (default: text)
+  --limit          Limit number of results for list action
+  --order          Sort field: "after", "id" 
+  --direction      Sort direction: "ASC", "DESC", "A", "D" (default: ASC)
+  --fields         Comma-separated list of fields to display
+
+**Queue List Features:**
+
+The ``queue list`` command displays comprehensive information about scheduled jobs:
+
+- **Schedule Type**: Shows human-readable schedule types (daily, weekly, monthly, yearly, hourly, minutly, custom, disabled) converted from interval codes
+- **Waiting Time**: Displays human-readable time remaining until job execution (e.g., "2h 45m", "25d 2h 45m", "overdue")
+- **Complete Job Details**: RunTemplate name, Application name, Company information
+- **Flexible Ordering**: Sort by scheduled time or ID in ascending/descending order
+- **Field Filtering**: Display only specific columns using --fields option
 
 Examples:
 
 .. code-block:: bash
 
-    multiflexi-cli queue list -f json
-    multiflexi-cli queue truncate -f json
+    # Basic queue listing
+    multiflexi-cli queue list
+    
+    # Show overview metrics
+    multiflexi-cli queue
+    
+    # Order by scheduled time (earliest first)
+    multiflexi-cli queue list --order after --limit 10
+    
+    # Order by scheduled time (latest first)  
+    multiflexi-cli queue list --order after --direction DESC --limit 10
+    
+    # Show only specific fields
+    multiflexi-cli queue list --fields "id,after,schedule_type,runtemplate_name" --limit 5
+    
+    # JSON output for automation
+    multiflexi-cli queue list --format json --limit 20
+    
+    # Truncate all jobs
+    multiflexi-cli queue truncate
 
 prune
 -----

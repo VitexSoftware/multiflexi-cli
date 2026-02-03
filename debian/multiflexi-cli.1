@@ -125,10 +125,11 @@ Options: --debug, --help
 .RE
 .TP
 .B queue
-Queue operations
+Queue operations with comprehensive job listing, sorting, and metrics
 .RS
-Actions: list, truncate
-Options: --format, --help
+Actions: list, truncate, (none for overview)
+Options: --format, --limit, --order, --direction, --fields, --help
+Features: Schedule type display, human-readable waiting times, flexible sorting by scheduled time or ID, field filtering
 .RE
 .TP
 .B prune
@@ -231,6 +232,18 @@ Create company-application relation:
 .TP
 Prune logs and jobs, keeping only the latest 500 records:
 .B multiflexi-cli prune --logs --jobs --keep 500
+.TP
+Show queue overview with metrics:
+.B multiflexi-cli queue
+.TP
+List jobs ordered by scheduled time (earliest first):
+.B multiflexi-cli queue list --order after --limit 10
+.TP
+List jobs ordered by scheduled time (latest first):
+.B multiflexi-cli queue list --order after --direction DESC --limit 10
+.TP
+Show specific queue fields in JSON format:
+.B multiflexi-cli queue list --fields "id,after,schedule_type" --format json
 .TP
 Truncate the job queue:
 .B multiflexi-cli queue truncate

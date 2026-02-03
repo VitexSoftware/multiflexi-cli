@@ -33,7 +33,7 @@ multiflexi-cli <command> [options]
 - `telemetry:test`: Test OpenTelemetry metrics export
 - `encryption`: Manage encryption keys (status, init)
 - `prune`: Remove obsolete data
-- `queue`: Manage job queue
+- `queue`: Manage job queue (list with sorting/filtering, truncate, overview metrics)
 - `token`: Manage authentication tokens
 
 ## Output Formats
@@ -62,6 +62,12 @@ multiflexi-cli credtype validate-json --file credential-type.json
 # System status (includes encryption, Zabbix, OpenTelemetry)
 multiflexi-cli status
 multiflexi-cli status --format json
+
+# Queue management with enhanced features
+multiflexi-cli queue                                    # Show queue overview metrics
+multiflexi-cli queue list --order after --limit 10     # List jobs by scheduled time
+multiflexi-cli queue list --order after --direction DESC --limit 5  # Latest jobs first
+multiflexi-cli queue list --fields "id,after,schedule_type" --format json  # Custom fields JSON
 
 # Credential type management
 multiflexi-cli credtype list
