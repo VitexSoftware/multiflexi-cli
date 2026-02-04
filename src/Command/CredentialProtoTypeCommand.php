@@ -469,7 +469,8 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                             'schema' => realpath(CredentialProtoType::$credProtoTypeSchema),
                         ], \JSON_PRETTY_PRINT));
                     } else {
-                        $output->writeln('<error>JSON validation failed: '.$jsonFile.'</error>');
+                        $output->writeln('<error>JSON validation failed</error>');
+                        $output->writeln('<comment>File: '.$jsonFile.'</comment>');
                         $output->writeln('<comment>Schema: '.realpath(CredentialProtoType::$credProtoTypeSchema).'</comment>');
 
                         foreach ($validationResult as $violation) {
@@ -605,6 +606,8 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                         $output->writeln('<info>JSON is valid</info>');
                     } else {
                         $output->writeln('<error>JSON validation failed</error>');
+                        $output->writeln('<comment>File: '.$jsonFile.'</comment>');
+                        $output->writeln('<comment>Schema: '.realpath(CredentialProtoType::$credProtoTypeSchema).'</comment>');
 
                         foreach ($result as $violation) {
                             $output->writeln('<error> '.$violation.' </error>');
