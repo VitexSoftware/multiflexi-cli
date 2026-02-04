@@ -17,9 +17,8 @@ Depends: ${misc:Depends},
  php-json-schema,
  sudo,
  multiflexi-database
-Recommends:
- multiflexi-sqlite
 Suggests:
+ multiflexi-sqlite,
  multiflexi-mysql,
  multiflexi-pgsql
 Architecture: all
