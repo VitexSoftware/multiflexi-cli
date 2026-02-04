@@ -36,9 +36,8 @@ class CredentialTypeCommand extends MultiFlexiCommand
      */
     public function validateCredTypeJson(string $jsonFile): array
     {
-        // For credential types, we might want to use a different schema
-        // For now, using the credential prototype schema as a base
-        return self::validateJson($jsonFile, \MultiFlexi\CredentialProtoType::$credProtoTypeSchema);
+        // Validate credential type JSON against the proper credential type schema
+        return self::validateJson($jsonFile, \MultiFlexi\CredentialType::$credTypeSchema);
     }
     protected function configure(): void
     {
@@ -307,11 +306,11 @@ class CredentialTypeCommand extends MultiFlexiCommand
                             'message' => 'JSON validation failed',
                             'violations' => $validationResult,
                             'file' => $json,
-                            'schema' => realpath(CredentialProtoType::$credProtoTypeSchema),
+                            'schema' => realpath(\MultiFlexi\CredentialType::$credTypeSchema),
                         ], \JSON_PRETTY_PRINT));
                     } else {
                         $output->writeln('<error>JSON validation failed</error>');
-                        $output->writeln('<comment>Schema: '.realpath(CredentialProtoType::$credProtoTypeSchema).'</comment>');
+                        $output->writeln('<comment>Schema: '.realpath(\MultiFlexi\CredentialType::$credTypeSchema).'</comment>');
 
                         foreach ($validationResult as $violation) {
                             $output->writeln('<error> '.$violation.' </error>');
@@ -397,7 +396,7 @@ class CredentialTypeCommand extends MultiFlexiCommand
                         $output->writeln(json_encode([
                             'status' => 'success',
                             'file' => $json,
-                            'schema' => realpath(\MultiFlexi\CredentialProtoType::$credProtoTypeSchema),
+                            'schema' => realpath(\MultiFlexi\CredentialType::$credTypeSchema),
                             'message' => 'JSON is valid',
                         ], \JSON_PRETTY_PRINT));
                     } else {
@@ -405,7 +404,7 @@ class CredentialTypeCommand extends MultiFlexiCommand
                             'status' => 'error',
                             'file' => $json,
                             'violations' => $result,
-                            'schema' => realpath(\MultiFlexi\CredentialProtoType::$credProtoTypeSchema),
+                            'schema' => realpath(\MultiFlexi\CredentialType::$credTypeSchema),
                             'message' => 'JSON validation failed',
                         ], \JSON_PRETTY_PRINT));
                     }
