@@ -1,47 +1,53 @@
 {
-  "name": "vitexsoftware/multiflexi",
-  "description": "Tool used to setup AbraFlexi multiinstance",
-  "type": "project",
-  "require": {
-    "deb/ease-fluentpdo": "*",
-    "deb/multiflexi-core": "*",
-    "symfony/process": "*",
-    "sensiolabs/ansi-to-html": "*",
-    "zarplata/zabbix-sender": "dev-master",
-    "rcubitto/json-pretty": "dev-master",
-    "justinrainbow/json-schema": "^6.0@dev",
-    "phplucidframe/console-table": "dev-master"
-  },
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Vítězslav Dvořák",
-      "email": "info@vitexsoftware.cz"
-    }
-  ],
-  "config": {
-    "vendor-dir": "/var/lib/composer/multiflexi-cli"
-  },
-  "minimum-stability": "dev",
-  "autoload": {
-    "psr-4": {
-      "MultiFlexi\\": "./MultiFlexi/",
-      "MultiFlexi\\Cli\\": "./MultiFlexi/Cli/",
-      "MultiFlexi\\Cli\\Command\\": "./Command/"
-    }
-  },
-  "repositories": [
-    {
-      "type": "path",
-      "url": "/usr/share/php/EaseCore/"
+    "name": "vitexsoftware/multiflexi",
+    "description": "Tool used to setup AbraFlexi multiinstance",
+    "type": "project",
+    "require": {
+        "deb/ease-fluentpdo": "*",
+        "deb/multiflexi-core": "*",
+        "symfony/process": "*",
+        "sensiolabs/ansi-to-html": "*",
+        "zarplata/zabbix-sender": "dev-master",
+        "rcubitto/json-pretty": "dev-master",
+        "justinrainbow/json-schema": "^6.0@dev",
+        "phplucidframe/console-table": "dev-master"
     },
-    {
-      "type": "path",
-      "url": "/usr/share/php/MultiFlexi"
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Vítězslav Dvořák",
+            "email": "info@vitexsoftware.cz"
+        }
+    ],
+    "config": {
+        "vendor-dir": "/var/lib/composer/multiflexi-cli"
     },
-    {
-      "type": "path",
-      "url": "/usr/share/php/EaseFluentPDO/"
-    }
-  ]
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "MultiFlexi\\": "./MultiFlexi/",
+            "MultiFlexi\\Cli\\": "./MultiFlexi/Cli/",
+            "MultiFlexi\\Cli\\Command\\": "./Command/"
+        },
+        "files": [
+            "/usr/share/php/Symfony/Component/Console/autoload.php",
+            "/usr/share/php/Symfony/Component/DependencyInjection/autoload.php",
+            "/usr/share/php/Symfony/Component/Yaml/autoload.php",
+            "/usr/share/php/JsonSchema/autoload.php"
+        ]
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "/usr/share/php/EaseCore/"
+        },
+        {
+            "type": "path",
+            "url": "/usr/share/php/MultiFlexi"
+        },
+        {
+            "type": "path",
+            "url": "/usr/share/php/EaseFluentPDO/"
+        }
+    ]
 }

@@ -27,8 +27,6 @@ override_dh_install:
 	if [ -f debian/multiflexi-cli/usr/bin/multiflexi ]; then chmod 0755 debian/multiflexi-cli/usr/bin/multiflexi; fi
 	sed -i "s|require_once __DIR__.'/../vendor/autoload.php';|require_once '/var/lib/composer/multiflexi-cli/autoload.php';|" debian/multiflexi-cli/usr/share/multiflexi-cli/multiflexi-cli.php
 	sed -i 's/\.\.\//\/etc\/multiflexi\/multiflexi/' debian/multiflexi-cli/usr/share/multiflexi-cli/multiflexi-cli.php
-	sed -i "20i require_once '/usr/share/php/Symfony/Component/Console/autoload.php';" debian/multiflexi-cli/usr/share/multiflexi-cli/multiflexi-cli.php
-	sed -i "20i require_once '/usr/share/php/JsonSchema/autoload.php';" debian/multiflexi-cli/usr/share/multiflexi-cli/multiflexi-cli.php
 	composer update
 	# Fix autoload include for multiflexi-cli.php only (precise replacement)
 	mkdir -p debian/multiflexi-cli/usr/share/bash-completion/completions
