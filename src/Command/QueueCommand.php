@@ -154,39 +154,45 @@ class QueueCommand extends MultiFlexiCommand
                 if (!empty($order)) {
                     $orderField = strtolower($order);
                     $orderBy = 'ASC'; // Default to ascending
-                    
+
                     // Check if direction is specified separately
                     if (!empty($direction)) {
                         $dir = strtoupper($direction);
-                        if (in_array($dir, ['DESC', 'D'])) {
+
+                        if (\in_array($dir, ['DESC', 'D'], true)) {
                             $orderBy = 'DESC';
                         }
                     }
-                    
+
                     // Check if order has direction embedded (for backward compatibility)
-                    if (strpos($orderField, ' ') !== false) {
+                    if (str_contains($orderField, ' ')) {
                         $parts = explode(' ', $orderField);
                         $orderField = $parts[0];
                         $dir = strtoupper($parts[1]);
-                        if (in_array($dir, ['DESC', 'D'])) {
+
+                        if (\in_array($dir, ['DESC', 'D'], true)) {
                             $orderBy = 'DESC';
                         }
                     }
-                    
+
                     // Map field names to actual database columns
                     switch ($orderField) {
                         case 'after':
-                            $query = $query->orderBy('after ' . $orderBy);
+                            $query = $query->orderBy('after '.$orderBy);
+
                             break;
                         case 'job':
-                            $query = $query->orderBy('job ' . $orderBy);
+                            $query = $query->orderBy('job '.$orderBy);
+
                             break;
                         case 'id':
                             // Backward compatibility: if order is just "D", treat as descending ID
                             if ($orderField === 'd') {
                                 $orderBy = 'DESC';
                             }
-                            $query = $query->orderBy('id ' . $orderBy);
+
+                            $query = $query->orderBy('id '.$orderBy);
+
                             break;
                         case 'schedule_type':
                         case 'runtemplate_id':
@@ -198,10 +204,13 @@ class QueueCommand extends MultiFlexiCommand
                             // These fields need to be sorted after data population since they come from joins
                             $this->postSortField = $orderField;
                             $this->postSortDirection = $orderBy;
+
                             break;
+
                         default:
                             // Default to ID ordering
-                            $query = $query->orderBy('id ' . $orderBy);
+                            $query = $query->orderBy('id '.$orderBy);
+
                             break;
                     }
                 }
@@ -243,30 +252,33 @@ class QueueCommand extends MultiFlexiCommand
                         $scheduledTime = new \DateTime($row['after']);
                         $now = new \DateTime();
                         $interval = $now->diff($scheduledTime);
-                        
+
                         $waitingTime = '';
+
                         if ($scheduledTime < $now) {
                             $waitingTime = 'overdue ';
                         }
-                        
+
                         // Calculate total days including months and years
                         $totalDays = $interval->days;
-                        
+
                         if ($totalDays > 0) {
-                            $waitingTime .= $totalDays . 'd ';
+                            $waitingTime .= $totalDays.'d ';
                         }
+
                         if ($interval->h > 0) {
-                            $waitingTime .= $interval->h . 'h ';
+                            $waitingTime .= $interval->h.'h ';
                         }
+
                         if ($interval->i > 0) {
-                            $waitingTime .= $interval->i . 'm ';
+                            $waitingTime .= $interval->i.'m ';
                         }
-                        
-                        if (empty(trim($waitingTime)) || ($totalDays == 0 && $interval->h == 0 && $interval->i == 0)) {
+
+                        if (empty(trim($waitingTime)) || ($totalDays === 0 && $interval->h === 0 && $interval->i === 0)) {
                             $waitingTime = 'now ';
                         }
-                        
-                        $orderedRow['after'] = $row['after'] . ' (' . rtrim($waitingTime) . ')';
+
+                        $orderedRow['after'] = $row['after'].' ('.rtrim($waitingTime).')';
                     }
 
                     // If we have job ID, try to get related data
@@ -317,51 +329,60 @@ class QueueCommand extends MultiFlexiCommand
                             case 'schedule_type':
                                 $aValue = $a['schedule_type'] ?? '';
                                 $bValue = $b['schedule_type'] ?? '';
+
                                 break;
                             case 'runtemplate_id':
-                                $aValue = (int)($a['runtemplate_id'] ?? 0);
-                                $bValue = (int)($b['runtemplate_id'] ?? 0);
+                                $aValue = (int) ($a['runtemplate_id'] ?? 0);
+                                $bValue = (int) ($b['runtemplate_id'] ?? 0);
+
                                 break;
                             case 'runtemplate_name':
                                 $aValue = $a['runtemplate_name'] ?? '';
                                 $bValue = $b['runtemplate_name'] ?? '';
+
                                 break;
                             case 'app_id':
-                                $aValue = (int)($a['app_id'] ?? 0);
-                                $bValue = (int)($b['app_id'] ?? 0);
+                                $aValue = (int) ($a['app_id'] ?? 0);
+                                $bValue = (int) ($b['app_id'] ?? 0);
+
                                 break;
                             case 'app_name':
                                 $aValue = $a['app_name'] ?? '';
                                 $bValue = $b['app_name'] ?? '';
+
                                 break;
                             case 'company_id':
-                                $aValue = (int)($a['company_id'] ?? 0);
-                                $bValue = (int)($b['company_id'] ?? 0);
+                                $aValue = (int) ($a['company_id'] ?? 0);
+                                $bValue = (int) ($b['company_id'] ?? 0);
+
                                 break;
                             case 'company_name':
                                 $aValue = $a['company_name'] ?? '';
                                 $bValue = $b['company_name'] ?? '';
+
                                 break;
                             case 'job':
-                                $aValue = (int)($a['job'] ?? 0);
-                                $bValue = (int)($b['job'] ?? 0);
+                                $aValue = (int) ($a['job'] ?? 0);
+                                $bValue = (int) ($b['job'] ?? 0);
+
                                 break;
+
                             default:
                                 return 0; // No comparison for unknown fields
                         }
-                        
+
                         // Compare values based on type
                         if (is_numeric($aValue) && is_numeric($bValue)) {
                             $result = $aValue <=> $bValue;
                         } else {
-                            $result = strcasecmp((string)$aValue, (string)$bValue);
+                            $result = strcasecmp((string) $aValue, (string) $bValue);
                         }
-                        
+
                         // Apply sort direction
                         if ($this->postSortDirection === 'DESC') {
                             $result = -$result;
                         }
-                        
+
                         return $result;
                     });
                 }

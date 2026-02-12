@@ -122,53 +122,63 @@ abstract class MultiFlexiCommand extends \Symfony\Component\Console\Command\Comm
     public static function validateJson(string $jsonFile, string $schemaFile): array
     {
         $violations = [];
-        
+
         // Validate input file exists and is readable
         if (!is_file($jsonFile)) {
             $violations[] = "JSON file does not exist or is not a file: {$jsonFile}";
+
             return $violations;
         }
-        
+
         if (!is_readable($jsonFile)) {
             $violations[] = "JSON file is not readable: {$jsonFile}";
+
             return $violations;
         }
-        
+
         // Validate schema file exists and is readable
         if (!is_file($schemaFile)) {
             $violations[] = "Schema file does not exist or is not a file: {$schemaFile}";
+
             return $violations;
         }
-        
+
         if (!is_readable($schemaFile)) {
             $violations[] = "Schema file is not readable: {$schemaFile}";
+
             return $violations;
         }
-        
+
         // Read and validate JSON content
         $jsonContent = file_get_contents($jsonFile);
+
         if ($jsonContent === false) {
             $violations[] = "Failed to read JSON file: {$jsonFile}";
+
             return $violations;
         }
-        
+
         $data = json_decode($jsonContent);
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            $violations[] = "Invalid JSON in file {$jsonFile}: " . json_last_error_msg();
+
+        if (json_last_error() !== \JSON_ERROR_NONE) {
+            $violations[] = "Invalid JSON in file {$jsonFile}: ".json_last_error_msg();
+
             return $violations;
         }
-        
+
         // Resolve schema path
         $resolvedSchemaPath = realpath($schemaFile);
+
         if ($resolvedSchemaPath === false) {
             $violations[] = "Failed to resolve schema file path: {$schemaFile}";
+
             return $violations;
         }
-        
+
         // Validate with JSON Schema
         try {
             $validator = new \JsonSchema\Validator();
-            $validator->validate($data, (object) ['$ref' => 'file://' . $resolvedSchemaPath]);
+            $validator->validate($data, (object) ['$ref' => 'file://'.$resolvedSchemaPath]);
 
             if (!$validator->isValid()) {
                 foreach ($validator->getErrors() as $error) {
@@ -176,7 +186,7 @@ abstract class MultiFlexiCommand extends \Symfony\Component\Console\Command\Comm
                 }
             }
         } catch (\Exception $e) {
-            $violations[] = "JSON Schema validation failed: " . $e->getMessage();
+            $violations[] = 'JSON Schema validation failed: '.$e->getMessage();
         }
 
         return $violations;
