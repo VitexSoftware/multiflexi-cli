@@ -453,7 +453,36 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
 
                 $normalized = self::normalizePrototypeJson($decoded, 'en', 'cs');
                 $normalizedPath = sys_get_temp_dir().'/crprototype.normalized.'.md5($jsonFile).'.json';
-                file_put_contents($normalizedPath, json_encode($normalized, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE));
+                
+                // Write normalized JSON to temporary file
+                $normalizedJson = json_encode($normalized, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE);
+                if ($normalizedJson === false) {
+                    if ($format === 'json') {
+                        $output->writeln(json_encode([
+                            'status' => 'error',
+                            'message' => 'Failed to encode normalized JSON',
+                            'file' => $jsonFile,
+                        ], \JSON_PRETTY_PRINT));
+                    } else {
+                        $output->writeln('<error>Failed to encode normalized JSON</error>');
+                    }
+                    return MultiFlexiCommand::FAILURE;
+                }
+                
+                $writeResult = file_put_contents($normalizedPath, $normalizedJson);
+                if ($writeResult === false) {
+                    if ($format === 'json') {
+                        $output->writeln(json_encode([
+                            'status' => 'error',
+                            'message' => 'Failed to write normalized JSON to temporary file',
+                            'file' => $jsonFile,
+                            'temp_file' => $normalizedPath,
+                        ], \JSON_PRETTY_PRINT));
+                    } else {
+                        $output->writeln('<error>Failed to write normalized JSON to temporary file: '.$normalizedPath.'</error>');
+                    }
+                    return MultiFlexiCommand::FAILURE;
+                }
 
                 // Validate normalized JSON
                 $validationResult = $this->validateCredPrototypeJson($normalizedPath);
@@ -476,6 +505,11 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                         foreach ($validationResult as $violation) {
                             $output->writeln('<error> '.$violation.' </error>');
                         }
+                    }
+
+                    // Clean up temporary file
+                    if (file_exists($normalizedPath)) {
+                        @unlink($normalizedPath);
                     }
 
                     return MultiFlexiCommand::FAILURE;
@@ -520,6 +554,11 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                             $output->writeln('<info>Code: '.$credProto->getDataValue('code').'</info>');
                         }
 
+                        // Clean up temporary file
+                        if (file_exists($normalizedPath)) {
+                            @unlink($normalizedPath);
+                        }
+
                         return MultiFlexiCommand::SUCCESS;
                     }
 
@@ -535,6 +574,11 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                         $output->writeln('<error>Failed to import credential prototype</error>');
                     }
 
+                    // Clean up temporary file
+                    if (file_exists($normalizedPath)) {
+                        @unlink($normalizedPath);
+                    }
+
                     return MultiFlexiCommand::FAILURE;
                 } catch (\Exception $e) {
                     if ($format === 'json') {
@@ -546,6 +590,11 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                         ], \JSON_PRETTY_PRINT));
                     } else {
                         $output->writeln('<error>Import failed: '.$e->getMessage().'</error>');
+                    }
+
+                    // Clean up temporary file
+                    if (file_exists($normalizedPath)) {
+                        @unlink($normalizedPath);
                     }
 
                     return MultiFlexiCommand::FAILURE;
