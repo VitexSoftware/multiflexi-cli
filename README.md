@@ -33,7 +33,7 @@ multiflexi-cli <command> [options]
 - `telemetry:test`: Test OpenTelemetry metrics export
 - `encryption`: Manage encryption keys (status, init)
 - `prune`: Remove obsolete data
-- `queue`: Manage job queue (list with sorting/filtering, truncate, overview metrics)
+- `queue`: Manage job queue (list with sorting/filtering, truncate, fix orphaned jobs, overview metrics)
 - `token`: Manage authentication tokens
 
 ## Output Formats
@@ -64,7 +64,8 @@ multiflexi-cli status
 multiflexi-cli status --format json
 
 # Queue management with enhanced features
-multiflexi-cli queue                                    # Show queue overview metrics
+multiflexi-cli queue                                    # Show queue overview metrics inclusive orphaned jobs
+multiflexi-cli queue fix                                # Fix orphaned jobs and queue inconsistencies
 multiflexi-cli queue list --order after --limit 10     # List jobs by scheduled time
 multiflexi-cli queue list --order after --direction DESC --limit 5  # Latest jobs first
 multiflexi-cli queue list --fields "id,after,schedule_type" --format json  # Custom fields JSON

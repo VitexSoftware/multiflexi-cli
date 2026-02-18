@@ -37,9 +37,9 @@ class QueueCommand extends MultiFlexiCommand
     {
         $this
             ->setName('queue')
-            ->setDescription('Queue operations (list, truncate) - shows metric overview when no action specified')
+            ->setDescription('Queue operations (list, truncate, fix) - shows metric overview when no action specified')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'The output format: text or json. Defaults to text.', 'text')
-            ->addArgument('action', InputArgument::OPTIONAL, 'Action: list|truncate (optional - shows overview if omitted)')
+            ->addArgument('action', InputArgument::OPTIONAL, 'Action: list|truncate|fix (optional - shows overview if omitted)')
             ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit number of results for list action')
             ->addOption('order', null, InputOption::VALUE_REQUIRED, 'Sort order field: "after", "id", "job", "schedule_type", "runtemplate_id", "runtemplate_name", "app_id", "app_name", "company_id", "company_name"')
             ->addOption('direction', null, InputOption::VALUE_REQUIRED, 'Sort direction: "ASC", "DESC", "A", "D" (default: ASC)');
@@ -105,10 +105,19 @@ class QueueCommand extends MultiFlexiCommand
                     }
                 }
 
+                // Count orphaned jobs: jobs that haven't started and are not in the schedule queue
+                $jobModel = new \MultiFlexi\Job();
+                $orphanedJobsCount = $jobModel->listingQuery()
+                    ->where('begin IS NULL')
+                    ->where('exitcode IS NULL')
+                    ->where('id NOT IN (SELECT job FROM schedule WHERE job IS NOT NULL)')
+                    ->count();
+
                 if ($format === 'json') {
                     $result = [
                         'comprehensive_queue_metrics' => [
                             'total_jobs_in_queue' => $totalJobsInQueue,
+                            'orphaned_jobs' => $orphanedJobsCount,
                             'unique_applications' => $uniqueApps,
                             'unique_companies' => $uniqueCompanies,
                             'unique_runtemplates' => $uniqueRuntemplates,
@@ -127,6 +136,7 @@ class QueueCommand extends MultiFlexiCommand
                     // Display comprehensive metric overview
                     $metricsTable = [
                         ['Total jobs in queue', $totalJobsInQueue],
+                        ['Orphaned jobs', $orphanedJobsCount],
                         ['Unique applications', $uniqueApps],
                         ['Unique companies', $uniqueCompanies],
                         ['Unique runtemplates', $uniqueRuntemplates],
@@ -178,11 +188,11 @@ class QueueCommand extends MultiFlexiCommand
                     // Map field names to actual database columns
                     switch ($orderField) {
                         case 'after':
-                            $query = $query->orderBy('after '.$orderBy);
+                            $query = $query->orderBy('after ' . $orderBy);
 
                             break;
                         case 'job':
-                            $query = $query->orderBy('job '.$orderBy);
+                            $query = $query->orderBy('job ' . $orderBy);
 
                             break;
                         case 'id':
@@ -191,7 +201,7 @@ class QueueCommand extends MultiFlexiCommand
                                 $orderBy = 'DESC';
                             }
 
-                            $query = $query->orderBy('id '.$orderBy);
+                            $query = $query->orderBy('id ' . $orderBy);
 
                             break;
                         case 'schedule_type':
@@ -209,7 +219,7 @@ class QueueCommand extends MultiFlexiCommand
 
                         default:
                             // Default to ID ordering
-                            $query = $query->orderBy('id '.$orderBy);
+                            $query = $query->orderBy('id ' . $orderBy);
 
                             break;
                     }
@@ -263,22 +273,22 @@ class QueueCommand extends MultiFlexiCommand
                         $totalDays = $interval->days;
 
                         if ($totalDays > 0) {
-                            $waitingTime .= $totalDays.'d ';
+                            $waitingTime .= $totalDays . 'd ';
                         }
 
                         if ($interval->h > 0) {
-                            $waitingTime .= $interval->h.'h ';
+                            $waitingTime .= $interval->h . 'h ';
                         }
 
                         if ($interval->i > 0) {
-                            $waitingTime .= $interval->i.'m ';
+                            $waitingTime .= $interval->i . 'm ';
                         }
 
                         if (empty(trim($waitingTime)) || ($totalDays === 0 && $interval->h === 0 && $interval->i === 0)) {
                             $waitingTime = 'now ';
                         }
 
-                        $orderedRow['after'] = $row['after'].' ('.rtrim($waitingTime).')';
+                        $orderedRow['after'] = $row['after'] . ' (' . rtrim($waitingTime) . ')';
                     }
 
                     // If we have job ID, try to get related data
@@ -418,12 +428,12 @@ class QueueCommand extends MultiFlexiCommand
 
                 if ($driver === 'sqlite') {
                     // For SQLite, use DELETE FROM and reset the sequence if needed
-                    $result = $pdo->exec('DELETE FROM '.$table);
+                    $result = $pdo->exec('DELETE FROM ' . $table);
                     // Reset AUTOINCREMENT sequence if table has one
-                    $pdo->exec('DELETE FROM sqlite_sequence WHERE name="'.$table.'"');
+                    $pdo->exec('DELETE FROM sqlite_sequence WHERE name="' . $table . '"');
                 } else {
                     // For MySQL and others, use TRUNCATE TABLE
-                    $result = $pdo->exec('TRUNCATE TABLE '.$table);
+                    $result = $pdo->exec('TRUNCATE TABLE ' . $table);
                 }
 
                 $pdo->exec('UPDATE runtemplate SET next_schedule=NULL');
@@ -440,9 +450,60 @@ class QueueCommand extends MultiFlexiCommand
                 }
 
                 return ($result !== false) ? self::SUCCESS : self::FAILURE;
+            case 'fix':
+                $scheduler = new Scheduler();
+                $scheduler->cleanupOrphanedJobs();
+                $scheduler->purgeBrokenQueueRecords();
+                $scheduler->initializeScheduling();
+
+                // Delete orphaned jobs: jobs that haven't started, haven't finished,
+                // and have no corresponding entry in the schedule table.
+                // These jobs are stuck and will never execute.
+                $jobModel = new \MultiFlexi\Job();
+                $orphanedJobs = $jobModel->listingQuery()
+                    ->where('job.begin IS NULL')
+                    ->where('job.exitcode IS NULL')
+                    ->where('job.id NOT IN (SELECT job FROM schedule WHERE job IS NOT NULL)')
+                    ->fetchAll();
+
+                foreach ($orphanedJobs as $orphan) {
+                    $orphanJob = new \MultiFlexi\Job((int) $orphan['id']);
+                    $orphanJob->deleteFromSQL();
+                    $scheduler->addStatusMessage(
+                        sprintf(
+                            'Removed orphaned job #%d (runtemplate #%s, scheduled %s) - no schedule entry',
+                            $orphan['id'],
+                            $orphan['runtemplate_id'] ?? '?',
+                            $orphan['schedule'] ?? '?',
+                        ),
+                        'info',
+                    );
+                }
+
+                $messages = [];
+
+                foreach ($scheduler->getStatusMessages() as $message) {
+                    $messages[] = ['type' => $message->type, 'message' => $message->body];
+                }
+
+                if ($format === 'json') {
+                    $this->jsonSuccess($output, _('Queue diagnostics and fix completed'), ['messages' => $messages]);
+                } else {
+                    if (empty($messages)) {
+                        $output->writeln(_('Nothing to clean up.'));
+                    } else {
+                        foreach ($messages as $message) {
+                            $output->writeln(sprintf('[%s] %s', strtoupper($message['type']), $message['message']));
+                        }
+                    }
+
+                    $output->writeln('<info>' . _('Queue diagnostics and fix completed') . '</info>');
+                }
+
+                return self::SUCCESS;
 
             default:
-                $output->writeln('<error>Unknown action for queue: '.$action.'</error>');
+                $output->writeln('<error>Unknown action for queue: ' . $action . '</error>');
 
                 return self::FAILURE;
         }

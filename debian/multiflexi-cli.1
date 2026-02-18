@@ -127,7 +127,7 @@ Options: --debug, --help
 .B queue
 Queue operations with comprehensive job listing, sorting, and metrics
 .RS
-Actions: list, truncate, (none for overview)
+Actions: list, truncate, fix, (none for overview)
 Options: --format, --limit, --order, --direction, --fields, --help
 Features: Schedule type display, human-readable waiting times, flexible sorting by scheduled time or ID, field filtering
 .RE
@@ -247,6 +247,9 @@ Show specific queue fields in JSON format:
 .TP
 Truncate the job queue:
 .B multiflexi-cli queue truncate
+.TP
+Fix orphaned jobs and queue inconsistencies:
+.B multiflexi-cli queue fix
 .TP
 List user deletion requests:
 .B multiflexi-cli user:data-erasure list --status=pending

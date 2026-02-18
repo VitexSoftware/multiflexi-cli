@@ -60,7 +60,7 @@ Project structure and architecture
     - JobCommand: Manage jobs; status aggregation, CRUD, and field filtering via --fields.
     - CompanyCommand: Manage companies with lookup by id/ic/name/slug and slug derivation.
     - TokenCommand: Manage/generate tokens.
-    - QueueCommand: Inspect and truncate scheduler queue (handles SQLite vs others).
+    - QueueCommand: Inspect, truncate, and fix scheduler queue (handles SQLite vs others).
     - CredentialCommand: Manage credentials; CRUD operations for credential instances based on credential types.
     - CredentialTypeCommand: List/get/update credential types.
     - CompanyAppCommand: List runtemplates for a given company+app context (partial implementation for non-list actions).
