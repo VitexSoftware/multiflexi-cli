@@ -33,3 +33,4 @@ override_dh_install:
 	cd src; ./multiflexi-cli completion bash > ../debian/multiflexi-cli/usr/share/bash-completion/completions/multiflexi-cli ; cd ..
 	mkdir -p debian/multiflexi-cli/usr/share/zsh-completion/completions
 	cd src; ./multiflexi-cli completion zsh > ../debian/multiflexi-cli/usr/share/zsh-completion/completions/multiflexi-cli ; cd ..
+	sed -i '68s/$/:int/' debian/multiflexi-cli/usr/lib/multiflexi-cli/Command/JobCommand.php
