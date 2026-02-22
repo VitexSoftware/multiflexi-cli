@@ -31,7 +31,7 @@ class DescribeCommand extends Command
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: json or yaml', 'json');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $application = $this->getApplication();
         $commands = $application->all();

@@ -59,7 +59,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
             ->setHelp('This command manages Credential Prototypes (JSON-based credential type definitions)');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $format = strtolower($input->getOption('format'));
         $action = strtolower($input->getArgument('action'));
@@ -453,9 +453,10 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
 
                 $normalized = self::normalizePrototypeJson($decoded, 'en', 'cs');
                 $normalizedPath = sys_get_temp_dir().'/crprototype.normalized.'.md5($jsonFile).'.json';
-                
+
                 // Write normalized JSON to temporary file
                 $normalizedJson = json_encode($normalized, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE);
+
                 if ($normalizedJson === false) {
                     if ($format === 'json') {
                         $output->writeln(json_encode([
@@ -466,10 +467,12 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                     } else {
                         $output->writeln('<error>Failed to encode normalized JSON</error>');
                     }
+
                     return MultiFlexiCommand::FAILURE;
                 }
-                
+
                 $writeResult = file_put_contents($normalizedPath, $normalizedJson);
+
                 if ($writeResult === false) {
                     if ($format === 'json') {
                         $output->writeln(json_encode([
@@ -481,6 +484,7 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                     } else {
                         $output->writeln('<error>Failed to write normalized JSON to temporary file: '.$normalizedPath.'</error>');
                     }
+
                     return MultiFlexiCommand::FAILURE;
                 }
 

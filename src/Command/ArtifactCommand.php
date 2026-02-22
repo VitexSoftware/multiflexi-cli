@@ -61,7 +61,7 @@ class ArtifactCommand extends MultiFlexiCommand
             ->addOption('order', null, InputOption::VALUE_REQUIRED, 'Sort order for list action: A (ascending) or D (descending)');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $format = strtolower($input->getOption('format'));
         $action = strtolower($input->getArgument('action'));

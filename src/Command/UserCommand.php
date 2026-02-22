@@ -71,7 +71,7 @@ class UserCommand extends MultiFlexiCommand
         // Add more options as needed
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $format = strtolower($input->getOption('format'));
         $action = strtolower($input->getArgument('action'));

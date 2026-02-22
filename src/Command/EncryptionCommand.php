@@ -43,7 +43,7 @@ class EncryptionCommand extends MultiFlexiCommand
             ->setHelp('This command manages encryption keys. Actions: status (check status), init (re-initialize keys).');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $format = strtolower($input->getOption('format'));
         $action = strtolower($input->getArgument('action'));

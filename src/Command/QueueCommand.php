@@ -45,7 +45,7 @@ class QueueCommand extends MultiFlexiCommand
             ->addOption('direction', null, InputOption::VALUE_REQUIRED, 'Sort direction: "ASC", "DESC", "A", "D" (default: ASC)');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $format = strtolower($input->getOption('format'));
         $action = $input->getArgument('action') ? strtolower($input->getArgument('action')) : 'overview';
@@ -188,11 +188,11 @@ class QueueCommand extends MultiFlexiCommand
                     // Map field names to actual database columns
                     switch ($orderField) {
                         case 'after':
-                            $query = $query->orderBy('after ' . $orderBy);
+                            $query = $query->orderBy('after '.$orderBy);
 
                             break;
                         case 'job':
-                            $query = $query->orderBy('job ' . $orderBy);
+                            $query = $query->orderBy('job '.$orderBy);
 
                             break;
                         case 'id':
@@ -201,7 +201,7 @@ class QueueCommand extends MultiFlexiCommand
                                 $orderBy = 'DESC';
                             }
 
-                            $query = $query->orderBy('id ' . $orderBy);
+                            $query = $query->orderBy('id '.$orderBy);
 
                             break;
                         case 'schedule_type':
@@ -219,7 +219,7 @@ class QueueCommand extends MultiFlexiCommand
 
                         default:
                             // Default to ID ordering
-                            $query = $query->orderBy('id ' . $orderBy);
+                            $query = $query->orderBy('id '.$orderBy);
 
                             break;
                     }
@@ -273,22 +273,22 @@ class QueueCommand extends MultiFlexiCommand
                         $totalDays = $interval->days;
 
                         if ($totalDays > 0) {
-                            $waitingTime .= $totalDays . 'd ';
+                            $waitingTime .= $totalDays.'d ';
                         }
 
                         if ($interval->h > 0) {
-                            $waitingTime .= $interval->h . 'h ';
+                            $waitingTime .= $interval->h.'h ';
                         }
 
                         if ($interval->i > 0) {
-                            $waitingTime .= $interval->i . 'm ';
+                            $waitingTime .= $interval->i.'m ';
                         }
 
                         if (empty(trim($waitingTime)) || ($totalDays === 0 && $interval->h === 0 && $interval->i === 0)) {
                             $waitingTime = 'now ';
                         }
 
-                        $orderedRow['after'] = $row['after'] . ' (' . rtrim($waitingTime) . ')';
+                        $orderedRow['after'] = $row['after'].' ('.rtrim($waitingTime).')';
                     }
 
                     // If we have job ID, try to get related data
@@ -428,12 +428,12 @@ class QueueCommand extends MultiFlexiCommand
 
                 if ($driver === 'sqlite') {
                     // For SQLite, use DELETE FROM and reset the sequence if needed
-                    $result = $pdo->exec('DELETE FROM ' . $table);
+                    $result = $pdo->exec('DELETE FROM '.$table);
                     // Reset AUTOINCREMENT sequence if table has one
-                    $pdo->exec('DELETE FROM sqlite_sequence WHERE name="' . $table . '"');
+                    $pdo->exec('DELETE FROM sqlite_sequence WHERE name="'.$table.'"');
                 } else {
                     // For MySQL and others, use TRUNCATE TABLE
-                    $result = $pdo->exec('TRUNCATE TABLE ' . $table);
+                    $result = $pdo->exec('TRUNCATE TABLE '.$table);
                 }
 
                 $pdo->exec('UPDATE runtemplate SET next_schedule=NULL');
@@ -497,13 +497,13 @@ class QueueCommand extends MultiFlexiCommand
                         }
                     }
 
-                    $output->writeln('<info>' . _('Queue diagnostics and fix completed') . '</info>');
+                    $output->writeln('<info>'._('Queue diagnostics and fix completed').'</info>');
                 }
 
                 return self::SUCCESS;
 
             default:
-                $output->writeln('<error>Unknown action for queue: ' . $action . '</error>');
+                $output->writeln('<error>Unknown action for queue: '.$action.'</error>');
 
                 return self::FAILURE;
         }

@@ -52,7 +52,7 @@ class CredentialCommand extends MultiFlexiCommand
             ->setHelp('This command manages credentials. Use create action to create a new credential based on a credential type.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $format = strtolower($input->getOption('format'));
         $action = strtolower($input->getArgument('action'));
