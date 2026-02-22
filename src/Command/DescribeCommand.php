@@ -24,6 +24,13 @@ class DescribeCommand extends Command
 {
     protected static $defaultName = 'describe';
 
+    public function __construct()
+    {
+        // Ensure the command has a name in environments where
+        // the static::$defaultName value may not be picked up reliably.
+        parent::__construct(self::$defaultName);
+    }
+
     protected function configure(): void
     {
         $this
