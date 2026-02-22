@@ -630,7 +630,7 @@ If ``ENCRYPTION_MASTER_KEY`` is not configured, the init command will fail:
 queue
 -----
 
-Queue operations (list, truncate). When no action is specified, shows comprehensive queue metrics overview.
+Queue operations (list, truncate, fix). When no action is specified, shows comprehensive queue metrics overview including orphaned jobs count.
 
 .. code-block:: bash
 
@@ -639,6 +639,7 @@ Queue operations (list, truncate). When no action is specified, shows comprehens
 Actions:
 - list:     Show all scheduled jobs in the queue with detailed information.
 - truncate: Remove all scheduled jobs from the queue.
+- fix:      Perform diagnostics and fix orphaned jobs or queue inconsistencies.
 - (no action): Show queue overview with metrics and statistics.
 
 Options:
@@ -682,6 +683,9 @@ Examples:
     
     # Truncate all jobs
     multiflexi-cli queue truncate
+    
+    # Fix orphaned jobs and queue inconsistencies
+    multiflexi-cli queue fix
 
 prune
 -----
