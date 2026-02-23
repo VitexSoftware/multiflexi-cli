@@ -9,4 +9,5 @@ if [[ $EUID -ne 0 ]]; then
 	fi
 fi
 
-exec sudo -u multiflexi /usr/bin/multiflexi-cli "$@"
+exec /usr/bin/multiflexi-cli "$@"
+

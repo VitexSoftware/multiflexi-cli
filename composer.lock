@@ -1240,12 +1240,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "4d8ecef682873f53f55e4e7adf02ddb44e5af803"
+                "reference": "a0613ffdb5895e2f1fa3689e8155d278275b8b42"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/4d8ecef682873f53f55e4e7adf02ddb44e5af803",
-                "reference": "4d8ecef682873f53f55e4e7adf02ddb44e5af803",
+                "url": "https://api.github.com/repos/symfony/console/zipball/a0613ffdb5895e2f1fa3689e8155d278275b8b42",
+                "reference": "a0613ffdb5895e2f1fa3689e8155d278275b8b42",
                 "shasum": ""
             },
             "require": {
@@ -1330,7 +1330,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-02-21T15:59:25+00:00"
+            "time": "2026-02-22T13:29:26+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
@@ -3765,8 +3765,8 @@
             "version": "2.2.x-dev",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/7dfcbf1411d6b45affb671efde457c50b79009b2",
-                "reference": "7dfcbf1411d6b45affb671efde457c50b79009b2",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/c1bf753107e3e0242e3279be557dad040f491ce9",
+                "reference": "c1bf753107e3e0242e3279be557dad040f491ce9",
                 "shasum": ""
             },
             "require": {
@@ -3812,7 +3812,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-02-22T06:11:05+00:00"
+            "time": "2026-02-22T20:17:02+00:00"
         },
         {
             "name": "phpstan/phpstan-phpunit",
@@ -4263,12 +4263,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "54cc06417d20918505574877cb633b84b799bd55"
+                "reference": "e89ef564dc056261d574082988c58a98329525f8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/54cc06417d20918505574877cb633b84b799bd55",
-                "reference": "54cc06417d20918505574877cb633b84b799bd55",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/e89ef564dc056261d574082988c58a98329525f8",
+                "reference": "e89ef564dc056261d574082988c58a98329525f8",
                 "shasum": ""
             },
             "require": {
@@ -4362,7 +4362,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-02-22T10:22:04+00:00"
+            "time": "2026-02-23T06:26:36+00:00"
         },
         {
             "name": "psr/event-dispatcher",
