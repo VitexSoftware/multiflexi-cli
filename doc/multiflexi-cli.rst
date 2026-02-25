@@ -142,6 +142,9 @@ Options:
   --company_id   Company ID
   --app_id       Application ID
   --app_uuid     Application UUID
+  --limit        Limit number of results for list action
+  --offset       Offset for list action (skip N results)
+  --order        Sort order for list action: A (ascending) or D (descending)
   -f, --format   Output format: text or json (default: text)
 
 Examples:
@@ -149,6 +152,7 @@ Examples:
 .. code-block:: bash
 
     multiflexi-cli companyapp list --company_id=1 --app_id=2
+    multiflexi-cli companyapp list --company_id=1 --app_id=2 --limit=10 --offset=0 --order=D
     multiflexi-cli companyapp create --company_id=1 --app_id=2
     multiflexi-cli companyapp delete --id=5
 
@@ -309,6 +313,10 @@ Options:
   --executor     Executor
   --schedule_type Schedule type
   --app_id       App ID
+  --limit        Limit number of results for list action
+  --offset       Offset for list action (skip N results)
+  --order        Sort order for list action: A (ascending) or D (descending)
+  --fields       Comma-separated list of fields to display
   -f, --format   Output format: text or json (default: text)
 
 Examples:
@@ -316,6 +324,7 @@ Examples:
 .. code-block:: bash
 
     multiflexi-cli job list
+    multiflexi-cli job list --limit=10 --order=D
     multiflexi-cli job get --id=123
     multiflexi-cli job create --runtemplate_id=5 --scheduled="2024-07-01 12:00"
     multiflexi-cli job update --id=123 --executor=Native

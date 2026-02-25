@@ -52,4 +52,16 @@ class JobCommandTest extends \PHPUnit\Framework\TestCase
         // Remove the following lines when you implement this test.
         $this->markTestIncomplete('This test has not been implemented yet.');
     }
+
+    /**
+     * Test that the command defines standard pagination options.
+     */
+    public function testPaginationOptionsAreDefined(): void
+    {
+        $definition = $this->object->getDefinition();
+        $this->assertTrue($definition->hasOption('limit'), 'Missing --limit option');
+        $this->assertTrue($definition->hasOption('offset'), 'Missing --offset option');
+        $this->assertTrue($definition->hasOption('order'), 'Missing --order option');
+        $this->assertTrue($definition->hasOption('fields'), 'Missing --fields option');
+    }
 }

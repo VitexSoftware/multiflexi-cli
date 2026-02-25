@@ -36,7 +36,10 @@ class CompanyAppCommand extends MultiFlexiCommand
             ->addOption('company_id', null, InputOption::VALUE_REQUIRED, 'Company ID')
             ->addOption('app_id', null, InputOption::VALUE_REQUIRED, 'Application ID')
             ->addOption('app_uuid', null, InputOption::VALUE_REQUIRED, 'Application UUID')
-            ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'The output format: text or json. Defaults to text.', 'text');
+            ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'The output format: text or json. Defaults to text.', 'text')
+            ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit number of results for list action')
+            ->addOption('offset', null, InputOption::VALUE_REQUIRED, 'Offset for list action (skip N results)')
+            ->addOption('order', null, InputOption::VALUE_REQUIRED, 'Sort order for list action: A (ascending) or D (descending)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -73,6 +76,29 @@ class CompanyAppCommand extends MultiFlexiCommand
                 'company_id' => $companyId,
                 'app_id' => $appId,
             ]);
+
+            // Handle order option
+            $order = $input->getOption('order');
+
+            if (!empty($order)) {
+                $orderBy = strtoupper($order) === 'D' ? 'DESC' : 'ASC';
+                $query = $query->orderBy('id '.$orderBy);
+            }
+
+            // Handle limit option
+            $limit = $input->getOption('limit');
+
+            if (!empty($limit) && is_numeric($limit)) {
+                $query = $query->limit((int) $limit);
+            }
+
+            // Handle offset option
+            $offset = $input->getOption('offset');
+
+            if (!empty($offset) && is_numeric($offset)) {
+                $query = $query->offset((int) $offset);
+            }
+
             $runtemplates = $query->fetchAll();
 
             if ($format === 'json') {

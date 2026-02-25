@@ -40,4 +40,15 @@ class CompanyAppCommandTest extends \PHPUnit\Framework\TestCase
     protected function tearDown(): void
     {
     }
+
+    /**
+     * Test that the command defines standard pagination options.
+     */
+    public function testPaginationOptionsAreDefined(): void
+    {
+        $definition = $this->object->getDefinition();
+        $this->assertTrue($definition->hasOption('limit'), 'Missing --limit option');
+        $this->assertTrue($definition->hasOption('offset'), 'Missing --offset option');
+        $this->assertTrue($definition->hasOption('order'), 'Missing --order option');
+    }
 }
