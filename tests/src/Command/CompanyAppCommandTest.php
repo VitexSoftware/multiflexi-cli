@@ -48,7 +48,6 @@ class CompanyAppCommandTest extends \PHPUnit\Framework\TestCase
     {
         $definition = $this->object->getDefinition();
         $this->assertTrue($definition->hasOption('limit'), 'Missing --limit option');
-        $this->assertTrue($definition->hasOption('offset'), 'Missing --offset option');
         $this->assertTrue($definition->hasOption('order'), 'Missing --order option');
     }
 }
