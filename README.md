@@ -34,6 +34,8 @@ multiflexi-cli <command> [options]
 - `encryption`: Manage encryption keys (status, init)
 - `prune`: Remove obsolete data
 - `queue`: Manage job queue (list with sorting/filtering, truncate, fix orphaned jobs, overview metrics)
+- `eventsource`: Manage event sources (list, get, create, update, remove, test connection)
+- `eventrule`: Manage event rules (list, get, create, update, remove)
 - `token`: Manage authentication tokens
 
 ## Output Formats
@@ -69,6 +71,15 @@ multiflexi-cli queue fix                                # Fix orphaned jobs and 
 multiflexi-cli queue list --order after --limit 10     # List jobs by scheduled time
 multiflexi-cli queue list --order after --direction DESC --limit 5  # Latest jobs first
 multiflexi-cli queue list --fields "id,after,schedule_type" --format json  # Custom fields JSON
+
+# Event source management
+multiflexi-cli eventsource list
+multiflexi-cli eventsource create --name "Webhooks" --db_database webhooks --db_host localhost
+multiflexi-cli eventsource test --id 1
+
+# Event rule management
+multiflexi-cli eventrule list
+multiflexi-cli eventrule create --event_source_id 1 --evidence faktura-vydana --operation create --runtemplate_id 42
 
 # Credential type management
 multiflexi-cli credtype list
