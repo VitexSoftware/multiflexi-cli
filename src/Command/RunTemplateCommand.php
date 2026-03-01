@@ -565,7 +565,7 @@ class RunTemplateCommand extends MultiFlexiCommand
                     $isImmediate = ($scheduleDateTime->getTimestamp() <= $now->getTimestamp() + 5); // 5 sec tolerance
                     $scheduleType = $isImmediate ? 'adhoc' : 'cli';
 
-                    $prepared = $jobber->prepareJob($rt->getMyKey(), $overridedEnv, $scheduleDateTime, $executor, $scheduleType);
+                    $prepared = $jobber->prepareJob($rt, $overridedEnv, $scheduleDateTime, $executor, $scheduleType);
                     // scheduleJobRun() is now called automatically inside prepareJob()
 
                     if ($format === 'json') {
