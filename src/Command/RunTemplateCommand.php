@@ -156,6 +156,15 @@ class RunTemplateCommand extends MultiFlexiCommand
         return $result;
     }
 
+    /**
+     * Handle the "runtemplate" CLI command performing actions such as list, get, create, update, delete, and schedule, and emit results to the provided output.
+     *
+     * Supports resolving company slugs/IDs, resolving app UUIDs, applying command-line config overrides, and formatting output as JSON or text.
+     *
+     * @param InputInterface  $input  Console input containing the action argument and command options.
+     * @param OutputInterface $output Console output used for writing messages and serialized results.
+     * @return int One of MultiFlexiCommand::SUCCESS or MultiFlexiCommand::FAILURE indicating the command outcome.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $format = strtolower($input->getOption('format'));
@@ -565,7 +574,7 @@ class RunTemplateCommand extends MultiFlexiCommand
                     $isImmediate = ($scheduleDateTime->getTimestamp() <= $now->getTimestamp() + 5); // 5 sec tolerance
                     $scheduleType = $isImmediate ? 'adhoc' : 'cli';
 
-                    $prepared = $jobber->prepareJob($rt->getMyKey(), $overridedEnv, $scheduleDateTime, $executor, $scheduleType);
+                    $prepared = $jobber->prepareJob($rt, $overridedEnv, $scheduleDateTime, $executor, $scheduleType);
                     // scheduleJobRun() is now called automatically inside prepareJob()
 
                     if ($format === 'json') {
