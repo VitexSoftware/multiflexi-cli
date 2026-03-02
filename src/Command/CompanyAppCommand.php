@@ -30,6 +30,7 @@ class CompanyAppCommand extends MultiFlexiCommand
     protected function configure(): void
     {
         $this
+            ->setName('companyapp')
             ->setDescription('Manage company-application relations')
             ->addArgument('action', InputArgument::REQUIRED, 'Action: list|get|create|update|delete')
             ->addOption('id', null, InputOption::VALUE_REQUIRED, 'Relation ID')

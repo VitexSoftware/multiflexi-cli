@@ -28,6 +28,7 @@ class PruneCommand extends Command
     protected function configure(): void
     {
         $this
+            ->setName('prune')
             ->addOption('logs', null, InputOption::VALUE_NONE, 'Prune logs table')
             ->addOption('jobs', null, InputOption::VALUE_NONE, 'Prune jobs table')
             ->addOption('keep', null, InputOption::VALUE_OPTIONAL, 'Number of records to keep', 1000);
