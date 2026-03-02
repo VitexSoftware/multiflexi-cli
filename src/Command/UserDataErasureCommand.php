@@ -36,6 +36,7 @@ class UserDataErasureCommand extends Command
     protected function configure(): void
     {
         $this
+            ->setName('user:data-erasure')
             ->setDescription('Manage GDPR user data erasure requests')
             ->setHelp('This command allows you to create, approve, and process user data erasure requests under GDPR Article 17')
             ->addArgument('action', InputArgument::REQUIRED, 'Action to perform: list, create, approve, reject, process, audit, cleanup')

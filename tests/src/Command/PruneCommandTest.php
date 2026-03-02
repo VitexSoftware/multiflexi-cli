@@ -40,4 +40,22 @@ class PruneCommandTest extends \PHPUnit\Framework\TestCase
     protected function tearDown(): void
     {
     }
+
+    /**
+     * Test that the command name is correctly set for Symfony Console 7.x compatibility.
+     */
+    public function testCommandName(): void
+    {
+        $this->assertSame('prune', $this->object->getName());
+    }
+
+    /**
+     * Test that the command can be found by name in a Symfony Application.
+     */
+    public function testCommandIsRegistrable(): void
+    {
+        $application = new \Symfony\Component\Console\Application();
+        $application->add($this->object);
+        $this->assertSame('prune', $application->find('prune')->getName());
+    }
 }
