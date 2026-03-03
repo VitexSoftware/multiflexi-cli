@@ -30,6 +30,10 @@ override_dh_install:
 	sed -i "20i require_once '/usr/share/php/Symfony/Component/Console/autoload.php';" debian/multiflexi-cli/usr/share/multiflexi-cli/multiflexi-cli.php
 	sed -i "20i require_once '/usr/share/php/JsonSchema/autoload.php';" debian/multiflexi-cli/usr/share/multiflexi-cli/multiflexi-cli.php
 	composer dump-autoload --classmap-authoritative --no-dev --no-interaction --quiet || true
+	# Install generated autoloader into the package
+	install -m0755 -d debian/multiflexi-cli/var/lib/composer/multiflexi-cli/composer
+	cp vendor/autoload.php debian/multiflexi-cli/var/lib/composer/multiflexi-cli/
+	cp vendor/composer/*.php debian/multiflexi-cli/var/lib/composer/multiflexi-cli/composer/
 	# Generate shell completions
 	mkdir -p debian/multiflexi-cli/usr/share/bash-completion/completions
 	cd src; ./multiflexi-cli completion bash > ../debian/multiflexi-cli/usr/share/bash-completion/completions/multiflexi-cli ; cd ..
