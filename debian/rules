@@ -37,3 +37,6 @@ override_dh_install:
 	install -m0755 -d debian/multiflexi-cli/usr/share/pkg-php-tools/autoloaders
 	echo 'deb multiflexi-cli multiflexi-cli/autoload.php' > debian/multiflexi-cli/usr/share/pkg-php-tools/autoloaders/multiflexi-cli
 
+override_dh_phpcomposer:
+	jq 'del(."require-dev")' composer.json | sponge composer.json
+	dh_phpcomposer
