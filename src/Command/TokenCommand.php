@@ -124,15 +124,19 @@ class TokenCommand extends MultiFlexiCommand
             case 'create':
                 $data = [];
 
-                foreach (['user', 'token'] as $field) {
-                    $val = $input->getOption($field);
+                $user = $input->getOption('user');
 
-                    if ($val !== null) {
-                        $data[$field] = $val;
-                    }
+                if ($user !== null) {
+                    $data['user_id'] = $user;
                 }
 
-                if (empty($data['user'])) {
+                $tokenVal = $input->getOption('token');
+
+                if ($tokenVal !== null) {
+                    $data['token'] = $tokenVal;
+                }
+
+                if (empty($data['user_id'])) {
                     $output->writeln('<error>Missing --user for token create</error>');
 
                     return MultiFlexiCommand::FAILURE;
@@ -140,6 +144,11 @@ class TokenCommand extends MultiFlexiCommand
 
                 $token = new \MultiFlexi\Token();
                 $token->takeData($data);
+
+                if (empty($data['token'])) {
+                    $token->generate();
+                }
+
                 $tokenId = $token->saveToSQL();
 
                 if ($output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
@@ -171,7 +180,7 @@ class TokenCommand extends MultiFlexiCommand
                 }
 
                 $token = new \MultiFlexi\Token();
-                $token->setDataValue('user', $user);
+                $token->setDataValue('user_id', $user);
                 $token->generate();
                 $tokenId = $token->saveToSQL();
 
@@ -195,12 +204,16 @@ class TokenCommand extends MultiFlexiCommand
 
                 $data = [];
 
-                foreach (['user', 'token'] as $field) {
-                    $val = $input->getOption($field);
+                $user = $input->getOption('user');
 
-                    if ($val !== null) {
-                        $data[$field] = $val;
-                    }
+                if ($user !== null) {
+                    $data['user_id'] = $user;
+                }
+
+                $tokenVal = $input->getOption('token');
+
+                if ($tokenVal !== null) {
+                    $data['token'] = $tokenVal;
                 }
 
                 if (empty($data)) {

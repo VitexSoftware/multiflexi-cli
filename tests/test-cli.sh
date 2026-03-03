@@ -12,6 +12,13 @@ else
     CLI_CMD="php $(dirname $0)/../src/multiflexi-cli.php"
 fi
 
+# Try installed version if local version not found
+if [ -z "$CLI_CMD" ] || [ "$CLI_CMD" = "php" ]; then
+    if command -v multiflexi-cli &> /dev/null; then
+        CLI_CMD="multiflexi-cli"
+    fi
+fi
+
 ###############################################################################
 # Output format compliance tests
 ###############################################################################

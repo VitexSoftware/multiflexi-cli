@@ -645,6 +645,7 @@
                 "issues": "http://pear.php.net/bugs/search.php?cmd=display&package_name[]=Console_Getopt",
                 "source": "https://github.com/pear/Console_Getopt"
             },
+            "abandoned": true,
             "time": "2019-11-20T18:27:48+00:00"
         },
         {
@@ -2058,12 +2059,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/VitexSoftware/php-ease-fluentpdo.git",
-                "reference": "fc843e5601c80ec267e7d99012b1dd28797e3cfd"
+                "reference": "23aa50dc4b23fc931777c15207a568980802fa48"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/VitexSoftware/php-ease-fluentpdo/zipball/fc843e5601c80ec267e7d99012b1dd28797e3cfd",
-                "reference": "fc843e5601c80ec267e7d99012b1dd28797e3cfd",
+                "url": "https://api.github.com/repos/VitexSoftware/php-ease-fluentpdo/zipball/23aa50dc4b23fc931777c15207a568980802fa48",
+                "reference": "23aa50dc4b23fc931777c15207a568980802fa48",
                 "shasum": ""
             },
             "require": {
@@ -2111,7 +2112,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2026-03-02T13:08:14+00:00"
+            "time": "2026-03-02T17:54:11+00:00"
         },
         {
             "name": "vitexsoftware/ease-html",
@@ -2255,21 +2256,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/VitexSoftware/php-vitexsoftware-multiflexi-core.git",
-<<<<<<< Updated upstream
-                "reference": "6cc940e349eae203d20741d2b9b4c15a319f766a"
+                "reference": "d8f922b32467a6632adefdddb05e206d1c23a42b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/VitexSoftware/php-vitexsoftware-multiflexi-core/zipball/6cc940e349eae203d20741d2b9b4c15a319f766a",
-                "reference": "6cc940e349eae203d20741d2b9b4c15a319f766a",
-=======
-                "reference": "9c84b27f91dc9c29362947314e311c7b51f5b27e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/VitexSoftware/php-vitexsoftware-multiflexi-core/zipball/9c84b27f91dc9c29362947314e311c7b51f5b27e",
-                "reference": "9c84b27f91dc9c29362947314e311c7b51f5b27e",
->>>>>>> Stashed changes
+                "url": "https://api.github.com/repos/VitexSoftware/php-vitexsoftware-multiflexi-core/zipball/d8f922b32467a6632adefdddb05e206d1c23a42b",
+                "reference": "d8f922b32467a6632adefdddb05e206d1c23a42b",
                 "shasum": ""
             },
             "require": {
@@ -2314,11 +2306,7 @@
                 "issues": "https://github.com/VitexSoftware/php-vitexsoftware-multiflexi-core/issues",
                 "source": "https://github.com/VitexSoftware/php-vitexsoftware-multiflexi-core/tree/main"
             },
-<<<<<<< Updated upstream
-            "time": "2026-03-02T13:15:12+00:00"
-=======
-            "time": "2026-02-26T20:02:49+00:00"
->>>>>>> Stashed changes
+            "time": "2026-03-02T17:56:46+00:00"
         }
     ],
     "packages-dev": [
@@ -3778,13 +3766,8 @@
             "version": "2.2.x-dev",
             "dist": {
                 "type": "zip",
-<<<<<<< Updated upstream
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/2e7b90af9c995e64fb82bb66de4130fe121db4c0",
-                "reference": "2e7b90af9c995e64fb82bb66de4130fe121db4c0",
-=======
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/cd881cf96c2370aa82f342d6bfb1a708f81752e8",
-                "reference": "cd881cf96c2370aa82f342d6bfb1a708f81752e8",
->>>>>>> Stashed changes
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/11e8d9d2fd40687e9fe2199d08dad0a9a7897cc4",
+                "reference": "11e8d9d2fd40687e9fe2199d08dad0a9a7897cc4",
                 "shasum": ""
             },
             "require": {
@@ -3830,11 +3813,7 @@
                     "type": "github"
                 }
             ],
-<<<<<<< Updated upstream
-            "time": "2026-03-02T09:01:10+00:00"
-=======
-            "time": "2026-03-01T20:05:07+00:00"
->>>>>>> Stashed changes
+            "time": "2026-03-03T09:18:49+00:00"
         },
         {
             "name": "phpstan/phpstan-phpunit",
@@ -6208,21 +6187,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
-<<<<<<< Updated upstream
                 "reference": "887783fbf51c9a30ac67bf751a3a8829e4d7f2db"
             },
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/symfony/filesystem/zipball/887783fbf51c9a30ac67bf751a3a8829e4d7f2db",
                 "reference": "887783fbf51c9a30ac67bf751a3a8829e4d7f2db",
-=======
-                "reference": "e69f8b8122f465c8524aad710c1f7a954f3d7fbb"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/filesystem/zipball/e69f8b8122f465c8524aad710c1f7a954f3d7fbb",
-                "reference": "e69f8b8122f465c8524aad710c1f7a954f3d7fbb",
->>>>>>> Stashed changes
                 "shasum": ""
             },
             "require": {
@@ -6281,11 +6251,7 @@
                     "type": "tidelift"
                 }
             ],
-<<<<<<< Updated upstream
             "time": "2026-03-02T09:38:43+00:00"
-=======
-            "time": "2026-02-25T17:08:26+00:00"
->>>>>>> Stashed changes
         },
         {
             "name": "symfony/finder",

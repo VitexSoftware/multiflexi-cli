@@ -82,6 +82,13 @@ configure)
         done
     fi
 
+    # 7. Generate Composer autoloader for multiflexi-cli
+    if pathfind composer; then
+        echo -n "Generating Composer autoloader for multiflexi-cli.."
+        cd /usr/lib/multiflexi-cli && composer install --no-dev --optimize-autoloader --no-interaction --quiet 2>/dev/null || true
+        echo "..done"
+    fi
+
     ;;
 
 abort-upgrade | abort-remove | abort-deconfigure) ;;

@@ -46,7 +46,7 @@ $globalOptions = getopt('e::', ['environment::']);
 
 Shared::init(
     ['DB_CONNECTION', 'DB_HOST', 'DB_PORT', 'DB_DATABASE', 'DB_USERNAME', 'DB_PASSWORD'],
-    \array_key_exists('environment', $globalOptions) ? $globalOptions['environment'] : (\array_key_exists('e', $globalOptions) ? $globalOptions['e'] : '../.env'),
+    \array_key_exists('environment', $globalOptions) ? $globalOptions['environment'] : (\array_key_exists('e', $globalOptions) ? $globalOptions['e'] : __DIR__ . '/../.env'),
 );
 
 $loggers = ['syslog', '\MultiFlexi\LogToSQL'];

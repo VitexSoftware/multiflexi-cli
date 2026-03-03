@@ -180,7 +180,8 @@ EOD;
                 }
 
                 if ($format === 'json') {
-                    $output->writeln(json_encode($jobs, \JSON_PRETTY_PRINT));
+                    $jsonResult = json_encode($jobs, \JSON_PRETTY_PRINT | \JSON_INVALID_UTF8_SUBSTITUTE);
+                    $output->writeln($jsonResult !== false ? $jsonResult : '[]');
                 } else {
                     foreach ($jobs as $row) {
                         // Convert array values (like env) to JSON for text output
@@ -220,7 +221,8 @@ EOD;
                     );
 
                     if ($format === 'json') {
-                        $output->writeln(json_encode($filteredData, \JSON_PRETTY_PRINT));
+                        $jsonResult = json_encode($filteredData, \JSON_PRETTY_PRINT | \JSON_INVALID_UTF8_SUBSTITUTE);
+                        $output->writeln($jsonResult !== false ? $jsonResult : '{}');
                     } else {
                         foreach ($filteredData as $k => $v) {
                             $output->writeln("{$k}: {$v}");
@@ -228,7 +230,8 @@ EOD;
                     }
                 } else {
                     if ($format === 'json') {
-                        $output->writeln(json_encode($job->getData(), \JSON_PRETTY_PRINT));
+                        $jsonResult = json_encode($job->getData(), \JSON_PRETTY_PRINT | \JSON_INVALID_UTF8_SUBSTITUTE);
+                        $output->writeln($jsonResult !== false ? $jsonResult : '{}');
                     } else {
                         foreach ($job->getData() as $k => $v) {
                             $output->writeln("{$k}: {$v}");
@@ -280,7 +283,8 @@ EOD;
                     $full['env'] = $job->getEnv();
 
                     if ($format === 'json') {
-                        $output->writeln(json_encode($full, \JSON_PRETTY_PRINT));
+                        $jsonResult = json_encode($full, \JSON_PRETTY_PRINT | \JSON_INVALID_UTF8_SUBSTITUTE);
+                        $output->writeln($jsonResult !== false ? $jsonResult : '{}');
                     } else {
                         foreach ($full as $k => $v) {
                             $output->writeln("{$k}: {$v}");
@@ -327,7 +331,8 @@ EOD;
                     $full = $job->getData();
 
                     if ($format === 'json') {
-                        $output->writeln(json_encode($full, \JSON_PRETTY_PRINT));
+                        $jsonResult = json_encode($full, \JSON_PRETTY_PRINT | \JSON_INVALID_UTF8_SUBSTITUTE);
+                        $output->writeln($jsonResult !== false ? $jsonResult : '{}');
                     } else {
                         foreach ($full as $k => $v) {
                             $output->writeln("{$k}: {$v}");
