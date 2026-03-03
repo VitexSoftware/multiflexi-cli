@@ -44,10 +44,12 @@ class CredentialTypeCommand extends MultiFlexiCommand
         $this
             ->setName('credtype')
             ->setDescription('Credential type operations')
-            ->addArgument('action', InputArgument::REQUIRED, 'Action: list|get|update|import|import-json|export-json|remove-json|validate-json')
+            ->addArgument('action', InputArgument::REQUIRED, 'Action: list|get|create|update|import|import-json|export-json|remove-json|validate-json')
             ->addOption('id', null, InputOption::VALUE_REQUIRED, 'Credential Type ID')
             ->addOption('uuid', null, InputOption::VALUE_REQUIRED, 'Credential Type UUID')
             ->addOption('name', null, InputOption::VALUE_REQUIRED, 'Name')
+            ->addOption('company-id', null, InputOption::VALUE_REQUIRED, 'Company ID for credential type creation')
+            ->addOption('class', null, InputOption::VALUE_REQUIRED, 'Class name for credential type creation')
             ->addOption('file', null, InputOption::VALUE_REQUIRED, 'Path to JSON file for import/export/remove/validate')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'The output format: text or json. Defaults to text.', 'text')
             ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit number of results for list action')
@@ -141,6 +143,54 @@ class CredentialTypeCommand extends MultiFlexiCommand
                 }
 
                 return MultiFlexiCommand::SUCCESS;
+            case 'create':
+                $companyId = $input->getOption('company-id');
+                $className = $input->getOption('class');
+
+                if (empty($companyId) || empty($className)) {
+                    $output->writeln('<error>Missing --company-id or --class for credtype create</error>');
+                    return MultiFlexiCommand::FAILURE;
+                }
+
+                // Create credential type with company and class
+                $credProto = new CredentialProtoType();
+                $protoQuery = $credProto->listingQuery()->where(['code' => $className]);
+                $proto = $protoQuery->fetch();
+
+                if (!$proto) {
+                    $output->writeln('<error>No credential prototype found for class: ' . $className . '</error>');
+                    return MultiFlexiCommand::FAILURE;
+                }
+
+                $credType = new CredentialType();
+                $data = [
+                    'company_id' => (int) $companyId,
+                    'class' => $className,
+                    'name' => $proto['name'] ?? $className,
+                    'uuid' => $proto['uuid'] ?? null,
+                    'version' => $proto['version'] ?? '1.0',
+                ];
+
+                $result = $credType->insertToSQL($data);
+
+                if ($result) {
+                    $createdData = $credType->getData();
+                    if ($format === 'json') {
+                        $output->writeln(json_encode($createdData, \JSON_PRETTY_PRINT));
+                    } else {
+                        $output->writeln('Credential type created successfully');
+                        $output->writeln('ID: ' . $credType->getMyKey());
+                    }
+                    return MultiFlexiCommand::SUCCESS;
+                }
+
+                if ($format === 'json') {
+                    $output->writeln(json_encode(['error' => 'Failed to create credential type'], \JSON_PRETTY_PRINT));
+                } else {
+                    $output->writeln('<error>Failed to create credential type</error>');
+                }
+                return MultiFlexiCommand::FAILURE;
+
             case 'update':
                 $id = $input->getOption('id');
                 $uuid = $input->getOption('uuid');
