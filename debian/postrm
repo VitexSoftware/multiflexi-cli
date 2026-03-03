@@ -3,10 +3,9 @@ set -e
 
 case "$1" in
     purge|remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
-        # Remove multiflexi-cli data from /var/lib/composer to free space after package removal.
-        if [ -d "/var/lib/composer/multiflexi-cli/" ]; then
-            rm -rf /var/lib/composer/multiflexi-cli/
-        fi
+        # Debian autoloader is now at /usr/share/php/multiflexi-cli/autoload.php
+        # No special cleanup needed
+        :
     ;;
 
     *)
