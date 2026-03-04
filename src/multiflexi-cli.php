@@ -16,7 +16,26 @@ declare(strict_types=1);
 
 namespace MultiFlexi\Cli;
 
-require_once __DIR__.'/../vendor/autoload.php';
+$autoloaders = [
+    __DIR__ . '/../vendor/autoload.php',
+    __DIR__ . '/../../../autoload.php',
+    '/usr/share/php/MultiFlexi/autoload.php',
+    '/var/lib/composer/multiflexi-cli/autoload.php'
+];
+
+$autoloader_found = false;
+foreach ($autoloaders as $file) {
+    if (file_exists($file)) {
+        require_once $file;
+        $autoloader_found = true;
+        break;
+    }
+}
+
+if (!$autoloader_found) {
+    fwrite(STDERR, "Composer autoloader not found.\n");
+    exit(1);
+}
 
 use Ease\Anonym;
 use Ease\Shared;
