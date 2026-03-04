@@ -20,6 +20,7 @@ $autoloaders = [
     __DIR__ . '/../vendor/autoload.php',
     __DIR__ . '/../../../autoload.php',
     '/usr/share/php/MultiFlexi/autoload.php',
+    '/usr/share/php/multiflexi-cli/autoload.php',
     '/var/lib/composer/multiflexi-cli/autoload.php'
 ];
 
