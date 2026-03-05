@@ -1,52 +1,46 @@
 {
-    "name": "vitexsoftware/multiflexi-cli",
-    "description": "Manage MultiFlexi command line interface",
-    "type": "project",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Vítězslav Dvořák",
-            "email": "info@vitexsoftware.cz"
-        }
-    ],
-    "minimum-stability": "dev",
-    "require": {
-        "ext-yaml": "*",
-        "ext-simplexml": "*",
-        "vitexsoftware/ease-fluentpdo": "dev-main",
-        "symfony/process": "^6.0",
-        "vitexsoftware/multiflexi-core": "dev-main",
-        "phplucidframe/console-table": "^1.4",
-        "confirm-it-solutions/php-zabbix-api": "^3.0",
-        "vitexsoftware/ease-html": "^1.40",
-        "symfony/console": "^6.4",
-        "justinrainbow/json-schema": "^6.0@dev"
-    },
-    "autoload": {
-        "psr-4": {
-            "MultiFlexi\\": "src/MultiFlexi/",
-            "MultiFlexi\\Cli\\": "src/MultiFlexi/Cli/",
-            "MultiFlexi\\Cli\\Command\\": "src/Command/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "MultiFlexi\\Cli\\Tests\\": "tests/src",
-            "MultiFlexi\\Cli\\Tests\\Command\\": "tests/src/Command"
-        }
-    },
-    "require-dev": {
-        "phpunit/phpunit": "*",
-        "phpstan/phpstan": "*",
-        "friendsofphp/php-cs-fixer": "^3.75",
-        "ergebnis/composer-normalize": "^2.47",
-        "ergebnis/php-cs-fixer-config": "^6.46",
-        "phpstan/phpstan-phpunit": "2.0.x-dev"
-    },
-    "bin": ["src/multiflexi-cli"],
-    "config": {
-        "allow-plugins": {
-            "ergebnis/composer-normalize": true
-        }
+  "name": "vitexsoftware/multiflexi-cli",
+  "description": "Manage MultiFlexi command line interface",
+  "type": "project",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Vítězslav Dvořák",
+      "email": "info@vitexsoftware.cz"
     }
+  ],
+  "minimum-stability": "dev",
+  "require": {
+    "ext-yaml": "*",
+    "ext-simplexml": "*",
+    "vitexsoftware/ease-fluentpdo": "dev-main",
+    "symfony/process": "^6.0",
+    "vitexsoftware/multiflexi-core": "dev-main",
+    "phplucidframe/console-table": "^1.4",
+    "confirm-it-solutions/php-zabbix-api": "^3.0",
+    "vitexsoftware/ease-html": "^1.40",
+    "symfony/console": "^6.4",
+    "justinrainbow/json-schema": "^6.0@dev"
+  },
+  "autoload": {
+    "psr-4": {
+      "MultiFlexi\\": "src/MultiFlexi/",
+      "MultiFlexi\\Cli\\": "src/MultiFlexi/Cli/",
+      "MultiFlexi\\Cli\\Command\\": "src/Command/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "MultiFlexi\\Cli\\Tests\\": "tests/src",
+      "MultiFlexi\\Cli\\Tests\\Command\\": "tests/src/Command"
+    }
+  },
+  "bin": [
+    "src/multiflexi-cli"
+  ],
+  "config": {
+    "allow-plugins": {
+      "ergebnis/composer-normalize": true
+    }
+  }
 }

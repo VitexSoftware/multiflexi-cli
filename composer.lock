@@ -3766,8 +3766,8 @@
             "version": "2.2.x-dev",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/46df20f906e58bb90d182f2ad39fc541d9169fc7",
-                "reference": "46df20f906e58bb90d182f2ad39fc541d9169fc7",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/98b44590900543d56bcca83cf4d62e1fca344492",
+                "reference": "98b44590900543d56bcca83cf4d62e1fca344492",
                 "shasum": ""
             },
             "require": {
@@ -3813,7 +3813,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-03-03T17:10:35+00:00"
+            "time": "2026-03-04T09:14:08+00:00"
         },
         {
             "name": "phpstan/phpstan-phpunit",
@@ -4264,12 +4264,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "48b06a2edcd10a16077dea59ee6a034f84bbcc6d"
+                "reference": "08f08a07f68687b79609b4dafae5bee4832b533b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/48b06a2edcd10a16077dea59ee6a034f84bbcc6d",
-                "reference": "48b06a2edcd10a16077dea59ee6a034f84bbcc6d",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/08f08a07f68687b79609b4dafae5bee4832b533b",
+                "reference": "08f08a07f68687b79609b4dafae5bee4832b533b",
                 "shasum": ""
             },
             "require": {
@@ -4347,7 +4347,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2026-02-26T14:46:58+00:00"
+            "time": "2026-03-04T08:28:16+00:00"
         },
         {
             "name": "psr/event-dispatcher",
