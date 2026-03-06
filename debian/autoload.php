@@ -4,7 +4,7 @@
 require_once '/usr/share/php/MultiFlexi/autoload.php';
 require_once '/usr/share/php/EaseCore/autoload.php';
 require_once '/usr/share/php/EaseFluentPDO/autoload.php';
-require_once '/usr/share/php/EaseHtml/autoload.php';
+//require_once '/usr/share/php/EaseHtml/autoload.php';
 require_once '/usr/share/php/Symfony/Component/Process/autoload.php';
 require_once '/usr/share/php/Symfony/Component/Console/autoload.php';
 require_once '/usr/share/php/JsonSchema/autoload.php';
