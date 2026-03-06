@@ -8,6 +8,7 @@ require_once '/usr/share/php/EaseFluentPDO/autoload.php';
 require_once '/usr/share/php/Symfony/Component/Process/autoload.php';
 require_once '/usr/share/php/Symfony/Component/Console/autoload.php';
 require_once '/usr/share/php/JsonSchema/autoload.php';
+require_once '/usr/share/php/LucidFrame/autoload.php';
 
 // PSR-4 autoloader for application classes
 spl_autoload_register(function (string $class): void {

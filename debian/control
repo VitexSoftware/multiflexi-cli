@@ -17,6 +17,7 @@ Depends: ${misc:Depends},
  php-symfony-yaml,
  php-json-schema,
  php-symfony-dependency-injection,
+ php-phplucidframe-console-table,
  sudo,
  multiflexi-sqlite (>= 2.4.1) | multiflexi-mysql (>= 2.4.1) | multiflexi-pgsql (>= 2.4.1)
 Suggests:
