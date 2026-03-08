@@ -7,6 +7,7 @@ require_once '/usr/share/php/Symfony/Component/Console/autoload.php';
 //require_once '/usr/share/php/JsonSchema/autoload.php';
 require_once '/usr/share/php/LucidFrame/autoload.php';
 
+require_once '/usr/lib/multiflexi-cli/Command/MultiFlexiCommand.php';
 require_once '/usr/lib/multiflexi-cli/Command/ApplicationCommand.php';
 require_once '/usr/lib/multiflexi-cli/Command/ArtifactCommand.php';
 require_once '/usr/lib/multiflexi-cli/Command/CompanyAppCommand.php';
@@ -19,7 +20,6 @@ require_once '/usr/lib/multiflexi-cli/Command/EncryptionCommand.php';
 require_once '/usr/lib/multiflexi-cli/Command/EventRuleCommand.php';
 require_once '/usr/lib/multiflexi-cli/Command/EventSourceCommand.php';
 require_once '/usr/lib/multiflexi-cli/Command/JobCommand.php';
-require_once '/usr/lib/multiflexi-cli/Command/MultiFlexiCommand.php';
 require_once '/usr/lib/multiflexi-cli/Command/PruneCommand.php';
 require_once '/usr/lib/multiflexi-cli/Command/QueueCommand.php';
 require_once '/usr/lib/multiflexi-cli/Command/RunTemplateCommand.php';
