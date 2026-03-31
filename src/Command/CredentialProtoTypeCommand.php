@@ -801,15 +801,16 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
 
                     // Check if class implements credentialTypeInterface
                     if ($reflection->implementsInterface('\\MultiFlexi\\credentialTypeInterface')) {
+                        $instance = new $fullClassName();
                         $prototypes[] = [
                             'id' => 'fs_'.strtolower($className), // Filesystem prefix to distinguish
-                            'uuid' => $fullClassName::uuid(),
+                            'uuid' => $instance->uuid(),
                             'code' => $className,
-                            'name' => $fullClassName::name(),
-                            'description' => $fullClassName::description(),
+                            'name' => $instance->name(),
+                            'description' => $instance->description(),
                             'version' => '1.0', // Default version for filesystem classes
                             'url' => '',
-                            'logo' => $fullClassName::logo(),
+                            'logo' => $instance->logo(),
                             'created_at' => 'N/A (Filesystem)',
                             'updated_at' => 'N/A (Filesystem)',
                         ];
@@ -878,8 +879,10 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                     continue;
                 }
 
+                $instance = new $fullClassName();
+
                 // Get UUID from class
-                $uuid = $fullClassName::uuid();
+                $uuid = $instance->uuid();
 
                 if (empty($uuid)) {
                     $output->writeln("<error>Class {$fullClassName} has no UUID, skipping</error>");
@@ -896,10 +899,10 @@ class CredentialProtoTypeCommand extends MultiFlexiCommand
                 $prototypeData = [
                     'uuid' => $uuid,
                     'code' => $className,
-                    'name' => self::getLocalizedString($fullClassName::name()),
-                    'description' => self::getLocalizedString($fullClassName::description()),
+                    'name' => self::getLocalizedString($instance->name()),
+                    'description' => self::getLocalizedString($instance->description()),
                     'version' => '1.0',
-                    'logo' => $fullClassName::logo(),
+                    'logo' => $instance->logo(),
                     'url' => '',
                 ];
 
