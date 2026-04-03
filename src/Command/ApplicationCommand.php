@@ -321,6 +321,11 @@ class ApplicationCommand extends MultiFlexiCommand
                 $app = new Application();
                 $result = $app->importAppJson($json);
 
+                if (!empty($result)) {
+                    // Store the definition file path (only CLI knows the file location)
+                    $app->updateToSQL(['deffile' => realpath($json)], ['id' => $app->getMyKey()]);
+                }
+
                 if ($format === 'json') {
                     $output->writeln(json_encode(['imported' => $result], \JSON_PRETTY_PRINT));
                 } else {
