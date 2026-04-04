@@ -134,7 +134,7 @@ class RunTemplateCommand extends MultiFlexiCommand
             ->addOption('active', null, InputOption::VALUE_REQUIRED, 'Active')
             ->addOption('config', null, InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Application config key=value (repeatable)')
             ->addOption('schedule_time', null, InputOption::VALUE_OPTIONAL, 'Schedule time for launch (Y-m-d H:i:s or "now")', 'now')
-            ->addOption('executor', null, InputOption::VALUE_OPTIONAL, 'Executor to use for launch', 'Native')
+            ->addOption('executor', null, InputOption::VALUE_OPTIONAL, 'Executor to use for launch')
             ->addOption('fields', null, InputOption::VALUE_OPTIONAL, 'Comma-separated list of fields to display')
             ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit number of results for list action')
             ->addOption('order', null, InputOption::VALUE_REQUIRED, 'Sort order for list action: A (ascending) or D (descending)');
@@ -331,7 +331,7 @@ class RunTemplateCommand extends MultiFlexiCommand
             case 'create':
                 $data = [];
 
-                foreach (['name', 'app_id', 'company_id', 'interv', 'cron', 'active'] as $field) {
+                foreach (['name', 'app_id', 'company_id', 'interv', 'cron', 'active', 'executor'] as $field) {
                     $val = $input->getOption($field);
 
                     if ($field === 'cron' && $val !== null) {
@@ -439,7 +439,7 @@ class RunTemplateCommand extends MultiFlexiCommand
 
                 $data = [];
 
-                foreach (['name', 'app_id', 'company_id', 'interv', 'cron', 'active'] as $field) {
+                foreach (['name', 'app_id', 'company_id', 'interv', 'cron', 'active', 'executor'] as $field) {
                     $val = $input->getOption($field);
 
                     if ($field === 'cron' && $val !== null) {
@@ -546,7 +546,7 @@ class RunTemplateCommand extends MultiFlexiCommand
                 }
 
                 $scheduleTime = $input->getOption('schedule_time') ?? 'now';
-                $executor = $input->getOption('executor') ?? 'Native';
+                $executor = $input->getOption('executor') ?? null;
 
                 try {
                     $rt = new \MultiFlexi\RunTemplate(is_numeric($id) ? (int) $id : $id);
@@ -561,6 +561,12 @@ class RunTemplateCommand extends MultiFlexiCommand
                         $output->writeln('<error>RunTemplate is not active. Scheduling forbidden.</error>');
 
                         return MultiFlexiCommand::FAILURE;
+                    }
+
+                    // Resolve executor from runtemplate if not explicitly provided on CLI
+                    if ($executor === null) {
+                        $rtExecutor = $rt->getDataValue('executor');
+                        $executor = !empty($rtExecutor) ? $rtExecutor : 'Native';
                     }
 
                     $jobber = new Job();
