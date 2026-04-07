@@ -44,7 +44,7 @@ class ApplicationCommand extends MultiFlexiCommand
             ->addOption('id', null, InputOption::VALUE_REQUIRED, 'Application ID')
             ->addOption('name', null, InputOption::VALUE_REQUIRED, 'Name')
             ->addOption('description', null, InputOption::VALUE_OPTIONAL, 'Description')
-            ->addOption('topics', null, InputOption::VALUE_REQUIRED, 'Topics')
+            ->addOption('tags', null, InputOption::VALUE_REQUIRED, 'Tags')
             ->addOption('executable', null, InputOption::VALUE_REQUIRED, 'Executable')
             ->addOption('uuid', null, InputOption::VALUE_REQUIRED, 'UUID')
             ->addOption('ociimage', null, InputOption::VALUE_OPTIONAL, 'OCI Image')
@@ -155,7 +155,7 @@ class ApplicationCommand extends MultiFlexiCommand
                 $data = [];
 
                 foreach ([
-                    'name', 'description', 'appversion', 'topics', 'executable', 'uuid', 'ociimage', 'requirements', 'homepage',
+                    'name', 'description', 'appversion', 'tags', 'executable', 'uuid', 'ociimage', 'requirements', 'homepage',
                 ] as $field) {
                     $val = $input->getOption($field);
 
@@ -245,7 +245,7 @@ class ApplicationCommand extends MultiFlexiCommand
                 $data = [];
 
                 foreach ([
-                    'name', 'description', 'appversion', 'topics', 'executable', 'uuid', 'ociimage', 'requirements', 'homepage',
+                    'name', 'description', 'appversion', 'tags', 'executable', 'uuid', 'ociimage', 'requirements', 'homepage',
                 ] as $field) {
                     $val = $input->getOption($field);
 
