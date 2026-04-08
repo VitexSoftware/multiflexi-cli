@@ -153,6 +153,9 @@ echo "=== Job command ==="
 
 $CLI_CMD job status
 $CLI_CMD job status --format json
+
+$CLI_CMD job create --runtemplate_id 1 --scheduled now --executor native --verbose --format json
+
 $CLI_CMD job list
 $CLI_CMD job list --format json
 $CLI_CMD job list --limit 2

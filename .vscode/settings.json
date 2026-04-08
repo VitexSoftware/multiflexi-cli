@@ -1,6 +1,6 @@
 {
     // Editor color theme
-    "workbench.colorTheme": "Default Dark Modern",
+    "workbench.colorTheme": "Dark Modern",
     // Enable semantic highlighting for better code colors
     "editor.semanticHighlighting.enabled": true,
     // Bracket pair colorization

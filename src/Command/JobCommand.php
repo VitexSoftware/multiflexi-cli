@@ -262,7 +262,7 @@ EOD;
                 $executor = $input->getOption('executor') ?? 'Native';
                 $scheduleType = $input->getOption('schedule_type') ?? 'adhoc';
                 $job = new Job();
-                $jobId = $job->newJob((int) $runtemplateId, $env, $scheduledDT, $executor, $scheduleType);
+                $jobId = $job->newJob(new \MultiFlexi\RunTemplate((int) $runtemplateId), $env, $scheduledDT, $executor, $scheduleType);
 
                 // Only proceed if jobId is a valid positive integer
                 if (!\is_int($jobId) || $jobId <= 0) {
