@@ -11,6 +11,9 @@ export DB_DATABASE = dummy
 export DB_USERNAME = dummy
 export DB_PASSWORD = dummy
 
+PKG_VERSION := $(shell dpkg-parsechangelog -S Version | sed 's/~.*//')
+PKG_SOURCE  := $(shell dpkg-parsechangelog -S Source)
+
 %:
 	dh $@ --with phpcomposer
 
@@ -20,6 +23,10 @@ override_dh_install:
 	dh_install
 	# Install Debian autoloader
 	install -D -m 0644 debian/autoload.php debian/multiflexi-cli/usr/share/php/multiflexi-cli/autoload.php
+	sed -i "1a defined('APP_NAME') || define('APP_NAME', '$(PKG_SOURCE)');" \
+		debian/multiflexi-cli/usr/share/php/multiflexi-cli/autoload.php
+	sed -i "2a defined('APP_VERSION') || define('APP_VERSION', '$(PKG_VERSION)');" \
+		debian/multiflexi-cli/usr/share/php/multiflexi-cli/autoload.php
 	# Ensure sudoers snippets have correct permissions
 	if [ -d debian/multiflexi-cli/etc/sudoers.d ]; then chmod 0440 debian/multiflexi-cli/etc/sudoers.d/*; fi
 	# Ensure wrapper script is executable

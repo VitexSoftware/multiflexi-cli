@@ -30,3 +30,23 @@ require_once '/usr/lib/multiflexi-cli/Command/UserCommand.php';
 require_once '/usr/lib/multiflexi-cli/Command/UserDataErasureCommand.php';
 require_once '/usr/lib/multiflexi-cli/MultiFlexi/Cli/DataRetentionCleanup.php';
 require_once '/usr/lib/multiflexi-cli/MultiFlexi/Dummy.php';
+
+require_once '/usr/share/php/Composer/InstalledVersions.php';
+
+(function (): void {
+    $versions = [];
+    foreach (\Composer\InstalledVersions::getAllRawData() as $d) {
+        $versions = array_merge($versions, $d['versions'] ?? []);
+    }
+    $name    = defined('APP_NAME')    ? APP_NAME    : 'unknown';
+    $version = defined('APP_VERSION') ? APP_VERSION : '0.0.0';
+    $versions[$name] = ['pretty_version' => $version, 'version' => $version,
+        'reference' => null, 'type' => 'library', 'install_path' => __DIR__,
+        'aliases' => [], 'dev_requirement' => false];
+    \Composer\InstalledVersions::reload([
+        'root' => ['name' => $name, 'pretty_version' => $version, 'version' => $version,
+            'reference' => null, 'type' => 'project', 'install_path' => __DIR__,
+            'aliases' => [], 'dev' => false],
+        'versions' => $versions,
+    ]);
+})();
