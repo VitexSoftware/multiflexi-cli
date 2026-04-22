@@ -25,9 +25,9 @@ override_dh_install:
 	install -D -m 0644 debian/autoload.php debian/multiflexi-cli/usr/share/php/multiflexi-cli/autoload.php
 	sed -i "1a defined('APP_NAME') || define('APP_NAME', '$(PKG_SOURCE)');" \
 		debian/multiflexi-cli/usr/share/php/multiflexi-cli/autoload.php
-	sed -i "s|: 'unknown'|: '$(PKG_SOURCE)'|" \
+	sed -i "s|= 'unknown'|= '$(PKG_SOURCE)'|" \
 		debian/multiflexi-cli/usr/share/php/multiflexi-cli/autoload.php
-	sed -i "s|: '0.0.0'|: '$(PKG_VERSION)'|" \
+	sed -i "s|= '0.0.0'|= '$(PKG_VERSION)'|" \
 		debian/multiflexi-cli/usr/share/php/multiflexi-cli/autoload.php
 	sed -i "2a defined('APP_VERSION') || define('APP_VERSION', '$(PKG_VERSION)');" \
 		debian/multiflexi-cli/usr/share/php/multiflexi-cli/autoload.php
@@ -37,6 +37,7 @@ override_dh_install:
 	if [ -f debian/multiflexi-cli/usr/bin/multiflexi ]; then chmod 0755 debian/multiflexi-cli/usr/bin/multiflexi; fi
 	sed -i "s|require_once __DIR__.'/../vendor/autoload.php';|require_once '/usr/share/php/multiflexi-cli/autoload.php';|" debian/multiflexi-cli/usr/share/multiflexi-cli/multiflexi-cli.php
 	sed -i "s|__DIR__ \. '/../.env'|'/etc/multiflexi/multiflexi.env'|" debian/multiflexi-cli/usr/share/multiflexi-cli/multiflexi-cli.php
+	sed -i "s|\\\\define('APP_NAME',|defined('APP_NAME') \\|\\| define('APP_NAME',|" debian/multiflexi-cli/usr/share/multiflexi-cli/multiflexi-cli.php
 	# Generate shell completions
 	mkdir -p debian/multiflexi-cli/usr/share/bash-completion/completions
 	cd src; ./multiflexi-cli completion bash > ../debian/multiflexi-cli/usr/share/bash-completion/completions/multiflexi-cli ; cd ..

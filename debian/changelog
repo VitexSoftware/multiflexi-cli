@@ -1,10 +1,17 @@
-multiflexi-cli (2.5.0) UNRELEASED; urgency=medium
+multiflexi-cli (2.5.1) UNRELEASED; urgency=medium
 
   * EventSource and EventRule CLI commands
   * eventsource list|get|create|update|remove|test
   * eventrule list|get|create|update|remove
+  * Show multiflexi-core version in status command via Composer
+    InstalledVersions
+  * Rewrite Debian autoloader with spl_autoload_register for on-demand
+    class loading
+  * Fix Command subdirectory install: install full tree instead of top-
+    level only
+  * Fix InstalledVersions sed substitution patterns in debian/rules
 
- -- vitex <info@vitexsoftware.cz>  Thu, 26 Feb 2026 22:00:00 +0100
+ -- vitex <info@vitexsoftware.cz>  Wed, 22 Apr 2026 06:30:44 +0200
 
 multiflexi-cli (2.4.3) UNRELEASED; urgency=medium
 
