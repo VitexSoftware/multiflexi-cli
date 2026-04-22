@@ -161,9 +161,10 @@ class RunTemplateCommand extends MultiFlexiCommand
      *
      * Supports resolving company slugs/IDs, resolving app UUIDs, applying command-line config overrides, and formatting output as JSON or text.
      *
-     * @param InputInterface  $input  Console input containing the action argument and command options.
-     * @param OutputInterface $output Console output used for writing messages and serialized results.
-     * @return int One of MultiFlexiCommand::SUCCESS or MultiFlexiCommand::FAILURE indicating the command outcome.
+     * @param InputInterface  $input  console input containing the action argument and command options
+     * @param OutputInterface $output console output used for writing messages and serialized results
+     *
+     * @return int one of MultiFlexiCommand::SUCCESS or MultiFlexiCommand::FAILURE indicating the command outcome
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {

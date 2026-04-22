@@ -27,6 +27,7 @@ class UpdateCommand extends BaseCommand
     protected function configure(): void
     {
         $this
+            ->setName('credential-type:update')
             ->setDescription('Update a credential type')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('id', null, InputOption::VALUE_REQUIRED, 'Credential Type ID')

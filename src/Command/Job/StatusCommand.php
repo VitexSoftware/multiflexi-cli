@@ -27,6 +27,7 @@ class StatusCommand extends MultiFlexiCommand
     protected function configure(): void
     {
         $this
+            ->setName('job:status')
             ->setDescription('Show job statistics')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text');
     }

@@ -28,6 +28,7 @@ class FixCommand extends MultiFlexiCommand
     protected function configure(): void
     {
         $this
+            ->setName('queue:fix')
             ->setDescription('Fix queue by cleaning up orphaned jobs and broken records')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text');
     }

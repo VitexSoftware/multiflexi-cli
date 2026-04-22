@@ -27,6 +27,7 @@ class ListCommand extends BaseCommand
     protected function configure(): void
     {
         $this
+            ->setName('credential-type:list')
             ->setDescription('List credential types')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit number of results')

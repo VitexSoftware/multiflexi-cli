@@ -28,6 +28,7 @@ class GetCommand extends MultiFlexiCommand
     protected function configure(): void
     {
         $this
+            ->setName('event-rule:get')
             ->setDescription('Get an event rule by ID')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('id', null, InputOption::VALUE_REQUIRED, 'Event Rule ID');

@@ -28,6 +28,7 @@ class CreateCommand extends BaseCommand
     protected function configure(): void
     {
         $this
+            ->setName('credential-type:create')
             ->setDescription('Create a credential type for a company')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('company-id', null, InputOption::VALUE_REQUIRED, 'Company ID')

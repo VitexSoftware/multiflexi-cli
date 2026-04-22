@@ -28,6 +28,7 @@ class SaveCommand extends MultiFlexiCommand
     protected function configure(): void
     {
         $this
+            ->setName('artifact:save')
             ->setDescription('Save artifact content to a file')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('id', null, InputOption::VALUE_REQUIRED, 'Artifact ID')

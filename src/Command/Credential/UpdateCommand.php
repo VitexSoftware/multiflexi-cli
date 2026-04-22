@@ -30,6 +30,7 @@ class UpdateCommand extends MultiFlexiCommand
     protected function configure(): void
     {
         $this
+            ->setName('credential:update')
             ->setDescription('Update a credential')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('id', null, InputOption::VALUE_REQUIRED, 'Credential ID')

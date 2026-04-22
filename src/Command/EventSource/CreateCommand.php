@@ -28,6 +28,7 @@ class CreateCommand extends MultiFlexiCommand
     protected function configure(): void
     {
         $this
+            ->setName('event-source:create')
             ->setDescription('Create an event source')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('name', null, InputOption::VALUE_REQUIRED, 'Source name')

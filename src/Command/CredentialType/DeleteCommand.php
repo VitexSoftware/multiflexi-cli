@@ -27,6 +27,7 @@ class DeleteCommand extends BaseCommand
     protected function configure(): void
     {
         $this
+            ->setName('credential-type:delete')
             ->setDescription('Delete a credential type')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('id', null, InputOption::VALUE_REQUIRED, 'Credential Type ID');

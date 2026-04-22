@@ -28,6 +28,7 @@ class OverviewCommand extends MultiFlexiCommand
     protected function configure(): void
     {
         $this
+            ->setName('queue:overview')
             ->setDescription('Show comprehensive queue metrics overview')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text');
     }

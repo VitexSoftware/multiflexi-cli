@@ -171,12 +171,10 @@ class EncryptionCommand extends MultiFlexiCommand
             $deleteStmt->execute();
 
             // Insert new key
-            $insertStmt = $pdo->prepare(
-                <<<'EOD'
+            $insertStmt = $pdo->prepare(<<<'EOD'
 INSERT INTO encryption_keys (key_name, key_data, algorithm, created_at, is_active)
                  VALUES ('credentials', :key_data, 'aes-256-gcm', NOW(), TRUE)
-EOD
-            );
+EOD);
             $insertStmt->execute(['key_data' => $keyData]);
 
             if ($format === 'json') {

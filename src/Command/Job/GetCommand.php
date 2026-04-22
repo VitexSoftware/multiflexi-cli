@@ -28,6 +28,7 @@ class GetCommand extends MultiFlexiCommand
     protected function configure(): void
     {
         $this
+            ->setName('job:get')
             ->setDescription('Get a job by ID')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('id', null, InputOption::VALUE_REQUIRED, 'Job ID');

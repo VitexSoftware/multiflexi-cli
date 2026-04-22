@@ -28,6 +28,7 @@ class RemoveCommand extends MultiFlexiCommand
     protected function configure(): void
     {
         $this
+            ->setName('event-source:remove')
             ->setDescription('Remove an event source')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('id', null, InputOption::VALUE_REQUIRED, 'Event Source ID');

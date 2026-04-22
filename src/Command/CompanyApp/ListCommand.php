@@ -29,6 +29,7 @@ class ListCommand extends MultiFlexiCommand
     protected function configure(): void
     {
         $this
+            ->setName('company-app:list')
             ->setDescription('List run templates for a company+app combination')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('company_id', null, InputOption::VALUE_REQUIRED, 'Company ID')

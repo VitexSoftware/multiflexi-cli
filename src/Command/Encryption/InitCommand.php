@@ -26,6 +26,7 @@ class InitCommand extends BaseCommand
     protected function configure(): void
     {
         $this
+            ->setName('encryption:init')
             ->setDescription('Initialize or re-initialize the encryption key for credentials')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text');
     }
@@ -66,12 +67,10 @@ class InitCommand extends BaseCommand
             $deleteStmt = $pdo->prepare("DELETE FROM encryption_keys WHERE key_name = 'credentials'");
             $deleteStmt->execute();
 
-            $insertStmt = $pdo->prepare(
-                <<<'EOD'
+            $insertStmt = $pdo->prepare(<<<'EOD'
 INSERT INTO encryption_keys (key_name, key_data, algorithm, created_at, is_active)
                  VALUES ('credentials', :key_data, 'aes-256-gcm', NOW(), TRUE)
-EOD,
-            );
+EOD,);
             $insertStmt->execute(['key_data' => $keyData]);
 
             if ($format === 'json') {

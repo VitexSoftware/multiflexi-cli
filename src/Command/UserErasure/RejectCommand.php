@@ -30,6 +30,7 @@ class RejectCommand extends Command
     protected function configure(): void
     {
         $this
+            ->setName('user-erasure:reject')
             ->setDescription('Reject a GDPR user data erasure request')
             ->addOption('request-id', 'r', InputOption::VALUE_REQUIRED, 'Deletion request ID')
             ->addOption('reason', null, InputOption::VALUE_REQUIRED, 'Reason for rejection')

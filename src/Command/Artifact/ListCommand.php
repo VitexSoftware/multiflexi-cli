@@ -28,6 +28,7 @@ class ListCommand extends MultiFlexiCommand
     protected function configure(): void
     {
         $this
+            ->setName('artifact:list')
             ->setDescription('List job artifacts')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('job_id', null, InputOption::VALUE_REQUIRED, 'Filter by Job ID')

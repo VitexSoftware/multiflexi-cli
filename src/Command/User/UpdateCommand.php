@@ -28,6 +28,7 @@ class UpdateCommand extends MultiFlexiCommand
     protected function configure(): void
     {
         $this
+            ->setName('user:update')
             ->setDescription('Update a user')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('id', null, InputOption::VALUE_REQUIRED, 'User ID')

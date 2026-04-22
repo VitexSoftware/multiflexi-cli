@@ -27,6 +27,7 @@ class UpdateCommand extends BaseCommand
     protected function configure(): void
     {
         $this
+            ->setName('credential-prototype:update')
             ->setDescription('Update a credential prototype')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('id', null, InputOption::VALUE_REQUIRED, 'Credential Prototype ID')

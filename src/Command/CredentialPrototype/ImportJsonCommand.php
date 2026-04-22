@@ -27,6 +27,7 @@ class ImportJsonCommand extends BaseCommand
     protected function configure(): void
     {
         $this
+            ->setName('credential-prototype:import-json')
             ->setDescription('Import a credential prototype from a JSON file')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('file', null, InputOption::VALUE_REQUIRED, 'Path to JSON file');

@@ -28,6 +28,7 @@ class ValidateJsonCommand extends MultiFlexiCommand
     protected function configure(): void
     {
         $this
+            ->setName('application:validate-json')
             ->setDescription('Validate an application JSON file against the schema')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('file', null, InputOption::VALUE_REQUIRED, 'Path to JSON file');

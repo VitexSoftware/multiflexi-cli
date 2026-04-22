@@ -28,6 +28,7 @@ class ListCommand extends Command
     protected function configure(): void
     {
         $this
+            ->setName('user-erasure:list')
             ->setDescription('List GDPR user data erasure requests')
             ->addOption('status', 's', InputOption::VALUE_REQUIRED, 'Filter by status: pending, approved, rejected, completed')
             ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit number of results')

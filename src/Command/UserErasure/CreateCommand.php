@@ -30,6 +30,7 @@ class CreateCommand extends Command
     protected function configure(): void
     {
         $this
+            ->setName('user-erasure:create')
             ->setDescription('Create a GDPR user data erasure request')
             ->addOption('user-id', 'u', InputOption::VALUE_REQUIRED, 'User ID')
             ->addOption('user-login', 'l', InputOption::VALUE_REQUIRED, 'User login')

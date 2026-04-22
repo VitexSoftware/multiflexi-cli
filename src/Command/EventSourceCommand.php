@@ -100,7 +100,6 @@ class EventSourceCommand extends MultiFlexiCommand
                 }
 
                 return MultiFlexiCommand::SUCCESS;
-
             case 'get':
                 $id = $input->getOption('id');
 
@@ -122,7 +121,6 @@ class EventSourceCommand extends MultiFlexiCommand
                 }
 
                 return MultiFlexiCommand::SUCCESS;
-
             case 'create':
                 $name = $input->getOption('name');
 
@@ -161,7 +159,6 @@ class EventSourceCommand extends MultiFlexiCommand
                 $output->writeln('<error>Failed to create Event Source</error>');
 
                 return MultiFlexiCommand::FAILURE;
-
             case 'update':
                 $id = $input->getOption('id');
 
@@ -197,7 +194,6 @@ class EventSourceCommand extends MultiFlexiCommand
                 }
 
                 return MultiFlexiCommand::SUCCESS;
-
             case 'remove':
                 $id = $input->getOption('id');
 
@@ -222,7 +218,6 @@ class EventSourceCommand extends MultiFlexiCommand
                 $output->writeln('<error>Failed to remove Event Source</error>');
 
                 return MultiFlexiCommand::FAILURE;
-
             case 'test':
                 $id = $input->getOption('id');
 

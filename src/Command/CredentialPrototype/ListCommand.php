@@ -27,6 +27,7 @@ class ListCommand extends BaseCommand
     protected function configure(): void
     {
         $this
+            ->setName('credential-prototype:list')
             ->setDescription('List credential prototypes')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit number of results')

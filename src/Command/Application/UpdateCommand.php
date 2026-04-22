@@ -28,6 +28,7 @@ class UpdateCommand extends MultiFlexiCommand
     protected function configure(): void
     {
         $this
+            ->setName('application:update')
             ->setDescription('Update an application')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('id', null, InputOption::VALUE_REQUIRED, 'Application ID')

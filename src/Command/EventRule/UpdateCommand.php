@@ -28,6 +28,7 @@ class UpdateCommand extends MultiFlexiCommand
     protected function configure(): void
     {
         $this
+            ->setName('event-rule:update')
             ->setDescription('Update an event rule')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('id', null, InputOption::VALUE_REQUIRED, 'Event Rule ID')

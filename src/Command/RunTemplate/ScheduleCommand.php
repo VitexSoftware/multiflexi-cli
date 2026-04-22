@@ -28,6 +28,7 @@ class ScheduleCommand extends BaseCommand
     protected function configure(): void
     {
         $this
+            ->setName('run-template:schedule')
             ->setDescription('Schedule a run template for execution')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('id', null, InputOption::VALUE_REQUIRED, 'RunTemplate ID')

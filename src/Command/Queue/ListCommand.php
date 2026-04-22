@@ -24,13 +24,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 class ListCommand extends MultiFlexiCommand
 {
     protected static $defaultName = 'queue:list';
-
     private ?string $postSortField = null;
     private ?string $postSortDirection = null;
 
     protected function configure(): void
     {
         $this
+            ->setName('queue:list')
             ->setDescription('List queued jobs')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit number of results')

@@ -103,7 +103,6 @@ class EventRuleCommand extends MultiFlexiCommand
                 }
 
                 return MultiFlexiCommand::SUCCESS;
-
             case 'get':
                 $id = $input->getOption('id');
 
@@ -125,7 +124,6 @@ class EventRuleCommand extends MultiFlexiCommand
                 }
 
                 return MultiFlexiCommand::SUCCESS;
-
             case 'create':
                 $sourceId = $input->getOption('event_source_id');
                 $runtemplateId = $input->getOption('runtemplate_id');
@@ -170,7 +168,6 @@ class EventRuleCommand extends MultiFlexiCommand
                 $output->writeln('<error>Failed to create Event Rule</error>');
 
                 return MultiFlexiCommand::FAILURE;
-
             case 'update':
                 $id = $input->getOption('id');
 
@@ -212,7 +209,6 @@ class EventRuleCommand extends MultiFlexiCommand
                 }
 
                 return MultiFlexiCommand::SUCCESS;
-
             case 'remove':
                 $id = $input->getOption('id');
 

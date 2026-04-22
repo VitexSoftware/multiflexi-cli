@@ -28,6 +28,7 @@ class RemoveJsonCommand extends MultiFlexiCommand
     protected function configure(): void
     {
         $this
+            ->setName('application:remove-json')
             ->setDescription('Remove an application defined by a JSON file')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('file', null, InputOption::VALUE_REQUIRED, 'Path to JSON file');

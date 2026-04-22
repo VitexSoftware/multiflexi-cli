@@ -28,6 +28,7 @@ class ListCommand extends MultiFlexiCommand
     protected function configure(): void
     {
         $this
+            ->setName('user:list')
             ->setDescription('List users')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit number of results')

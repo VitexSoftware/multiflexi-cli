@@ -28,6 +28,7 @@ class ListCommand extends MultiFlexiCommand
     protected function configure(): void
     {
         $this
+            ->setName('event-source:list')
             ->setDescription('List event sources')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit number of results')

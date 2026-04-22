@@ -27,6 +27,7 @@ class UpdateCommand extends BaseCommand
     protected function configure(): void
     {
         $this
+            ->setName('run-template:update')
             ->setDescription('Update a run template')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('id', null, InputOption::VALUE_REQUIRED, 'RunTemplate ID')

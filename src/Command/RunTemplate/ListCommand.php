@@ -27,6 +27,7 @@ class ListCommand extends BaseCommand
     protected function configure(): void
     {
         $this
+            ->setName('run-template:list')
             ->setDescription('List run templates')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('company', null, InputOption::VALUE_REQUIRED, 'Filter by company slug or ID')

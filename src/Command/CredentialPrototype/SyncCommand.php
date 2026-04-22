@@ -27,6 +27,7 @@ class SyncCommand extends BaseCommand
     protected function configure(): void
     {
         $this
+            ->setName('credential-prototype:sync')
             ->setDescription('Synchronize credential prototypes from filesystem to database')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text');
     }

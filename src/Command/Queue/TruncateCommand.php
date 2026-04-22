@@ -28,6 +28,7 @@ class TruncateCommand extends MultiFlexiCommand
     protected function configure(): void
     {
         $this
+            ->setName('queue:truncate')
             ->setDescription('Truncate the job queue')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text');
     }
