@@ -2059,12 +2059,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/VitexSoftware/php-ease-fluentpdo.git",
-                "reference": "ef54aee6e213aff582228d18ca608e5131728872"
+                "reference": "60ee1c3f0f3d693792b1a281223857bc829cf708"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/VitexSoftware/php-ease-fluentpdo/zipball/ef54aee6e213aff582228d18ca608e5131728872",
-                "reference": "ef54aee6e213aff582228d18ca608e5131728872",
+                "url": "https://api.github.com/repos/VitexSoftware/php-ease-fluentpdo/zipball/60ee1c3f0f3d693792b1a281223857bc829cf708",
+                "reference": "60ee1c3f0f3d693792b1a281223857bc829cf708",
                 "shasum": ""
             },
             "require": {
@@ -2112,7 +2112,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2026-03-19T12:00:17+00:00"
+            "time": "2026-04-21T13:19:07+00:00"
         },
         {
             "name": "vitexsoftware/ease-html",
@@ -2256,12 +2256,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/VitexSoftware/php-vitexsoftware-multiflexi-core.git",
-                "reference": "70872b72de6451f4c084ac7162c8a5f362d51d20"
+                "reference": "4a25d18408db582e541d46ad9bb299a0c9fa135f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/VitexSoftware/php-vitexsoftware-multiflexi-core/zipball/70872b72de6451f4c084ac7162c8a5f362d51d20",
-                "reference": "70872b72de6451f4c084ac7162c8a5f362d51d20",
+                "url": "https://api.github.com/repos/VitexSoftware/php-vitexsoftware-multiflexi-core/zipball/4a25d18408db582e541d46ad9bb299a0c9fa135f",
+                "reference": "4a25d18408db582e541d46ad9bb299a0c9fa135f",
                 "shasum": ""
             },
             "require": {
@@ -2306,7 +2306,7 @@
                 "issues": "https://github.com/VitexSoftware/php-vitexsoftware-multiflexi-core/issues",
                 "source": "https://github.com/VitexSoftware/php-vitexsoftware-multiflexi-core/tree/main"
             },
-            "time": "2026-04-19T17:50:00+00:00"
+            "time": "2026-04-22T05:08:09+00:00"
         }
     ],
     "packages-dev": [],

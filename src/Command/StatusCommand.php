@@ -79,9 +79,7 @@ class StatusCommand extends MultiFlexiCommand
 
         $status = [
             'version-cli' => Shared::appVersion(),
-            'version-core' => \Composer\InstalledVersions::isInstalled('vitexsoftware/multiflexi-core')
-                ? \Composer\InstalledVersions::getPrettyVersion('vitexsoftware/multiflexi-core')
-                : 'unknown',
+            'version-core' => \Composer\InstalledVersions::getPrettyVersion('vitexsoftware/multiflexi-core'),
             'db-migration' => $databaseVersion['migration_name'].' ('.$databaseVersion['version'].')',
             'user' => Shared::user()->getUserLogin(),
             'php' => \PHP_VERSION,

@@ -24,6 +24,19 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 abstract class MultiFlexiCommand extends \Symfony\Component\Console\Command\Command
 {
+    public function __construct(?string $name = null)
+    {
+        if ($name === null && property_exists(static::class, 'defaultName')) {
+            $defaultName = static::$defaultName;
+
+            if (\is_string($defaultName) && $defaultName !== '') {
+                $name = $defaultName;
+            }
+        }
+
+        parent::__construct($name);
+    }
+
     public function listing(): array
     {
         return [];
