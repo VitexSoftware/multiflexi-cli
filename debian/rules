@@ -36,7 +36,7 @@ override_dh_install:
 	# Ensure wrapper script is executable
 	if [ -f debian/multiflexi-cli/usr/bin/multiflexi ]; then chmod 0755 debian/multiflexi-cli/usr/bin/multiflexi; fi
 	sed -i "s|require_once __DIR__.'/../vendor/autoload.php';|require_once '/usr/share/php/multiflexi-cli/autoload.php';|" debian/multiflexi-cli/usr/share/multiflexi-cli/multiflexi-cli.php
-	sed -i "s|__DIR__ \. '/../.env'|'/etc/multiflexi/multiflexi.env'|" debian/multiflexi-cli/usr/share/multiflexi-cli/multiflexi-cli.php
+	sed -i "s|__DIR__\.'/../.env'|'/etc/multiflexi/multiflexi.env'|" debian/multiflexi-cli/usr/share/multiflexi-cli/multiflexi-cli.php
 	sed -i "s|\\\\define('APP_NAME',|defined('APP_NAME') \\|\\| define('APP_NAME',|" debian/multiflexi-cli/usr/share/multiflexi-cli/multiflexi-cli.php
 	# Generate shell completions
 	mkdir -p debian/multiflexi-cli/usr/share/bash-completion/completions
