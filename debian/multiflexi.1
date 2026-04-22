@@ -1,0 +1,22 @@
+.TH MULTIFLEXI 1 "November 2025" "MultiFlexi" "User Commands"
+.SH NAME
+multiflexi \- group-restricted wrapper for multiflexi-cli
+.SH SYNOPSIS
+.B multiflexi
+[\fICOMMAND\fR] [\fIACTION\fR] [\fIOPTIONS\fR]
+.SH DESCRIPTION
+.B multiflexi
+is a wrapper around
+.BR multiflexi-cli (1)
+that restricts execution to members of the
+.I multiflexi
+group (or root). All arguments are passed through unchanged.
+.SH OPTIONS
+See
+.BR multiflexi-cli (1)
+for the full list of commands and options.
+.SH AUTHOR
+Vítězslav Dvořák <info@vitexsoftware.cz>
+.SH SEE ALSO
+.BR multiflexi-cli (1),
+.BR multiflexi-json2apps (1)

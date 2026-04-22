@@ -69,5 +69,5 @@ echo "  • Duplicate checking by UUID and ID\n";
 echo "  • Database insertion with proper field encoding\n";
 echo "  • Error handling and status reporting\n\n";
 echo "Usage:\n";
-echo "  multiflexi-cli credtype import --file /path/to/credential-type.json\n";
-echo "  multiflexi-cli credtype import --file /path/to/credential-type.json --format json\n\n";
+echo "  multiflexi-cli credential-type:import-json --file /path/to/credential-type.json\n";
+echo "  multiflexi-cli credential-type:import-json --file /path/to/credential-type.json --format json\n\n";

@@ -44,4 +44,4 @@ if (file_exists($testFile)) {
 }
 
 echo "\nImport functionality has been added to CredentialTypeCommand.php\n";
-echo "Usage: multiflexi-cli credtype import --file path/to/file.json\n";
+echo "Usage: multiflexi-cli credential-type:import-json --file path/to/file.json\n";

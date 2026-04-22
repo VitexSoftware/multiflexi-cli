@@ -57,6 +57,7 @@ configure)
         adduser --quiet \
             --system \
             --ingroup $SERVER_GROUP \
+            --home $SERVER_HOME \
             --no-create-home \
             --disabled-password \
             $SERVER_USER 2>/dev/null || true

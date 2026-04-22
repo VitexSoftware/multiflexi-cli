@@ -1,0 +1,25 @@
+.TH MULTIFLEXI-JSON2APPS 1 "November 2025" "MultiFlexi" "User Commands"
+.SH NAME
+multiflexi-json2apps \- import all MultiFlexi application JSON definitions
+.SH SYNOPSIS
+.B multiflexi-json2apps
+.SH DESCRIPTION
+.B multiflexi-json2apps
+scans
+.I /usr/lib/*/multiflexi/*.app.json
+and imports each non-empty file into MultiFlexi via
+.BR multiflexi-cli (1)
+.BR application\ import-json .
+Empty files are skipped with a notice.
+.SH EXIT STATUS
+.TP
+.B 0
+All files processed successfully.
+.TP
+.B non-zero
+One or more imports failed.
+.SH AUTHOR
+Vítězslav Dvořák <info@vitexsoftware.cz>
+.SH SEE ALSO
+.BR multiflexi-cli (1),
+.BR multiflexi (1)
