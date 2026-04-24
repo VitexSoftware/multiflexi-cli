@@ -61,7 +61,9 @@ class JobCommand extends MultiFlexiCommand
             ->addOption('schedule_type', null, InputOption::VALUE_REQUIRED, 'Schedule type')
             ->addOption('app_id', null, InputOption::VALUE_REQUIRED, 'App ID')
             ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit number of results for list action')
-            ->addOption('order', null, InputOption::VALUE_REQUIRED, 'Sort order for list action: A (ascending) or D (descending)');
+            ->addOption('order', null, InputOption::VALUE_REQUIRED, 'Sort order for list action: A (ascending) or D (descending)')
+            ->addOption('offset', null, InputOption::VALUE_REQUIRED, 'Offset for pagination')
+            ->addOption('fields', null, InputOption::VALUE_REQUIRED, 'Comma-separated list of fields to display');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

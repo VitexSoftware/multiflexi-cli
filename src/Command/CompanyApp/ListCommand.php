@@ -36,7 +36,9 @@ class ListCommand extends MultiFlexiCommand
             ->addOption('app_id', null, InputOption::VALUE_REQUIRED, 'Application ID')
             ->addOption('app_uuid', null, InputOption::VALUE_REQUIRED, 'Application UUID')
             ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit number of results')
-            ->addOption('order', null, InputOption::VALUE_REQUIRED, 'Sort order: A (ascending) or D (descending)');
+            ->addOption('order', null, InputOption::VALUE_REQUIRED, 'Sort order: A (ascending) or D (descending)')
+            ->addOption('offset', null, InputOption::VALUE_REQUIRED, 'Offset for pagination')
+            ->addOption('fields', null, InputOption::VALUE_REQUIRED, 'Comma-separated list of fields to display');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -85,6 +87,15 @@ class ListCommand extends MultiFlexiCommand
         }
 
         $runtemplates = $query->fetchAll();
+
+        $fields = $input->getOption('fields');
+
+        if (!empty($fields)) {
+            $fieldList = array_map('trim', explode(',', $fields));
+            $runtemplates = array_map(static function ($rt) use ($fieldList) {
+                return array_intersect_key($rt, array_flip($fieldList));
+            }, $runtemplates);
+        }
 
         if ($format === 'json') {
             $output->writeln(json_encode($runtemplates, \JSON_PRETTY_PRINT));

@@ -137,7 +137,8 @@ class RunTemplateCommand extends MultiFlexiCommand
             ->addOption('executor', null, InputOption::VALUE_OPTIONAL, 'Executor to use for launch')
             ->addOption('fields', null, InputOption::VALUE_OPTIONAL, 'Comma-separated list of fields to display')
             ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit number of results for list action')
-            ->addOption('order', null, InputOption::VALUE_REQUIRED, 'Sort order for list action: A (ascending) or D (descending)');
+            ->addOption('order', null, InputOption::VALUE_REQUIRED, 'Sort order for list action: A (ascending) or D (descending)')
+            ->addOption('offset', null, InputOption::VALUE_REQUIRED, 'Offset for pagination');
         // Add more options as needed
     }
 

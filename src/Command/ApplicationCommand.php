@@ -53,7 +53,9 @@ class ApplicationCommand extends MultiFlexiCommand
             ->addOption('file', null, InputOption::VALUE_REQUIRED, 'Path to JSON file for import/export/remove/validate')
             ->addOption('appversion', null, InputOption::VALUE_OPTIONAL, 'Application Version')
             ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit number of results for list action')
-            ->addOption('order', null, InputOption::VALUE_REQUIRED, 'Sort order for list action: A (ascending) or D (descending)');
+            ->addOption('order', null, InputOption::VALUE_REQUIRED, 'Sort order for list action: A (ascending) or D (descending)')
+            ->addOption('offset', null, InputOption::VALUE_REQUIRED, 'Offset for pagination')
+            ->addOption('fields', null, InputOption::VALUE_REQUIRED, 'Comma-separated list of fields to display');
         // Add more options as needed
     }
 

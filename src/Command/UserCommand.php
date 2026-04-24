@@ -67,6 +67,8 @@ class UserCommand extends MultiFlexiCommand
             ->addOption('enabled', null, InputOption::VALUE_OPTIONAL, 'Enabled (true/false)')
             ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit number of results for list action')
             ->addOption('order', null, InputOption::VALUE_REQUIRED, 'Sort order for list action: A (ascending) or D (descending)')
+            ->addOption('offset', null, InputOption::VALUE_REQUIRED, 'Offset for pagination')
+            ->addOption('fields', null, InputOption::VALUE_REQUIRED, 'Comma-separated list of fields to display')
             ->setHelp('This command manage Users');
         // Add more options as needed
     }

@@ -38,7 +38,9 @@ use MultiFlexi\Cli\Command\Company\GetCommand as CompanyGetCommand;
 use MultiFlexi\Cli\Command\Company\ListCommand as CompanyListCommand;
 use MultiFlexi\Cli\Command\Company\RemoveCommand as CompanyRemoveCommand;
 use MultiFlexi\Cli\Command\Company\UpdateCommand as CompanyUpdateCommand;
+use MultiFlexi\Cli\Command\CompanyApp\AssignCommand as CompanyAppAssignCommand;
 use MultiFlexi\Cli\Command\CompanyApp\ListCommand as CompanyAppListCommand;
+use MultiFlexi\Cli\Command\CompanyApp\UnassignCommand as CompanyAppUnassignCommand;
 use MultiFlexi\Cli\Command\Credential\CreateCommand as CredentialCreateCommand;
 use MultiFlexi\Cli\Command\Credential\GetCommand as CredentialGetCommand;
 use MultiFlexi\Cli\Command\Credential\ListCommand as CredentialListCommand;
@@ -167,6 +169,8 @@ $application->add(new CompanyRemoveCommand());
 
 // CompanyApp
 $application->add(new CompanyAppListCommand());
+$application->add(new CompanyAppAssignCommand());
+$application->add(new CompanyAppUnassignCommand());
 
 // Credential
 $application->add(new CredentialListCommand());

@@ -32,7 +32,8 @@ class UpdateCommand extends BaseCommand
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('id', null, InputOption::VALUE_REQUIRED, 'Credential Type ID')
             ->addOption('uuid', null, InputOption::VALUE_REQUIRED, 'Credential Type UUID')
-            ->addOption('name', null, InputOption::VALUE_REQUIRED, 'Name');
+            ->addOption('name', null, InputOption::VALUE_REQUIRED, 'Name')
+            ->addOption('class', null, InputOption::VALUE_REQUIRED, 'Class');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -60,10 +61,13 @@ class UpdateCommand extends BaseCommand
         }
 
         $data = [];
-        $name = $input->getOption('name');
 
-        if ($name !== null) {
-            $data['name'] = $name;
+        foreach (['name', 'class'] as $field) {
+            $val = $input->getOption($field);
+
+            if ($val !== null) {
+                $data[$field] = $val;
+            }
         }
 
         if (empty($data)) {

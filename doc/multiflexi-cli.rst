@@ -124,27 +124,25 @@ Examples:
 companyapp
 ----------
 
-Manage company-application relations (list, get, create, update, delete).
+Manage company-application relations (list, assign, unassign).
 
 .. code-block:: bash
 
     multiflexi-cli companyapp <action> [options]
 
 Actions:
-- list:   List company-app relations (requires --company_id and --app_id or --app_uuid).
-- get:    Get relation details by ID.
-- create: Create a new relation (requires --company_id and --app_id).
-- update: Update an existing relation (requires --id).
-- delete: Delete a relation (requires --id).
+- list:     List RunTemplates for a company-app pair (requires --company_id and --app_id or --app_uuid).
+- assign:   Assign an application to a company and create a default RunTemplate (requires --company_id and --app_id or --app_uuid).
+- unassign: Remove all RunTemplates and the company-app relation (requires --company_id and --app_id or --app_uuid).
 
 Options:
-  --id           Relation ID
   --company_id   Company ID
   --app_id       Application ID
   --app_uuid     Application UUID
   --limit        Limit number of results for list action
   --offset       Offset for list action (skip N results)
   --order        Sort order for list action: A (ascending) or D (descending)
+  --fields       Comma-separated list of fields to display
   -f, --format   Output format: text or json (default: text)
 
 Examples:
@@ -153,8 +151,9 @@ Examples:
 
     multiflexi-cli companyapp list --company_id=1 --app_id=2
     multiflexi-cli companyapp list --company_id=1 --app_id=2 --limit=10 --offset=0 --order=D
-    multiflexi-cli companyapp create --company_id=1 --app_id=2
-    multiflexi-cli companyapp delete --id=5
+    multiflexi-cli companyapp assign --company_id=1 --app_id=2
+    multiflexi-cli companyapp assign --company_id=1 --app_uuid=uuid-123 --format=json
+    multiflexi-cli companyapp unassign --company_id=1 --app_id=2
 
 credtype
 --------

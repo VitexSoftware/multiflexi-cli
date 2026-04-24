@@ -16,6 +16,8 @@ declare(strict_types=1);
 namespace MultiFlexi\Cli\Command;
 
 use MultiFlexi\Application;
+use MultiFlexi\Company;
+use MultiFlexi\CompanyApp;
 use MultiFlexi\RunTemplate;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -32,14 +34,16 @@ class CompanyAppCommand extends MultiFlexiCommand
         $this
             ->setName('companyapp')
             ->setDescription('Manage company-application relations')
-            ->addArgument('action', InputArgument::REQUIRED, 'Action: list|get|create|update|delete')
+            ->addArgument('action', InputArgument::REQUIRED, 'Action: list|assign|unassign')
             ->addOption('id', null, InputOption::VALUE_REQUIRED, 'Relation ID')
             ->addOption('company_id', null, InputOption::VALUE_REQUIRED, 'Company ID')
             ->addOption('app_id', null, InputOption::VALUE_REQUIRED, 'Application ID')
             ->addOption('app_uuid', null, InputOption::VALUE_REQUIRED, 'Application UUID')
-            ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'The output format: text or json. Defaults to text.', 'text')
-            ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit number of results for list action')
-            ->addOption('order', null, InputOption::VALUE_REQUIRED, 'Sort order for list action: A (ascending) or D (descending)');
+            ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
+            ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit number of results')
+            ->addOption('order', null, InputOption::VALUE_REQUIRED, 'Sort order: A (ascending) or D (descending)')
+            ->addOption('offset', null, InputOption::VALUE_REQUIRED, 'Offset for pagination')
+            ->addOption('fields', null, InputOption::VALUE_REQUIRED, 'Comma-separated list of fields to display');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -47,72 +51,193 @@ class CompanyAppCommand extends MultiFlexiCommand
         $format = strtolower($input->getOption('format'));
         $action = strtolower($input->getArgument('action'));
 
-        if ($action === 'list') {
-            $companyId = $input->getOption('company_id');
-            $appId = $input->getOption('app_id');
-            $appUuid = $input->getOption('app_uuid');
+        $companyId = $input->getOption('company_id');
+        $appId = $input->getOption('app_id');
+        $appUuid = $input->getOption('app_uuid');
 
-            if (empty($companyId) || (empty($appId) && empty($appUuid))) {
-                $output->writeln('<error>--company_id and either --app_id or --app_uuid are required for listing runtemplates.</error>');
+        // Resolve app UUID to ID if needed
+        if (!empty($appUuid) && empty($appId)) {
+            $found = (new Application())->listingQuery()->where(['uuid' => $appUuid])->fetch();
+
+            if (!$found) {
+                $msg = 'No application found with given UUID';
+                $format === 'json'
+                    ? $output->writeln(json_encode(['status' => 'error', 'message' => $msg], \JSON_PRETTY_PRINT))
+                    : $output->writeln("<error>{$msg}</error>");
 
                 return Command::FAILURE;
             }
 
-            if (!empty($appUuid)) {
-                $app = new Application();
-                $found = $app->listingQuery()->where(['uuid' => $appUuid])->fetch();
+            $appId = $found['id'];
+        }
 
-                if (!$found) {
-                    $output->writeln('<error>No application found with given UUID</error>');
+        switch ($action) {
+            case 'list':
+                if (empty($companyId) || empty($appId)) {
+                    $msg = '--company_id and either --app_id or --app_uuid are required for list.';
+                    $format === 'json'
+                        ? $output->writeln(json_encode(['status' => 'error', 'message' => $msg], \JSON_PRETTY_PRINT))
+                        : $output->writeln("<error>{$msg}</error>");
 
                     return Command::FAILURE;
                 }
 
-                $appId = $found['id'];
-            }
+                $query = (new RunTemplate())->listingQuery()->where([
+                    'company_id' => $companyId,
+                    'app_id' => $appId,
+                ]);
 
-            $runTemplate = new RunTemplate();
-            $query = $runTemplate->listingQuery()->where([
-                'company_id' => $companyId,
-                'app_id' => $appId,
-            ]);
+                $order = $input->getOption('order');
 
-            // Handle order option
-            $order = $input->getOption('order');
+                if (!empty($order)) {
+                    $query = $query->orderBy('id '.(strtoupper($order) === 'D' ? 'DESC' : 'ASC'));
+                }
 
-            if (!empty($order)) {
-                $orderBy = strtoupper($order) === 'D' ? 'DESC' : 'ASC';
-                $query = $query->orderBy('id '.$orderBy);
-            }
+                $limit = $input->getOption('limit');
 
-            // Handle limit option
-            $limit = $input->getOption('limit');
+                if (!empty($limit) && is_numeric($limit)) {
+                    $query = $query->limit((int) $limit);
+                }
 
-            if (!empty($limit) && is_numeric($limit)) {
-                $query = $query->limit((int) $limit);
-            }
+                $offset = $input->getOption('offset');
 
-            // Handle offset option
-            $offset = $input->getOption('offset');
+                if (!empty($offset) && is_numeric($offset)) {
+                    $query = $query->offset((int) $offset);
+                }
 
-            if (!empty($offset) && is_numeric($offset)) {
-                $query = $query->offset((int) $offset);
-            }
+                $runtemplates = $query->fetchAll();
 
-            $runtemplates = $query->fetchAll();
+                $fields = $input->getOption('fields');
 
-            if ($format === 'json') {
-                $output->writeln(json_encode($runtemplates, \JSON_PRETTY_PRINT));
-            } else {
-                $output->writeln(self::outputTable($runtemplates));
-            }
+                if (!empty($fields)) {
+                    $fieldList = array_map('trim', explode(',', $fields));
+                    $runtemplates = array_map(static function ($rt) use ($fieldList) {
+                        return array_intersect_key($rt, array_flip($fieldList));
+                    }, $runtemplates);
+                }
 
-            return Command::SUCCESS;
+                $format === 'json'
+                    ? $output->writeln(json_encode($runtemplates, \JSON_PRETTY_PRINT))
+                    : $output->writeln(self::outputTable($runtemplates));
+
+                return Command::SUCCESS;
+
+            case 'assign':
+                if (empty($companyId) || empty($appId)) {
+                    $msg = '--company_id and either --app_id or --app_uuid are required for assign.';
+                    $format === 'json'
+                        ? $output->writeln(json_encode(['status' => 'error', 'message' => $msg], \JSON_PRETTY_PRINT))
+                        : $output->writeln("<error>{$msg}</error>");
+
+                    return Command::FAILURE;
+                }
+
+                $company = new Company((int) $companyId);
+
+                if (empty($company->getData())) {
+                    $msg = "Company ID {$companyId} not found.";
+                    $format === 'json'
+                        ? $output->writeln(json_encode(['status' => 'error', 'message' => $msg], \JSON_PRETTY_PRINT))
+                        : $output->writeln("<error>{$msg}</error>");
+
+                    return Command::FAILURE;
+                }
+
+                // Check if already assigned
+                $existing = (new CompanyApp())->listingQuery()
+                    ->where(['company_id' => $companyId, 'app_id' => $appId])
+                    ->fetch();
+
+                if ($existing) {
+                    $result = ['status' => 'ok', 'message' => 'Already assigned', 'company_id' => (int) $companyId, 'app_id' => (int) $appId];
+                    $format === 'json'
+                        ? $output->writeln(json_encode($result, \JSON_PRETTY_PRINT))
+                        : $output->writeln("Application {$appId} already assigned to company {$companyId}");
+
+                    return Command::SUCCESS;
+                }
+
+                // Insert companyapp record
+                $companyApp = new CompanyApp();
+                $companyApp->insertToSQL(['company_id' => (int) $companyId, 'app_id' => (int) $appId]);
+
+                // Create a default RunTemplate
+                $allApps = (new Application())->listingQuery()->select(['id', 'name'], true)->fetchAll('id');
+                $appName = isset($allApps[$appId]) ? $allApps[$appId]['name'] : (string) $appId;
+
+                $runTemplate = new RunTemplate();
+                $runTemplate->setDataValue('app_id', (int) $appId);
+                $runTemplate->setDataValue('company_id', (int) $companyId);
+                $runTemplate->setDataValue('interv', 'n');
+                $runTemplate->setDataValue('name', $appName);
+                $rtId = $runTemplate->insertToSQL();
+
+                $result = [
+                    'status' => 'success',
+                    'message' => 'Application assigned to company',
+                    'company_id' => (int) $companyId,
+                    'app_id' => (int) $appId,
+                    'runtemplate_id' => $rtId,
+                ];
+                $format === 'json'
+                    ? $output->writeln(json_encode($result, \JSON_PRETTY_PRINT))
+                    : $output->writeln("Application {$appId} ({$appName}) assigned to company {$companyId}, RunTemplate {$rtId} created.");
+
+                return Command::SUCCESS;
+
+            case 'unassign':
+                if (empty($companyId) || empty($appId)) {
+                    $msg = '--company_id and either --app_id or --app_uuid are required for unassign.';
+                    $format === 'json'
+                        ? $output->writeln(json_encode(['status' => 'error', 'message' => $msg], \JSON_PRETTY_PRINT))
+                        : $output->writeln("<error>{$msg}</error>");
+
+                    return Command::FAILURE;
+                }
+
+                // Remove action configs and run templates
+                $runTemplate = new RunTemplate();
+                $appRuntemplates = $runTemplate->listingQuery()
+                    ->where('company_id', $companyId)
+                    ->where('app_id', $appId)
+                    ->fetchAll();
+
+                $removedRuntemplates = [];
+
+                foreach ($appRuntemplates as $rtData) {
+                    $runTemplate->getFluentPDO()
+                        ->deleteFrom('actionconfig')
+                        ->where('runtemplate_id', $rtData['id'])
+                        ->execute();
+                    $removedRuntemplates[] = $rtData['id'];
+                }
+
+                $runTemplate->deleteFromSQL(['app_id' => $appId, 'company_id' => $companyId]);
+
+                // Remove companyapp record
+                $companyApp = new CompanyApp();
+                $companyApp->deleteFromSQL(['company_id' => $companyId, 'app_id' => $appId]);
+
+                $result = [
+                    'status' => 'success',
+                    'message' => 'Application unassigned from company',
+                    'company_id' => (int) $companyId,
+                    'app_id' => (int) $appId,
+                    'removed_runtemplates' => $removedRuntemplates,
+                ];
+                $format === 'json'
+                    ? $output->writeln(json_encode($result, \JSON_PRETTY_PRINT))
+                    : $output->writeln("Application {$appId} unassigned from company {$companyId}. Removed RunTemplates: ".implode(', ', $removedRuntemplates));
+
+                return Command::SUCCESS;
+
+            default:
+                $msg = "Unknown action: {$action}. Supported: list, assign, unassign";
+                $format === 'json'
+                    ? $output->writeln(json_encode(['status' => 'error', 'message' => $msg], \JSON_PRETTY_PRINT))
+                    : $output->writeln("<error>{$msg}</error>");
+
+                return Command::FAILURE;
         }
-
-        // TODO: Implement logic for get, create, update, delete
-        $output->writeln('<info>companyapp command is not yet implemented for this action.</info>');
-
-        return Command::SUCCESS;
     }
 }

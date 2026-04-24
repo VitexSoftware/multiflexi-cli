@@ -38,7 +38,8 @@ class UpdateCommand extends MultiFlexiCommand
             ->addOption('settings', null, InputOption::VALUE_OPTIONAL, 'Settings')
             ->addOption('logo', null, InputOption::VALUE_OPTIONAL, 'Logo')
             ->addOption('ic', null, InputOption::VALUE_OPTIONAL, 'IC')
-            ->addOption('email', null, InputOption::VALUE_REQUIRED, 'Email');
+            ->addOption('email', null, InputOption::VALUE_REQUIRED, 'Email')
+            ->addOption('slug', null, InputOption::VALUE_OPTIONAL, 'Company Slug');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -54,7 +55,7 @@ class UpdateCommand extends MultiFlexiCommand
 
         $data = [];
 
-        foreach (['name', 'customer', 'enabled', 'settings', 'logo', 'ic', 'email'] as $field) {
+        foreach (['name', 'customer', 'enabled', 'settings', 'logo', 'ic', 'email', 'slug'] as $field) {
             $val = $input->getOption($field);
 
             if ($val !== null) {

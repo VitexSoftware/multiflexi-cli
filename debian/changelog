@@ -1,5 +1,15 @@
 multiflexi-cli (2.5.1) UNRELEASED; urgency=medium
 
+  * Add --offset pagination support to all list commands
+  * Add --slug support to company update action
+  * Add --class support to credential-type update action
+  * Add companyapp assign/unassign actions with RunTemplate lifecycle management
+  * Add --fields filter support to all list commands that were missing it
+
+ -- vitex <info@vitexsoftware.cz>  Thu, 24 Apr 2026 12:00:00 +0200
+
+multiflexi-cli (2.5.0) UNRELEASED; urgency=medium
+
   * EventSource and EventRule CLI commands
   * eventsource list|get|create|update|remove|test
   * eventrule list|get|create|update|remove
@@ -22,7 +32,7 @@ multiflexi-cli (2.4.3) UNRELEASED; urgency=medium
 multiflexi-cli (2.4.2) unstable; urgency=medium
 
   * Job Quee list improved
-  * Version bump to align with database package versions  
+  * Version bump to align with database package versions
   * Move multiflexi-sqlite from Recommends to Suggests to avoid auto-installation
     on production systems that already have MySQL/PostgreSQL
   * Fix: Use explicit DB alternatives instead of virtual package to

@@ -42,6 +42,8 @@ class QueueCommand extends MultiFlexiCommand
             ->addArgument('action', InputArgument::OPTIONAL, 'Action: list|truncate|fix (optional - shows overview if omitted)')
             ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit number of results for list action')
             ->addOption('order', null, InputOption::VALUE_REQUIRED, 'Sort order field: "after", "id", "job", "schedule_type", "runtemplate_id", "runtemplate_name", "app_id", "app_name", "company_id", "company_name"')
+            ->addOption('offset', null, InputOption::VALUE_REQUIRED, 'Offset for pagination')
+            ->addOption('fields', null, InputOption::VALUE_REQUIRED, 'Comma-separated list of fields to display')
             ->addOption('direction', null, InputOption::VALUE_REQUIRED, 'Sort direction: "ASC", "DESC", "A", "D" (default: ASC)');
     }
 

@@ -22,3 +22,13 @@ multiflexi-cli application export-json --id=123 --file=output.json
 multiflexi-cli application validate-json --file=app.json
 multiflexi-cli application remove-json --file=app.json
 ```
+
+## [2.5.1] - 2026-04-24
+
+### Added
+- `--offset` pagination support to all list commands
+- `--fields` filter support to all list commands that were missing it
+- `companyapp assign` action: assigns an application to a company and creates a default RunTemplate
+- `companyapp unassign` action: removes RunTemplate configs and the company-app relation
+- `--slug` option to `company update` action
+- `--class` option to `credential-type update` action

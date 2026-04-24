@@ -51,6 +51,8 @@ class UserDataErasureCommand extends Command
             ->addOption('status', 's', InputOption::VALUE_REQUIRED, 'Filter requests by status: pending, approved, rejected, completed')
             ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit number of results for list action')
             ->addOption('order', null, InputOption::VALUE_REQUIRED, 'Sort order for list action: A (ascending) or D (descending)')
+            ->addOption('offset', null, InputOption::VALUE_REQUIRED, 'Offset for pagination')
+            ->addOption('fields', null, InputOption::VALUE_REQUIRED, 'Comma-separated list of fields to display')
             ->addOption('format', 'F', InputOption::VALUE_REQUIRED, 'Output format: text or json', 'text');
     }
 
