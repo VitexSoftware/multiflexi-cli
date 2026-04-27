@@ -115,7 +115,6 @@ use MultiFlexi\Cli\Command\UserErasure\ProcessCommand as UserErasureProcessComma
 use MultiFlexi\Cli\Command\UserErasure\RejectCommand as UserErasureRejectCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\CompleteCommand;
-use Symfony\Component\Console\Input\InputOption;
 
 $globalOptions = getopt('e::', ['environment::']);
 
@@ -271,6 +270,4 @@ $application->add(new PruneCommand());
 $application->add(new TelemetryTestCommand());
 $application->add(new CompleteCommand());
 
-$application->getDefinition()->addOption(new InputOption('fields', null, InputOption::VALUE_OPTIONAL, 'Comma-separated list of fields to display'));
-$application->getDefinition()->addOption(new InputOption('offset', null, InputOption::VALUE_OPTIONAL, 'Number of records to skip for list action'));
 $application->run();
