@@ -32,6 +32,8 @@ class ListCommand extends MultiFlexiCommand
             ->setDescription('List event sources')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit number of results')
+            ->addOption('offset', null, InputOption::VALUE_REQUIRED, 'Offset for results')
+            ->addOption('fields', null, InputOption::VALUE_REQUIRED, 'Comma-separated list of fields to include in output')
             ->addOption('order', null, InputOption::VALUE_REQUIRED, 'Sort order: A (ascending) or D (descending)');
     }
 
