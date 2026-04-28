@@ -54,10 +54,12 @@ class ListCommand extends BaseCommand
             }
         }
 
+        $query->leftJoin('apps ON apps.id = runtemplate.app_id');
+        $query->select('apps.uuid AS app_uuid');
+
         $appUuid = $input->getOption('app_uuid');
 
         if ($appUuid) {
-            $query->join('apps ON apps.id = runtemplate.app_id');
             $query->where('apps.uuid', $appUuid);
         }
 
