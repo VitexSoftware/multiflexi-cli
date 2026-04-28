@@ -65,6 +65,10 @@ class CreateCommand extends MultiFlexiCommand
             return self::FAILURE;
         }
 
+        if (!isset($data['enabled'])) {
+            $data['enabled'] = true;
+        }
+
         $plaintextPassword = $input->getOption('plaintext');
 
         if (\is_string($plaintextPassword)) {
