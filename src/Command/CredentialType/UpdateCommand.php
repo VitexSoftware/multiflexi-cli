@@ -48,6 +48,8 @@ class UpdateCommand extends BaseCommand
             return self::FAILURE;
         }
 
+        $whereCondition = [];
+
         if (!empty($uuid)) {
             $found = (new CredentialType())->listingQuery()->where(['uuid' => $uuid])->fetch();
 
@@ -58,6 +60,9 @@ class UpdateCommand extends BaseCommand
             }
 
             $id = $found['id'];
+            $whereCondition = ['uuid' => $uuid];
+        } else {
+            $whereCondition = ['id' => (int) $id];
         }
 
         $data = [];
@@ -77,7 +82,7 @@ class UpdateCommand extends BaseCommand
         }
 
         $credType = new CredentialType((int) $id);
-        $credType->updateToSQL($data, ['id' => $id]);
+        $credType->updateToSQL($data, $whereCondition);
 
         if ($format === 'json') {
             $output->writeln(json_encode(['updated' => true], \JSON_PRETTY_PRINT));

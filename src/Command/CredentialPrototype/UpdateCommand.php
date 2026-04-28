@@ -54,6 +54,7 @@ class UpdateCommand extends BaseCommand
         }
 
         $credProto = new CredentialProtoType();
+        $whereCondition = [];
 
         if (!empty($uuid)) {
             $found = $credProto->listingQuery()->where(['uuid' => $uuid])->fetch();
@@ -65,6 +66,7 @@ class UpdateCommand extends BaseCommand
             }
 
             $id = $found['id'];
+            $whereCondition = ['uuid' => $uuid];
         } elseif (!empty($code)) {
             $found = $credProto->listingQuery()->where(['code' => $code])->fetch();
 
@@ -75,6 +77,9 @@ class UpdateCommand extends BaseCommand
             }
 
             $id = $found['id'];
+            $whereCondition = ['code' => $code];
+        } else {
+            $whereCondition = ['id' => (int) $id];
         }
 
         $data = [];
@@ -93,7 +98,7 @@ class UpdateCommand extends BaseCommand
             return self::FAILURE;
         }
 
-        (new CredentialProtoType((int) $id))->updateToSQL($data, ['id' => $id]);
+        (new CredentialProtoType((int) $id))->updateToSQL($data, $whereCondition);
 
         if ($format === 'json') {
             $output->writeln(json_encode(['updated' => true], \JSON_PRETTY_PRINT));

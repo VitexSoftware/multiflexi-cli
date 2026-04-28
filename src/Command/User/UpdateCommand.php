@@ -54,12 +54,14 @@ class UpdateCommand extends MultiFlexiCommand
         }
 
         $user = null;
+        $whereCondition = [];
 
         if (!empty($id)) {
             $user = new User((int) $id);
+            $whereCondition = ['id' => (int) $id];
         } elseif (!empty($login)) {
             $user = new User($login);
-            $id = $user->getDataValue('id');
+            $whereCondition = ['login' => $login];
         }
 
         if (!$user || empty($user->getData())) {
@@ -67,6 +69,8 @@ class UpdateCommand extends MultiFlexiCommand
 
             return self::FAILURE;
         }
+
+        $id = $user->getMyKey();
 
         $data = [];
 
@@ -92,7 +96,7 @@ class UpdateCommand extends MultiFlexiCommand
             return self::FAILURE;
         }
 
-        $user->updateToSQL($data, ['id' => $id]);
+        $user->updateToSQL($data, $whereCondition);
 
         if ($output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
             if ($format === 'json') {
