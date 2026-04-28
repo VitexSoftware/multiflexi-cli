@@ -48,12 +48,6 @@ class ListCommand extends MultiFlexiCommand
         $appId = $input->getOption('app_id');
         $appUuid = $input->getOption('app_uuid');
 
-        if (empty($companyId) || (empty($appId) && empty($appUuid))) {
-            $output->writeln('<error>--company_id and either --app_id or --app_uuid are required.</error>');
-
-            return self::FAILURE;
-        }
-
         if (!empty($appUuid)) {
             $found = (new Application())->listingQuery()->where(['uuid' => $appUuid])->fetch();
 
@@ -66,7 +60,29 @@ class ListCommand extends MultiFlexiCommand
             $appId = $found['id'];
         }
 
-        $query = (new RunTemplate())->listingQuery()->where(['company_id' => $companyId, 'app_id' => $appId]);
+        $conditions = [];
+
+        if (!empty($companyId)) {
+            $conditions['company_id'] = $companyId;
+        }
+
+        if (!empty($appId)) {
+            $conditions['app_id'] = $appId;
+        }
+
+        $query = (new RunTemplate())->listingQuery()
+            ->select([
+                'runtemplate.id',
+                'company.id AS company_id',
+                'company.name AS company_name',
+                'company.slug AS company_slug',
+                'apps.id AS app_id',
+                'apps.name AS app_name',
+                'apps.uuid AS app_uuid',
+            ], true)
+            ->leftJoin('apps ON apps.id = runtemplate.app_id')
+            ->leftJoin('company ON company.id = runtemplate.company_id')
+            ->where($conditions);
 
         $order = $input->getOption('order');
 

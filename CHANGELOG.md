@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- `company-app:list` no longer requires `--company_id` / `--app_id`; all filters are now optional and listing works without any arguments
+- `company-app:list` output limited to meaningful fields: runtemplate `id`, company (`id`, `name`, `slug`), app (`id`, `name`, `uuid`)
+
 ### Fixed
 - Fixed `--file` option usage in ApplicationCommand for JSON operations
   - Changed from `--json` to `--file` for: `import-json`, `export-json`, `remove-json`, `validate-json` actions

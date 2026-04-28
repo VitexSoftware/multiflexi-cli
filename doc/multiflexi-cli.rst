@@ -131,26 +131,35 @@ Manage company-application relations (list, assign, unassign).
     multiflexi-cli companyapp <action> [options]
 
 Actions:
-- list:     List RunTemplates for a company-app pair (requires --company_id and --app_id or --app_uuid).
+- list:     List RunTemplates. Without filters all assignments are shown; optionally filter by --company_id and/or --app_id / --app_uuid.
 - assign:   Assign an application to a company and create a default RunTemplate (requires --company_id and --app_id or --app_uuid).
 - unassign: Remove all RunTemplates and the company-app relation (requires --company_id and --app_id or --app_uuid).
 
+Output columns for ``list``:
+
+- **id** – RunTemplate ID
+- **company_id**, **company_name**, **company_slug** – company details
+- **app_id**, **app_name**, **app_uuid** – application details
+
 Options:
-  --company_id   Company ID
-  --app_id       Application ID
-  --app_uuid     Application UUID
+  --company_id   Company ID (optional filter)
+  --app_id       Application ID (optional filter)
+  --app_uuid     Application UUID (optional filter; resolved to app_id)
   --limit        Limit number of results for list action
   --offset       Offset for list action (skip N results)
   --order        Sort order for list action: A (ascending) or D (descending)
-  --fields       Comma-separated list of fields to display
+  --fields       Comma-separated list of fields to display (sub-selects from output columns)
   -f, --format   Output format: text or json (default: text)
 
 Examples:
 
 .. code-block:: bash
 
+    multiflexi-cli companyapp list
+    multiflexi-cli companyapp list --company_id=1
     multiflexi-cli companyapp list --company_id=1 --app_id=2
     multiflexi-cli companyapp list --company_id=1 --app_id=2 --limit=10 --offset=0 --order=D
+    multiflexi-cli companyapp list --format=json
     multiflexi-cli companyapp assign --company_id=1 --app_id=2
     multiflexi-cli companyapp assign --company_id=1 --app_uuid=uuid-123 --format=json
     multiflexi-cli companyapp unassign --company_id=1 --app_id=2
