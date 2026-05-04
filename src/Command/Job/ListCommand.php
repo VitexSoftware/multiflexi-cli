@@ -31,6 +31,7 @@ class ListCommand extends MultiFlexiCommand
             ->setName('job:list')
             ->setDescription('List jobs')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
+            ->addOption('status', null, InputOption::VALUE_REQUIRED, 'Filter by job status: failed, success, running, pending')
             ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit number of results')
             ->addOption('offset', null, InputOption::VALUE_REQUIRED, 'Offset for results')
             ->addOption('fields', null, InputOption::VALUE_REQUIRED, 'Comma-separated list of fields to include in output')
@@ -41,6 +42,33 @@ class ListCommand extends MultiFlexiCommand
     {
         $format = strtolower($input->getOption('format'));
         $query = (new Job())->listingQuery();
+
+        $status = $input->getOption('status');
+
+        if (!empty($status)) {
+            switch (strtolower($status)) {
+                case 'failed':
+                    $query->where('exitcode IS NOT NULL')->where('exitcode != 0');
+
+                    break;
+                case 'success':
+                case 'successful':
+                    $query->where('exitcode', 0);
+
+                    break;
+                case 'running':
+                    $query->where('begin IS NOT NULL')->where('exitcode IS NULL');
+
+                    break;
+                case 'pending':
+                    $query->where('begin IS NULL')->where('exitcode IS NULL');
+
+                    break;
+                default:
+                    // unknown status value — ignore filter
+                    break;
+            }
+        }
 
         $order = $input->getOption('order');
 

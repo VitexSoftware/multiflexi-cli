@@ -1,3 +1,10 @@
+multiflexi-cli (2.5.2) UNRELEASED; urgency=medium
+
+  * Add --status filter to job:list and job list commands
+  * Status values: failed, success, running, pending
+
+ -- vitex <info@vitexsoftware.cz>  Mon, 04 May 2026 23:30:00 +0200
+
 multiflexi-cli (2.5.1) UNRELEASED; urgency=medium
 
   * Add --offset pagination support to all list commands

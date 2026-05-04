@@ -63,6 +63,7 @@ class JobCommand extends MultiFlexiCommand
             ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit number of results for list action')
             ->addOption('order', null, InputOption::VALUE_REQUIRED, 'Sort order for list action: A (ascending) or D (descending)')
             ->addOption('offset', null, InputOption::VALUE_REQUIRED, 'Offset for pagination')
+            ->addOption('status', null, InputOption::VALUE_REQUIRED, 'Filter by job status: failed, success, running, pending')
             ->addOption('fields', null, InputOption::VALUE_REQUIRED, 'Comma-separated list of fields to display');
     }
 
@@ -119,6 +120,31 @@ EOD;
             case 'list':
                 $job = new Job();
                 $query = $job->listingQuery();
+
+                // Handle status filter
+                $status = $input->getOption('status');
+
+                if (!empty($status)) {
+                    switch (strtolower($status)) {
+                        case 'failed':
+                            $query->where('exitcode IS NOT NULL')->where('exitcode != 0');
+
+                            break;
+                        case 'success':
+                        case 'successful':
+                            $query->where('exitcode', 0);
+
+                            break;
+                        case 'running':
+                            $query->where('begin IS NOT NULL')->where('exitcode IS NULL');
+
+                            break;
+                        case 'pending':
+                            $query->where('begin IS NULL')->where('exitcode IS NULL');
+
+                            break;
+                    }
+                }
 
                 // Handle order option
                 $order = $input->getOption('order');

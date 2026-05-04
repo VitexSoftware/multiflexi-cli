@@ -324,6 +324,13 @@ Options:
   --limit        Limit number of results for list action
   --offset       Offset for list action (skip N results)
   --order        Sort order for list action: A (ascending) or D (descending)
+  --status       Filter by job state: ``failed``, ``success``, ``running``, ``pending``
+
+               - ``failed``  – completed with non-zero exit code (``exitcode IS NOT NULL AND exitcode != 0``)
+               - ``success`` – completed successfully (``exitcode = 0``)
+               - ``running`` – started but not yet finished (``begin IS NOT NULL AND exitcode IS NULL``)
+               - ``pending`` – scheduled but not yet started (``begin IS NULL AND exitcode IS NULL``)
+
   --fields       Comma-separated list of fields to display
   -f, --format   Output format: text or json (default: text)
 
@@ -333,6 +340,12 @@ Examples:
 
     multiflexi-cli job list
     multiflexi-cli job list --limit=10 --order=D
+    multiflexi-cli job list --status=failed
+    multiflexi-cli job list --status=failed --format=json
+    multiflexi-cli job list --status=pending
+    multiflexi-cli job list --status=running
+    multiflexi-cli job:list --status=failed
+    multiflexi-cli job:list --status=pending --format=json
     multiflexi-cli job get --id=123
     multiflexi-cli job create --runtemplate_id=5 --scheduled="2024-07-01 12:00"
     multiflexi-cli job update --id=123 --executor=Native

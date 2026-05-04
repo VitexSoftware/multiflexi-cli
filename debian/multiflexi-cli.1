@@ -21,7 +21,9 @@ Options: --id, --name, --uuid, --description, --topics, --executable, --ociimage
 Manage jobs
 .RS
 Actions: status, list, get, create, update, delete
-Options: --id, --runtemplate_id, --scheduled, --executor, --schedule_type, --app_id, --limit, --offset, --order, --fields, --format, --help
+Options: --id, --runtemplate_id, --scheduled, --executor, --schedule_type, --app_id, --limit, --offset, --order, --status, --fields, --format, --help
+.br
+--status filters list results by job state: failed (exitcode != 0), success (exitcode = 0), running (started, not finished), pending (not yet started)
 .RE
 .TP
 .B user
@@ -193,6 +195,12 @@ Schedule a runtemplate (active=1 required):
 .TP
 Show job status aggregation:
 .B multiflexi-cli job status
+.TP
+List failed jobs:
+.B multiflexi-cli job:list --status=failed
+.TP
+List pending jobs in JSON:
+.B multiflexi-cli job:list --status=pending --format=json
 .TP
 Show available commands and options:
 .B multiflexi-cli describe
