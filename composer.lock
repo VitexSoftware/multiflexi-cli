@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "283404535607cc088e7829a6cfa326f7",
+    "content-hash": "573406c6c6d44ae23238a1a11031ecb6",
     "packages": [
         {
             "name": "confirm-it-solutions/php-zabbix-api",
@@ -2124,12 +2124,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/VitexSoftware/php-ease-fluentpdo.git",
-                "reference": "60ee1c3f0f3d693792b1a281223857bc829cf708"
+                "reference": "a206067da3837d3994891cd7b13d0140d805161b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/VitexSoftware/php-ease-fluentpdo/zipball/60ee1c3f0f3d693792b1a281223857bc829cf708",
-                "reference": "60ee1c3f0f3d693792b1a281223857bc829cf708",
+                "url": "https://api.github.com/repos/VitexSoftware/php-ease-fluentpdo/zipball/a206067da3837d3994891cd7b13d0140d805161b",
+                "reference": "a206067da3837d3994891cd7b13d0140d805161b",
                 "shasum": ""
             },
             "require": {
@@ -2177,7 +2177,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2026-04-21T13:19:07+00:00"
+            "time": "2026-05-05T19:01:25+00:00"
         },
         {
             "name": "vitexsoftware/ease-html",
@@ -2321,12 +2321,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/VitexSoftware/php-vitexsoftware-multiflexi-core.git",
-                "reference": "a25aa69e7d985374ba01ea5dd5470dfdfe19bb2b"
+                "reference": "ff7c05e757e8c18be13a6c6f38fac7a25a87822c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/VitexSoftware/php-vitexsoftware-multiflexi-core/zipball/a25aa69e7d985374ba01ea5dd5470dfdfe19bb2b",
-                "reference": "a25aa69e7d985374ba01ea5dd5470dfdfe19bb2b",
+                "url": "https://api.github.com/repos/VitexSoftware/php-vitexsoftware-multiflexi-core/zipball/ff7c05e757e8c18be13a6c6f38fac7a25a87822c",
+                "reference": "ff7c05e757e8c18be13a6c6f38fac7a25a87822c",
                 "shasum": ""
             },
             "require": {
@@ -2373,7 +2373,7 @@
                 "issues": "https://github.com/VitexSoftware/php-vitexsoftware-multiflexi-core/issues",
                 "source": "https://github.com/VitexSoftware/php-vitexsoftware-multiflexi-core/tree/main"
             },
-            "time": "2026-04-28T19:43:40+00:00"
+            "time": "2026-05-05T19:54:47+00:00"
         }
     ],
     "packages-dev": [
@@ -3906,8 +3906,8 @@
             "version": "2.2.x-dev",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/bf01c3c556d652e280f5df7a5503275769bd36fd",
-                "reference": "bf01c3c556d652e280f5df7a5503275769bd36fd",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/77f24c00c06aaaf28cacd4131fd9d9a56f3dd21e",
+                "reference": "77f24c00c06aaaf28cacd4131fd9d9a56f3dd21e",
                 "shasum": ""
             },
             "require": {
@@ -3964,7 +3964,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-05-05T07:56:13+00:00"
+            "time": "2026-05-05T18:35:13+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -4360,12 +4360,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "11cb417d6d90a4d0dc13233f46871d2ed47f8ed7"
+                "reference": "6301da994fddabd3fe9f20ee2f789360723b5dd8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/11cb417d6d90a4d0dc13233f46871d2ed47f8ed7",
-                "reference": "11cb417d6d90a4d0dc13233f46871d2ed47f8ed7",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/6301da994fddabd3fe9f20ee2f789360723b5dd8",
+                "reference": "6301da994fddabd3fe9f20ee2f789360723b5dd8",
                 "shasum": ""
             },
             "require": {
@@ -4445,7 +4445,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2026-05-05T07:16:15+00:00"
+            "time": "2026-05-05T10:25:05+00:00"
         },
         {
             "name": "psr/event-dispatcher",

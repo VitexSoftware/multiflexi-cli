@@ -43,7 +43,7 @@
     "ergebnis/php-cs-fixer-config": "^6.58",
     "friendsofphp/php-cs-fixer": "^3.92",
     "phpstan/phpstan": "^2.1",
-    "phpunit/phpunit": "*"
+    "phpunit/phpunit": "^13"
   },
   "config": {
     "allow-plugins": {
