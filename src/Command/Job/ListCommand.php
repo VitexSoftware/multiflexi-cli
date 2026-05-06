@@ -64,6 +64,7 @@ class ListCommand extends MultiFlexiCommand
                     $query->where('begin IS NULL')->where('exitcode IS NULL');
 
                     break;
+
                 default:
                     // unknown status value — ignore filter
                     break;

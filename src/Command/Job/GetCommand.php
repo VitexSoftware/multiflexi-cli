@@ -31,7 +31,8 @@ class GetCommand extends MultiFlexiCommand
             ->setName('job:get')
             ->setDescription('Get a job by ID')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
-            ->addOption('id', null, InputOption::VALUE_REQUIRED, 'Job ID');
+            ->addOption('id', null, InputOption::VALUE_REQUIRED, 'Job ID')
+            ->addOption('fields', null, InputOption::VALUE_OPTIONAL, 'Comma-separated list of fields to display');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

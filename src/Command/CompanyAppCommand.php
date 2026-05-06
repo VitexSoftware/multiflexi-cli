@@ -121,7 +121,6 @@ class CompanyAppCommand extends MultiFlexiCommand
                     : $output->writeln(self::outputTable($runtemplates));
 
                 return Command::SUCCESS;
-
             case 'assign':
                 if (empty($companyId) || empty($appId)) {
                     $msg = '--company_id and either --app_id or --app_uuid are required for assign.';
@@ -184,7 +183,6 @@ class CompanyAppCommand extends MultiFlexiCommand
                     : $output->writeln("Application {$appId} ({$appName}) assigned to company {$companyId}, RunTemplate {$rtId} created.");
 
                 return Command::SUCCESS;
-
             case 'unassign':
                 if (empty($companyId) || empty($appId)) {
                     $msg = '--company_id and either --app_id or --app_uuid are required for unassign.';
