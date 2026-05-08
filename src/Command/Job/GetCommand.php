@@ -29,10 +29,10 @@ class GetCommand extends MultiFlexiCommand
     {
         $this
             ->setName('job:get')
-            ->setDescription('Get a job by ID')
-            ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
-            ->addOption('id', null, InputOption::VALUE_REQUIRED, 'Job ID')
-            ->addOption('fields', null, InputOption::VALUE_OPTIONAL, 'Comma-separated list of fields to display');
+            ->setDescription(_('Get a job by ID'))
+            ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, _('Output format: text or json'), 'text')
+            ->addOption('id', null, InputOption::VALUE_REQUIRED, _('Job ID'))
+            ->addOption('fields', null, InputOption::VALUE_OPTIONAL, _('Comma-separated list of fields to display'));
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -42,9 +42,9 @@ class GetCommand extends MultiFlexiCommand
 
         if (empty($id)) {
             if ($format === 'json') {
-                $output->writeln(json_encode(['status' => 'error', 'message' => 'Missing --id'], \JSON_PRETTY_PRINT));
+                $output->writeln(json_encode(['status' => 'error', 'message' => _('Missing --id')], \JSON_PRETTY_PRINT));
             } else {
-                $output->writeln('<error>Missing --id</error>');
+                $output->writeln('<error>'._('Missing --id').'</error>');
             }
 
             return self::FAILURE;
