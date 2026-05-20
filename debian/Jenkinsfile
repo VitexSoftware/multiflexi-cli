@@ -2,7 +2,17 @@
 
 // Current version of this Pipeline https://github.com/VitexSoftware/BuildImages/blob/main/Test/Jenkinsfile-parael
 
-String[] distributions = ['debian:bookworm', 'debian:trixie', 'debian:forky', 'ubuntu:jammy', 'ubuntu:noble', 'ubuntu:resolute']
+String[] distributions = [
+    'debian:bookworm',
+    'debian:trixie',
+    // 'debian:forky', // Disabled: Forky is still unstable/research-only. multiflexi-common is not yet
+    //                 // available for Forky, causing cascading unmet dependencies (php-symfony-dependency-injection,
+    //                 // php-phplucidframe-console-table etc. not installable). Re-enable once the full
+    //                 // multiflexi package stack is available for Forky.
+    'ubuntu:jammy',
+    'ubuntu:noble',
+    'ubuntu:resolute',
+]
 
 String vendor = 'vitexsoftware'
 //String distroFamily = ''

@@ -38,11 +38,17 @@ override_dh_install:
 	sed -i "s|require_once __DIR__.'/../vendor/autoload.php';|require_once '/usr/share/php/multiflexi-cli/autoload.php';|" debian/multiflexi-cli/usr/share/multiflexi-cli/multiflexi-cli.php
 	sed -i "s|__DIR__\.'/../.env'|'/etc/multiflexi/multiflexi.env'|" debian/multiflexi-cli/usr/share/multiflexi-cli/multiflexi-cli.php
 	sed -i "s|\\\\define('APP_NAME',|defined('APP_NAME') \\|\\| define('APP_NAME',|" debian/multiflexi-cli/usr/share/multiflexi-cli/multiflexi-cli.php
-	# Generate shell completions
+	# Generate shell completions using system packages (no vendor/ needed)
+	sed -e 's|/usr/lib/multiflexi-cli/|$(CURDIR)/debian/multiflexi-cli/usr/lib/multiflexi-cli/|g' \
+	    debian/autoload.php > /tmp/multiflexi-cli-build-autoload.php
+	cp src/multiflexi-cli.php /tmp/multiflexi-cli-build.php
+	sed -i "s|require_once __DIR__.'/../vendor/autoload.php';|require_once '/tmp/multiflexi-cli-build-autoload.php';|" \
+	    /tmp/multiflexi-cli-build.php
 	mkdir -p debian/multiflexi-cli/usr/share/bash-completion/completions
-	cd src; ./multiflexi-cli completion bash > ../debian/multiflexi-cli/usr/share/bash-completion/completions/multiflexi-cli ; cd ..
+	php /tmp/multiflexi-cli-build.php completion bash > debian/multiflexi-cli/usr/share/bash-completion/completions/multiflexi-cli
 	mkdir -p debian/multiflexi-cli/usr/share/zsh-completion/completions
-	cd src; ./multiflexi-cli completion zsh > ../debian/multiflexi-cli/usr/share/zsh-completion/completions/multiflexi-cli ; cd ..
+	php /tmp/multiflexi-cli-build.php completion zsh > debian/multiflexi-cli/usr/share/zsh-completion/completions/multiflexi-cli
+	rm -f /tmp/multiflexi-cli-build.php /tmp/multiflexi-cli-build-autoload.php
 	install -m0755 -d debian/multiflexi-cli/usr/share/pkg-php-tools/autoloaders
 	echo 'deb multiflexi-cli multiflexi-cli/autoload.php' > debian/multiflexi-cli/usr/share/pkg-php-tools/autoloaders/multiflexi-cli
 
