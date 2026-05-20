@@ -367,7 +367,7 @@
            type="rotate"
            from="0 754 477"
            to="360 754 477"
-           dur="4s"
+           dur="8s"
            repeatCount="indefinite" />
         <path
            id="path5740"
