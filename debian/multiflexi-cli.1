@@ -1,143 +1,185 @@
-.TH MULTIFLEXI-CLI 1 "November 2025" "MultiFlexi" "User Commands"
+.TH MULTIFLEXI-CLI 1 "May 2026" "MultiFlexi" "User Commands"
 .SH NAME
 multiflexi-cli \- MultiFlexi command-line interface for application and job management
 .SH SYNOPSIS
 .B multiflexi-cli
-[\fICOMMAND\fR] [\fIACTION\fR] [\fIOPTIONS\fR]
+[\fICOMMAND:ACTION\fR] [\fIOPTIONS\fR]
 .SH DESCRIPTION
 .B multiflexi-cli
-is a command-line tool for managing MultiFlexi applications, jobs, users, tokens, companies, runtemplates, credentials, queues, and more. It provides CRUD operations, scheduling, and status checks for all major MultiFlexi entities. Output can be formatted as text or JSON for automation and scripting.
+is a Symfony Console-based command-line tool for managing MultiFlexi applications, jobs, users, tokens, companies, run-templates, credentials, queues, and more. It provides full CRUD operations and scheduling for all major MultiFlexi entities. Output can be formatted as text or JSON for automation and scripting.
 
 .SH COMMANDS
 .TP
-.B application
-Manage applications
+.B application:list / application:get / application:create / application:update / application:delete
+Manage applications.
 .RS
-Actions: list, get, create, update, delete, import-json, export-json, remove-json, validate-json, showconfig
-Options: --id, --name, --uuid, --description, --topics, --executable, --ociimage, --requirements, --homepage, --file, --appversion, --format, --help
+Options: --id, --uuid, --name, --description, --topics, --executable, --ociimage, --requirements, --homepage, --file, --appversion, --format
 .RE
 .TP
-.B job
-Manage jobs
+.B application:import-json / application:export-json / application:remove-json / application:validate-json
+JSON import/export for applications.
 .RS
-Actions: status, list, get, create, update, delete
-Options: --id, --runtemplate_id, --scheduled, --executor, --schedule_type, --app_id, --limit, --offset, --order, --status, --fields, --format, --help
+Options: --id, --uuid, --file, --format
+.RE
+.TP
+.B application:show-config
+Show defined configuration fields for an application.
+.RS
+Options: --id, --uuid, --format
+.RE
+.TP
+.B run-template:list / run-template:get / run-template:create / run-template:update / run-template:delete
+Manage run templates.
+.RS
+Options: --id, --name, --app_id, --company_id, --interv, --active, --config, --format
+.RE
+.TP
+.B run-template:schedule
+Schedule a run template as a job.
+.RS
+Options: --id, --schedule_time, --executor, --env (repeatable, one-time override not saved to run-template), --format
 .br
---status filters list results by job state: failed (exitcode != 0), success (exitcode = 0), running (started, not finished), pending (not yet started)
+Note: Only run-templates with active=1 can be scheduled.
 .RE
 .TP
-.B user
-Manage users
+.B job:list / job:get / job:create / job:update / job:delete
+Manage jobs.
 .RS
-Actions: list, get, create, update, delete, data-erasure
-Options: --id, --login, --email, --firstname, --lastname, --password, --plaintext, --enabled, --format, --help
-.RE
-.TP
-.B user:data-erasure
-Manage GDPR user data erasure requests
-.RS
-Actions: list, create, approve, reject, process, audit, cleanup
-Options: --user-id, --user-login, --request-id, --deletion-type, --reason, --notes, --force, --export-audit, --status, --format, --help
-.RE
-.TP
-.B token
-Manage tokens
-.RS
-Actions: list, get, create, generate, update
-Options: --id, --user, --token, --format, --help
-.RE
-.TP
-.B company
-Manage companies
-.RS
-Actions: list, get, create, update, remove
-Options: --id, --name, --customer, --enabled, --settings, --logo, --ic, --DatCreate, --DatUpdate, --email, --slug, --fields, --zabbix_host, --format, --help
-.RE
-.TP
-.B runtemplate
-Manage runtemplates
-.RS
-Actions: list, get, create, update, delete, schedule
-Options: --id, --name, --app_id, --app_uuid, --company_id, --company, --interv, --cron, --active, --config, --schedule_time, --executor, --env, --fields, --format, --help
-
-Note: Only runtemplates with active=1 can be scheduled. Inactive runtemplates will be rejected.
-.RE
-.TP
-.B artifact
-Manage job artifacts
-.RS
-Actions: list, get, save
-Options: --id, --job_id, --file, --fields, --format, --help
-.RE
-.TP
-.B credential
-Manage credentials
-.RS
-Actions: list, get, create, update, remove
-Options: --id, --name, --company-id, --credential-type-id, --fields, --format, --help
-.RE
-.TP
-.B credtype
-Credential type operations (list, get, update, import, import-json, export-json, remove-json, validate-json)
-.RS
-Actions: list, get, update, import, import-json, export-json, remove-json, validate-json
-Options: --id, --uuid, --name, --file, --format, --help
-
-The credtype command provides comprehensive credential type management with JSON import/export capabilities:
+Options: --id, --runtemplate_id, --scheduled, --executor, --schedule_type, --app_id, --limit, --offset, --order, --fields, --format
 .br
-- Schema validation ensures JSON files comply with MultiFlexi credential type schema
-.br
-- Duplicate detection prevents importing credential types with existing UUIDs
-.br
-- Localization support for multi-language names and descriptions
-.br
-- Field definition import with proper types and validation
-.br
-- Comprehensive error reporting for validation failures and import issues
+--status filters: failed (exitcode != 0), success (exitcode = 0), running (started, not finished), pending (not yet started)
 .RE
 .TP
-.B encryption
-Manage encryption keys
+.B job:status
+Show job status aggregation.
 .RS
-Actions: init
-Options: --format, --help
+Options: --id, --format
 .RE
 .TP
-.B companyapp
-Manage company-application relations
+.B user:list / user:get / user:create / user:update / user:delete
+Manage users.
 .RS
-Actions: list, get, create, update, delete
-Options: --id, --company_id, --app_id, --app_uuid, --limit, --offset, --order, --format, --help
+Options: --id, --login, --email, --firstname, --lastname, --password, --plaintext, --enabled, --format
 .RE
 .TP
-.B appstatus
-Prints App Status
+.B user-erasure:list / user-erasure:create / user-erasure:approve / user-erasure:reject / user-erasure:process / user-erasure:audit / user-erasure:cleanup
+Manage GDPR user data erasure requests (Article 17 Right to Erasure).
 .RS
-Options: --format, --help
+Options: --user-id, --user-login, --request-id, --deletion-type, --reason, --notes, --force, --export-audit, --status, --format
+.RE
+.TP
+.B token:list / token:get / token:create / token:generate / token:update / token:delete
+Manage API tokens.
+.RS
+Options: --id, --user, --token, --format
+.RE
+.TP
+.B company:list / company:get / company:create / company:update / company:remove
+Manage companies.
+.RS
+Options: --id, --name, --customer, --enabled, --settings, --logo, --ic, --email, --slug, --format
+.RE
+.TP
+.B company-app:list / company-app:assign / company-app:unassign
+Manage company-application relations.
+.RS
+Options: --company_id, --app_id, --app_uuid, --limit, --offset, --order, --fields, --format
+.RE
+.TP
+.B credential-type:list / credential-type:get / credential-type:create / credential-type:update / credential-type:delete
+Manage credential types.
+.RS
+Options: --id, --uuid, --name, --format
+.RE
+.TP
+.B credential-type:import-json / credential-type:export-json / credential-type:remove-json / credential-type:validate-json
+JSON import/export for credential types.
+.RS
+Options: --id, --uuid, --file, --format
+.RE
+.TP
+.B credential:list / credential:get / credential:create / credential:update / credential:remove
+Manage credentials.
+.RS
+Options: --id, --name, --company-id, --credential-type-id, --fields, --format
+.RE
+.TP
+.B event-source:list / event-source:get / event-source:create / event-source:update / event-source:remove / event-source:test
+Manage event sources.
+.RS
+Options: --id, --name, --format
+.RE
+.TP
+.B event-rule:list / event-rule:get / event-rule:create / event-rule:update / event-rule:remove
+Manage event rules.
+.RS
+Options: --id, --event_source_id, --evidence, --operation, --runtemplate_id, --format
+.RE
+.TP
+.B artifact:list / artifact:get / artifact:save
+Manage job artifacts.
+.RS
+Options: --id, --job_id, --file, --fields, --format
+.RE
+.TP
+.B encryption:status
+Show encryption system status (master key, active keys, key details).
+.RS
+Options: --format
+.RE
+.TP
+.B encryption:init
+Re-initialize encryption keys (generates new 256-bit key encrypted with master key).
+.RS
+Options: --format
+.br
+Warning: Invalidates all previously encrypted credentials.
+.RE
+.TP
+.B queue:overview
+Show queue metrics and statistics.
+.RS
+Options: --format
+.RE
+.TP
+.B queue:list
+List scheduled jobs in the queue.
+.RS
+Options: --format, --limit, --order, --direction, --fields
+.RE
+.TP
+.B queue:fix
+Fix orphaned jobs and queue inconsistencies.
+.TP
+.B queue:truncate
+Remove all scheduled jobs from the queue.
+.TP
+.B prune
+Prune logs and jobs, keeping only the latest N records (default: 1000).
+.RS
+Options: --logs, --jobs, --keep
+.RE
+.TP
+.B status
+Show overall MultiFlexi system status (version, database, PHP, encryption, Zabbix, OpenTelemetry).
+.RS
+Options: --format
+.RE
+.TP
+.B telemetry:test
+Test OpenTelemetry metrics export.
+.RS
+Options: --endpoint, --disable-gauges
 .RE
 .TP
 .B describe
-Show all available commands and their parameters in JSON or YAML
+List all available commands and their parameters.
 .TP
 .B completion
-Dump the shell completion script
+Dump the shell completion script for bash, zsh, or fish.
 .RS
 Arguments: shell (optional - bash, zsh, fish)
-Options: --debug, --help
-.RE
-.TP
-.B queue
-Queue operations with comprehensive job listing, sorting, and metrics
-.RS
-Actions: list, truncate, fix, (none for overview)
-Options: --format, --limit, --order, --direction, --fields, --help
-Features: Schedule type display, human-readable waiting times, flexible sorting by scheduled time or ID, field filtering
-.RE
-.TP
-.B prune
-Prune logs and jobs, keeping only the latest N records (default: 1000)
-.RS
-Options: --logs, --jobs, --keep
+Options: --debug
 .RE
 
 .SH OPTIONS
@@ -155,46 +197,31 @@ Specify record by UUID (where supported)
 .BR --help
 Show help for a command
 .TP
-.BR --name
-Specify record by name (where supported)
+.BR --limit
+Limit number of results (list commands)
 .TP
-.BR --login
-Specify user by login (where supported)
+.BR --offset
+Offset for pagination (list commands)
 .TP
-.BR --email
-Specify user/company by email (where supported)
+.BR --order
+Sort order: A (ascending) or D (descending)
 .TP
-.BR --company
-Specify company by slug or ID (where supported)
-.TP
-.BR --config
-Specify configuration key=value (repeatable, where supported)
+.BR --fields
+Comma-separated list of fields to display
 
 .SH EXAMPLES
 .TP
 List all applications in JSON:
-.B multiflexi-cli application list -f json
+.B multiflexi-cli application:list -f json
 .TP
-Validate application JSON file:
-.B multiflexi-cli application validate-json --file=app.json
+Import application from JSON:
+.B multiflexi-cli application:import-json --file=app.json
 .TP
-Get user by ID:
-.B multiflexi-cli user get --id=1
+Schedule a run-template immediately:
+.B multiflexi-cli run-template:schedule --id=167
 .TP
-Create user:
-.B multiflexi-cli user create --login jsmith --email jsmith@example.com --plaintext secret
-.TP
-Create a new token for user ID 3:
-.B multiflexi-cli token create --user 3
-.TP
-Generate a new token:
-.B multiflexi-cli token generate --user 2
-.TP
-Schedule a runtemplate (active=1 required):
-.B multiflexi-cli runtemplate schedule --id=123 --schedule_time="2025-07-01 10:00:00" --executor=Native --env=FOO=bar
-.TP
-Show job status aggregation:
-.B multiflexi-cli job status
+Schedule with a one-time environment override (not saved to run-template):
+.B multiflexi-cli run-template:schedule --id=167 --env=IMPORT_SCOPE=2025-11-01>2026-01-07
 .TP
 List failed jobs:
 .B multiflexi-cli job:list --status=failed
@@ -202,80 +229,50 @@ List failed jobs:
 List pending jobs in JSON:
 .B multiflexi-cli job:list --status=pending --format=json
 .TP
-Show available commands and options:
-.B multiflexi-cli describe
+Get job details:
+.B multiflexi-cli job:get --id=123
 .TP
-List artifacts for job ID 123:
-.B multiflexi-cli artifact list --job_id=123
+Create a user:
+.B multiflexi-cli user:create --login jsmith --email jsmith@example.com --plaintext secret
 .TP
-Save artifact to file:
-.B multiflexi-cli artifact save --id=456 --file=output.txt
+Generate a new token for user ID 2:
+.B multiflexi-cli token:generate --user=2
 .TP
-Create a new credential:
-.B multiflexi-cli credential create --company-id=1 --credential-type-id=2 --name="My Credential"
-.TP
-List all credentials in JSON:
-.B multiflexi-cli credential list -f json
-.TP
-Get credential by ID:
-.B multiflexi-cli credential get --id=123
+Assign application to company:
+.B multiflexi-cli company-app:assign --company_id=1 --app_id=5
 .TP
 Import credential type from JSON:
-.B multiflexi-cli credtype import-json --file=credtype.json
+.B multiflexi-cli credential-type:import-json --file=credtype.json
 .TP
 Validate credential type JSON before import:
-.B multiflexi-cli credtype validate-json --file=credtype.json
+.B multiflexi-cli credential-type:validate-json --file=credtype.json
 .TP
-List all credential types:
-.B multiflexi-cli credtype list
+Show queue overview metrics:
+.B multiflexi-cli queue:overview
 .TP
-Get credential type by UUID:
-.B multiflexi-cli credtype get --uuid="d3d3ae58-d64a-4ab4-afb5-ba439ffc8587"
+List jobs ordered by scheduled time:
+.B multiflexi-cli queue:list --order after --limit 10
 .TP
-Export credential type to JSON:
-.B multiflexi-cli credtype export-json --id=1 --file=exported.json
+Fix orphaned jobs:
+.B multiflexi-cli queue:fix
 .TP
-Create company-application relation:
-.B multiflexi-cli companyapp create --company_id=1 --app_id=5
+Show encryption status:
+.B multiflexi-cli encryption:status
 .TP
-Prune logs and jobs, keeping only the latest 500 records:
+Show system status in JSON:
+.B multiflexi-cli status --format json
+.TP
+Prune logs and jobs, keeping the latest 500 records:
 .B multiflexi-cli prune --logs --jobs --keep 500
 .TP
-Show queue overview with metrics:
-.B multiflexi-cli queue
-.TP
-List jobs ordered by scheduled time (earliest first):
-.B multiflexi-cli queue list --order after --limit 10
-.TP
-List jobs ordered by scheduled time (latest first):
-.B multiflexi-cli queue list --order after --direction DESC --limit 10
-.TP
-Show specific queue fields in JSON format:
-.B multiflexi-cli queue list --fields "id,after,schedule_type" --format json
-.TP
-Truncate the job queue:
-.B multiflexi-cli queue truncate
-.TP
-Fix orphaned jobs and queue inconsistencies:
-.B multiflexi-cli queue fix
-.TP
 List user deletion requests:
-.B multiflexi-cli user:data-erasure list --status=pending
-.TP
-Create a soft deletion request:
-.B multiflexi-cli user:data-erasure create --user-id=123 --deletion-type=soft --reason="User requested deletion"
+.B multiflexi-cli user-erasure:list --status=pending
 .TP
 Approve a deletion request:
-.B multiflexi-cli user:data-erasure approve --request-id=456 --notes="Approved by admin"
+.B multiflexi-cli user-erasure:approve --request-id=456 --notes="Approved by admin"
 .TP
-Process an approved deletion request:
-.B multiflexi-cli user:data-erasure process --request-id=456
-.TP
-Show audit trail for a deletion request:
-.B multiflexi-cli user:data-erasure audit --request-id=456 --export-audit=audit.csv
-.TP
-Re-initialize encryption keys:
-.B multiflexi-cli encryption init
+Show all available commands:
+.B multiflexi-cli describe
 
 .SH AUTHOR
 Vítězslav Dvořák <info@vitexsoftware.cz>

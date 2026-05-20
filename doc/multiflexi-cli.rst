@@ -13,17 +13,17 @@ The CLI is included with MultiFlexi and available as:
 .. code-block:: bash
 
     # System-wide installation
-    multiflexi-cli <command> [action] [options]
-    
+    multiflexi-cli <command:action> [options]
+
     # Local installation
-    ./cli/multiflexi-cli <command> [action] [options]
+    ./cli/multiflexi-cli <command:action> [options]
 
 General Usage
 -------------
 
 .. code-block:: bash
 
-    multiflexi-cli <command> [action] [options]
+    multiflexi-cli <command:action> [options]
 
 **Global Options:**
 
@@ -39,7 +39,7 @@ Use the ``-e`` or ``--environment`` option to specify a custom .env file:
 
 .. code-block:: bash
 
-    multiflexi-cli -e /path/to/custom/.env command action
+    multiflexi-cli -e /path/to/custom/.env command:action
 
 
 Commands Overview
@@ -47,22 +47,26 @@ Commands Overview
 
 The MultiFlexi CLI provides the following main commands:
 
-- **application**   - Manage applications (import/export/remove JSON, show configuration fields)
-- **company**       - Manage companies and their settings
-- **companyapp**    - Manage company-application relations
-- **job**           - Manage job execution and monitoring
-- **run-template**  - Manage run templates and scheduling
-- **user**          - User account management
-- **user:data-erasure** - GDPR user data erasure management
-- **token**         - API token management
-- **credtype**      - Credential type operations
-- **encryption**    - Manage encryption keys
-- **queue**         - Job queue operations
-- **status**        - System status information (encryption, Zabbix, OpenTelemetry)
-- **telemetry:test** - Test OpenTelemetry metrics export
-- **describe**      - List all available commands and their parameters
-- **prune**         - Prune logs and jobs, keeping only the latest N records (default: 1000)
-- **completion**    - Dump the shell completion script
+- **application:\***     - Manage applications (list, get, create, update, delete, import/export/remove JSON, show config)
+- **company:\***         - Manage companies and their settings
+- **company-app:\***     - Manage company-application relations (list, assign, unassign)
+- **job:\***             - Manage job execution and monitoring
+- **run-template:\***    - Manage run templates and scheduling
+- **user:\***            - User account management
+- **user-erasure:\***    - GDPR user data erasure management
+- **token:\***           - API token management
+- **credential-type:\*** - Credential type operations
+- **credential:\***      - Credential management
+- **event-source:\***    - Manage event sources
+- **event-rule:\***      - Manage event rules
+- **artifact:\***        - Manage job artifacts
+- **encryption:\***      - Manage encryption keys
+- **queue:\***           - Job queue operations
+- **status**             - System status information (encryption, Zabbix, OpenTelemetry)
+- **telemetry:test**     - Test OpenTelemetry metrics export
+- **describe**           - List all available commands and their parameters
+- **prune**              - Prune logs and jobs, keeping only the latest N records (default: 1000)
+- **completion**         - Dump the shell completion script
 
 Detailed Command Reference
 -------------------------
@@ -77,21 +81,6 @@ application
 
 Manage applications (list, get, create, update, delete, import/export/remove JSON, show configuration fields).
 
-.. code-block:: bash
-
-    multiflexi-cli application <action> [options]
-
-Actions:
-- list:         List all applications.
-- get:          Get application details by ID, UUID, or name.
-- create:       Create a new application (requires --name, --uuid).
-- update:       Update an existing application (requires --id or --uuid).
-- delete:       Delete an application (requires --id).
-- import-json:  Import application from JSON file (requires --json).
-- export-json:  Export application to JSON file (requires --id, --json).
-- remove-json:  Remove application from JSON file (requires --json).
-- showconfig:   Show defined configuration fields for application (requires --id or --uuid).
-
 Options:
   --id           Application ID
   --uuid         Application UUID
@@ -102,7 +91,7 @@ Options:
   --ociimage     OCI Image
   --requirements Requirements
   --homepage     Homepage URL
-  --json         Path to JSON file for import/export/remove
+  --file         Path to JSON file for import/export/remove
   --appversion   Application Version
   -f, --format   Output format: text or json (default: text)
 
@@ -110,32 +99,23 @@ Examples:
 
 .. code-block:: bash
 
-    multiflexi-cli application list
-    multiflexi-cli application get --id=1
-    multiflexi-cli application get --uuid=uuid-123
-    multiflexi-cli application get --name="App1"
-    multiflexi-cli application create --name="App1" --uuid="uuid-123"
-    multiflexi-cli application update --id=1 --name="App1 Updated"
-    multiflexi-cli application delete --id=1
-    multiflexi-cli application import-json --json=app.json
-    multiflexi-cli application export-json --id=1 --json=app.json
-    multiflexi-cli application showconfig --id=1
+    multiflexi-cli application:list
+    multiflexi-cli application:get --id=1
+    multiflexi-cli application:get --uuid=uuid-123
+    multiflexi-cli application:get --name="App1"
+    multiflexi-cli application:create --name="App1" --uuid="uuid-123"
+    multiflexi-cli application:update --id=1 --name="App1 Updated"
+    multiflexi-cli application:delete --id=1
+    multiflexi-cli application:import-json --file=app.json
+    multiflexi-cli application:export-json --id=1 --file=app.json
+    multiflexi-cli application:show-config --id=1
 
-companyapp
-----------
+company-app
+-----------
 
 Manage company-application relations (list, assign, unassign).
 
-.. code-block:: bash
-
-    multiflexi-cli companyapp <action> [options]
-
-Actions:
-- list:     List RunTemplates. Without filters all assignments are shown; optionally filter by --company_id and/or --app_id / --app_uuid.
-- assign:   Assign an application to a company and create a default RunTemplate (requires --company_id and --app_id or --app_uuid).
-- unassign: Remove all RunTemplates and the company-app relation (requires --company_id and --app_id or --app_uuid).
-
-Output columns for ``list``:
+Output columns for ``company-app:list``:
 
 - **id** – RunTemplate ID
 - **company_id**, **company_name**, **company_slug** – company details
@@ -145,43 +125,29 @@ Options:
   --company_id   Company ID (optional filter)
   --app_id       Application ID (optional filter)
   --app_uuid     Application UUID (optional filter; resolved to app_id)
-  --limit        Limit number of results for list action
-  --offset       Offset for list action (skip N results)
-  --order        Sort order for list action: A (ascending) or D (descending)
-  --fields       Comma-separated list of fields to display (sub-selects from output columns)
+  --limit        Limit number of results
+  --offset       Offset for pagination
+  --order        Sort order: A (ascending) or D (descending)
+  --fields       Comma-separated list of fields to display
   -f, --format   Output format: text or json (default: text)
 
 Examples:
 
 .. code-block:: bash
 
-    multiflexi-cli companyapp list
-    multiflexi-cli companyapp list --company_id=1
-    multiflexi-cli companyapp list --company_id=1 --app_id=2
-    multiflexi-cli companyapp list --company_id=1 --app_id=2 --limit=10 --offset=0 --order=D
-    multiflexi-cli companyapp list --format=json
-    multiflexi-cli companyapp assign --company_id=1 --app_id=2
-    multiflexi-cli companyapp assign --company_id=1 --app_uuid=uuid-123 --format=json
-    multiflexi-cli companyapp unassign --company_id=1 --app_id=2
+    multiflexi-cli company-app:list
+    multiflexi-cli company-app:list --company_id=1
+    multiflexi-cli company-app:list --company_id=1 --app_id=2
+    multiflexi-cli company-app:list --company_id=1 --app_id=2 --limit=10 --offset=0 --order=D
+    multiflexi-cli company-app:list --format=json
+    multiflexi-cli company-app:assign --company_id=1 --app_id=2
+    multiflexi-cli company-app:assign --company_id=1 --app_uuid=uuid-123 --format=json
+    multiflexi-cli company-app:unassign --company_id=1 --app_id=2
 
-credtype
---------
+credential-type
+---------------
 
-Credential type operations (list, get, update, import, import-json, export-json, remove-json, validate-json).
-
-.. code-block:: bash
-
-    multiflexi-cli credtype <action> [options]
-
-Actions:
-- list:         List all credential types.
-- get:          Get credential type details by ID or UUID.
-- update:       Update a credential type (requires --id or --uuid).
-- import:       Import credential type from JSON file with validation (requires --file).
-- import-json:  Import credential type from JSON file (alias for import, requires --file).
-- export-json:  Export credential type to JSON file (requires --id or --uuid, --file).
-- remove-json:  Remove credential type based on JSON file (requires --file).
-- validate-json: Validate credential type JSON file against schema (requires --file).
+Credential type operations (list, get, create, update, delete, import-json, export-json, remove-json, validate-json).
 
 Options:
   --id           Credential Type ID
@@ -194,20 +160,15 @@ Examples:
 
 .. code-block:: bash
 
-    multiflexi-cli credtype list
-    multiflexi-cli credtype get --id=1
-    multiflexi-cli credtype get --uuid="d3d3ae58-d64a-4ab4-afb5-ba439ffc8587"
-    multiflexi-cli credtype update --id=1 --name="Updated API Key"
-    
+    multiflexi-cli credential-type:list
+    multiflexi-cli credential-type:get --id=1
+    multiflexi-cli credential-type:get --uuid="d3d3ae58-d64a-4ab4-afb5-ba439ffc8587"
+    multiflexi-cli credential-type:update --id=1 --name="Updated API Key"
+
     # JSON Operations
-    multiflexi-cli credtype import-json --file credential-type.json
-    multiflexi-cli credtype import-json --file credential-type.json --format json
-    multiflexi-cli credtype validate-json --file credential-type.json
-    multiflexi-cli credtype export-json --id=1 --file exported-credtype.json
-    
-    # Schema validation before import
-    multiflexi-cli credtype validate-json --file new-credtype.json
-    multiflexi-cli credtype import-json --file new-credtype.json
+    multiflexi-cli credential-type:validate-json --file new-credtype.json
+    multiflexi-cli credential-type:import-json --file credential-type.json
+    multiflexi-cli credential-type:export-json --id=1 --file exported-credtype.json
 
 **JSON Import Features:**
 
@@ -264,17 +225,6 @@ company
 
 Manage companies (list, get, create, update, remove).
 
-.. code-block:: bash
-
-    multiflexi-cli company <action> [options]
-
-Actions:
-- list:   List all companies.
-- get:    Get company details by ID.
-- create: Create a new company (requires --name).
-- update: Update an existing company (requires --id).
-- remove: Remove a company (requires --id).
-
 Options:
   --id           Company ID
   --name         Company name
@@ -293,63 +243,49 @@ Examples:
 
 .. code-block:: bash
 
-    multiflexi-cli company list
-    multiflexi-cli company get --id=1
-    multiflexi-cli company create --name="Acme Corp" --customer="CustomerX"
-    multiflexi-cli company remove --id=1
+    multiflexi-cli company:list
+    multiflexi-cli company:get --id=1
+    multiflexi-cli company:create --name="Acme Corp" --customer="CustomerX"
+    multiflexi-cli company:remove --id=1
 
 job
 ---
 
-Manage jobs (list, get, create, update, delete).
-
-.. code-block:: bash
-
-    multiflexi-cli job <action> [options]
-
-Actions:
-- list:   List all jobs.
-- get:    Get job details by ID.
-- create: Create a new job (requires --runtemplate_id and --scheduled).
-- update: Update an existing job (requires --id).
-- delete: Delete a job by its ID.
+Manage jobs (list, get, create, update, delete, status).
 
 Options:
-  --id           Job ID
+  --id             Job ID
   --runtemplate_id RunTemplate ID
-  --scheduled    Scheduled datetime
-  --executor     Executor
-  --schedule_type Schedule type
-  --app_id       App ID
-  --limit        Limit number of results for list action
-  --offset       Offset for list action (skip N results)
-  --order        Sort order for list action: A (ascending) or D (descending)
-  --status       Filter by job state: ``failed``, ``success``, ``running``, ``pending``
+  --scheduled      Scheduled datetime
+  --executor       Executor
+  --schedule_type  Schedule type
+  --app_id         App ID
+  --limit          Limit number of results
+  --offset         Offset for pagination
+  --order          Sort order: A (ascending) or D (descending)
+  --status         Filter by job state: ``failed``, ``success``, ``running``, ``pending``
 
-               - ``failed``  – completed with non-zero exit code (``exitcode IS NOT NULL AND exitcode != 0``)
-               - ``success`` – completed successfully (``exitcode = 0``)
-               - ``running`` – started but not yet finished (``begin IS NOT NULL AND exitcode IS NULL``)
-               - ``pending`` – scheduled but not yet started (``begin IS NULL AND exitcode IS NULL``)
+                 - ``failed``  – completed with non-zero exit code
+                 - ``success`` – completed successfully (``exitcode = 0``)
+                 - ``running`` – started but not yet finished
+                 - ``pending`` – scheduled but not yet started
 
-  --fields       Comma-separated list of fields to display
-  -f, --format   Output format: text or json (default: text)
+  --fields         Comma-separated list of fields to display
+  -f, --format     Output format: text or json (default: text)
 
 Examples:
 
 .. code-block:: bash
 
-    multiflexi-cli job list
-    multiflexi-cli job list --limit=10 --order=D
-    multiflexi-cli job list --status=failed
-    multiflexi-cli job list --status=failed --format=json
-    multiflexi-cli job list --status=pending
-    multiflexi-cli job list --status=running
+    multiflexi-cli job:list
+    multiflexi-cli job:list --limit=10 --order=D
     multiflexi-cli job:list --status=failed
     multiflexi-cli job:list --status=pending --format=json
-    multiflexi-cli job get --id=123
-    multiflexi-cli job create --runtemplate_id=5 --scheduled="2024-07-01 12:00"
-    multiflexi-cli job update --id=123 --executor=Native
-    multiflexi-cli job delete --id=123
+    multiflexi-cli job:get --id=123
+    multiflexi-cli job:status --id=123
+    multiflexi-cli job:create --runtemplate_id=5 --scheduled="2024-07-01 12:00"
+    multiflexi-cli job:update --id=123 --executor=Native
+    multiflexi-cli job:delete --id=123
 
 run-template
 ------------
@@ -406,17 +342,6 @@ user
 
 Manage users (list, get, create, update, delete).
 
-.. code-block:: bash
-
-    multiflexi-cli user <action> [options]
-
-Actions:
-- list:   List all users.
-- get:    Get user details by ID.
-- create: Create a new user (requires --login and --email).
-- update: Update an existing user (requires --id).
-- delete: Delete a user (requires --id).
-
 Options:
   --id           User ID
   --login        Login
@@ -432,11 +357,11 @@ Examples:
 
 .. code-block:: bash
 
-    multiflexi-cli user list
-    multiflexi-cli user get --id=1
-    multiflexi-cli user create --login="jsmith" --firstname="John" --lastname="Smith" --email="jsmith@example.com" --plaintext="secret"
-    multiflexi-cli user update --id=1 --email="john.smith@example.com"
-    multiflexi-cli user delete --id=1
+    multiflexi-cli user:list
+    multiflexi-cli user:get --id=1
+    multiflexi-cli user:create --login="jsmith" --firstname="John" --lastname="Smith" --email="jsmith@example.com" --plaintext="secret"
+    multiflexi-cli user:update --id=1 --email="john.smith@example.com"
+    multiflexi-cli user:delete --id=1
 
 user:data-erasure
 -----------------
@@ -504,18 +429,7 @@ Examples:
 token
 -----
 
-Manage tokens (list, get, create, generate, update).
-
-.. code-block:: bash
-
-    multiflexi-cli token <action> [options]
-
-Actions:
-- list:   List all tokens.
-- get:    Get token details by ID.
-- create: Create a new token (requires --user).
-- generate: Generate a new token value (requires --user).
-- update: Update an existing token (requires --id).
+Manage tokens (list, get, create, generate, update, delete).
 
 Options:
   --id           Token ID
@@ -527,24 +441,17 @@ Examples:
 
 .. code-block:: bash
 
-    multiflexi-cli token list
-    multiflexi-cli token get --id=1
-    multiflexi-cli token create --user=2
-    multiflexi-cli token generate --user=2
-    multiflexi-cli token update --id=1 --token=NEWVALUE
+    multiflexi-cli token:list
+    multiflexi-cli token:get --id=1
+    multiflexi-cli token:create --user=2
+    multiflexi-cli token:generate --user=2
+    multiflexi-cli token:update --id=1 --token=NEWVALUE
+    multiflexi-cli token:delete --id=1
 
 encryption
 ----------
 
 Manage encryption keys for secure credential storage. MultiFlexi uses AES-256 encryption to protect sensitive data (passwords, API keys, tokens) in the database.
-
-.. code-block:: bash
-
-    multiflexi-cli encryption <action> [options]
-
-Actions:
-- **status**: Show encryption system status (master key, active keys, key details)
-- **init**: Re-initialize encryption keys (generates new 256-bit key encrypted with master key)
 
 Options:
   -f, --format   Output format: text or json (default: text)
@@ -584,10 +491,10 @@ Check the encryption system status:
 
 .. code-block:: bash
 
-    multiflexi-cli encryption status
-    
+    multiflexi-cli encryption:status
+
     # JSON output for automation
-    multiflexi-cli encryption status -f json
+    multiflexi-cli encryption:status -f json
 
 Sample output:
 
@@ -638,10 +545,10 @@ Re-initialize encryption keys:
 .. code-block:: bash
 
     # Re-initialize encryption keys
-    multiflexi-cli encryption init
-    
+    multiflexi-cli encryption:init
+
     # Re-initialize with JSON output
-    multiflexi-cli encryption init -f json
+    multiflexi-cli encryption:init -f json
 
 Sample output:
 
@@ -670,62 +577,48 @@ If ``ENCRYPTION_MASTER_KEY`` is not configured, the init command will fail:
 queue
 -----
 
-Queue operations (list, truncate, fix). When no action is specified, shows comprehensive queue metrics overview including orphaned jobs count.
-
-.. code-block:: bash
-
-    multiflexi-cli queue <action> [options]
-
-Actions:
-- list:     Show all scheduled jobs in the queue with detailed information.
-- truncate: Remove all scheduled jobs from the queue.
-- fix:      Perform diagnostics and fix orphaned jobs or queue inconsistencies.
-- (no action): Show queue overview with metrics and statistics.
+Queue operations (overview, list, fix, truncate).
 
 Options:
   -f, --format     Output format: text or json (default: text)
-  --limit          Limit number of results for list action
-  --order          Sort field: "after", "id" 
+  --limit          Limit number of results
+  --order          Sort field: "after", "id"
   --direction      Sort direction: "ASC", "DESC", "A", "D" (default: ASC)
   --fields         Comma-separated list of fields to display
 
-**Queue List Features:**
+**queue:list features:**
 
-The ``queue list`` command displays comprehensive information about scheduled jobs:
-
-- **Schedule Type**: Shows human-readable schedule types (daily, weekly, monthly, yearly, hourly, minutly, custom, disabled) converted from interval codes
-- **Waiting Time**: Displays human-readable time remaining until job execution (e.g., "2h 45m", "25d 2h 45m", "overdue")
+- **Schedule Type**: Human-readable schedule types converted from interval codes
+- **Waiting Time**: Human-readable time remaining (e.g., "2h 45m", "overdue")
 - **Complete Job Details**: RunTemplate name, Application name, Company information
-- **Flexible Ordering**: Sort by scheduled time or ID in ascending/descending order
-- **Field Filtering**: Display only specific columns using --fields option
 
 Examples:
 
 .. code-block:: bash
 
-    # Basic queue listing
-    multiflexi-cli queue list
-    
     # Show overview metrics
-    multiflexi-cli queue
-    
+    multiflexi-cli queue:overview
+
+    # Basic queue listing
+    multiflexi-cli queue:list
+
     # Order by scheduled time (earliest first)
-    multiflexi-cli queue list --order after --limit 10
-    
-    # Order by scheduled time (latest first)  
-    multiflexi-cli queue list --order after --direction DESC --limit 10
-    
+    multiflexi-cli queue:list --order after --limit 10
+
+    # Order by scheduled time (latest first)
+    multiflexi-cli queue:list --order after --direction DESC --limit 10
+
     # Show only specific fields
-    multiflexi-cli queue list --fields "id,after,schedule_type,runtemplate_name" --limit 5
-    
+    multiflexi-cli queue:list --fields "id,after,schedule_type,runtemplate_name" --limit 5
+
     # JSON output for automation
-    multiflexi-cli queue list --format json --limit 20
-    
-    # Truncate all jobs
-    multiflexi-cli queue truncate
-    
+    multiflexi-cli queue:list --format json --limit 20
+
     # Fix orphaned jobs and queue inconsistencies
-    multiflexi-cli queue fix
+    multiflexi-cli queue:fix
+
+    # Truncate all jobs
+    multiflexi-cli queue:truncate
 
 prune
 -----
