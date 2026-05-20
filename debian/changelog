@@ -1,3 +1,12 @@
+multiflexi-cli (2.5.3) UNRELEASED; urgency=medium
+
+  * Add --env option to run-template:schedule for one-time env overrides
+    that are passed to the job but not saved to the run-template
+  * Remove legacy RunTemplateCommand (runtemplate <action> style)
+  * Update tests: replace broken RunTemplateTest with ScheduleCommand tests
+
+ -- Vítězslav Dvořák <info@vitexsoftware.cz>  Tue, 20 May 2026 00:00:00 +0200
+
 multiflexi-cli (2.5.2) UNRELEASED; urgency=medium
 
   * Add --status filter to job:list and job list commands

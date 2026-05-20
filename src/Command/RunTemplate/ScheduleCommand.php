@@ -34,7 +34,8 @@ class ScheduleCommand extends BaseCommand
             ->addOption('id', null, InputOption::VALUE_REQUIRED, 'RunTemplate ID')
             ->addOption('schedule_time', null, InputOption::VALUE_OPTIONAL, 'Schedule time (Y-m-d H:i:s or "now")', 'now')
             ->addOption('executor', null, InputOption::VALUE_OPTIONAL, 'Executor')
-            ->addOption('config', null, InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Config key=value (repeatable)');
+            ->addOption('config', null, InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Config key=value (repeatable)')
+            ->addOption('env', null, InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'One-time environment override key=value (not saved to run-template, repeatable)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

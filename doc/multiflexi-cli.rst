@@ -51,7 +51,7 @@ The MultiFlexi CLI provides the following main commands:
 - **company**       - Manage companies and their settings
 - **companyapp**    - Manage company-application relations
 - **job**           - Manage job execution and monitoring
-- **runtemplate**   - Manage run templates and scheduling
+- **run-template**  - Manage run templates and scheduling
 - **user**          - User account management
 - **user:data-erasure** - GDPR user data erasure management
 - **token**         - API token management
@@ -351,45 +351,55 @@ Examples:
     multiflexi-cli job update --id=123 --executor=Native
     multiflexi-cli job delete --id=123
 
-runtemplate
------------
+run-template
+------------
 
-Manage runtemplates (list, get, create, update, delete, schedule).
+Manage run templates (list, get, create, update, delete, schedule).
 
 .. code-block:: bash
 
-    multiflexi-cli runtemplate <action> [options]
+    multiflexi-cli run-template:list [options]
+    multiflexi-cli run-template:get --id=<id> [options]
+    multiflexi-cli run-template:create --name=<name> --app_id=<id> --company_id=<id> [options]
+    multiflexi-cli run-template:update --id=<id> [options]
+    multiflexi-cli run-template:delete --id=<id>
+    multiflexi-cli run-template:schedule --id=<id> [options]
 
-Actions:
-- list:   List all runtemplates.
-- get:    Get runtemplate details by ID.
-- create: Create a new runtemplate (requires --name, --app_id, --company_id).
-- update: Update an existing runtemplate (requires --id).
-- delete: Delete a runtemplate (requires --id).
-- schedule: Schedule a runtemplate launch as a job (requires --id).
-
-Options:
+Common options:
   --id           RunTemplate ID
   --name         Name
   --app_id       App ID
   --company_id   Company ID
   --interv       Interval code
   --active       Active
-  --config       Application config key=value (repeatable)
-  --schedule_time Schedule time for launch (Y-m-d H:i:s or "now")
-  --executor     Executor to use for launch
-  --env          Environment override key=value (repeatable)
+  --config       Config key=value, saved persistently to run-template (repeatable, used with create/update)
   -f, --format   Output format: text or json (default: text)
+
+Schedule-specific options:
+  --env          One-time environment override key=value — passed to the job but NOT saved to run-template (repeatable)
+  --schedule_time Schedule time (Y-m-d H:i:s or "now", default: now)
+  --executor     Executor to use for this job
+
+.. note::
+
+   Use ``--env`` when scheduling to pass one-time environment variable overrides.
+   ``--config`` is for persistent run-template configuration (create/update).
+   This distinction prevents accidentally leaving a temporary override saved in the run-template.
 
 Examples:
 
 .. code-block:: bash
 
-    multiflexi-cli runtemplate create --name="Import Yesterday" --app_id=19 --company_id=1 --config=IMPORT_SCOPE=yesterday --config=ANOTHER_KEY=foo
-    multiflexi-cli runtemplate update --id=230 --config=IMPORT_SCOPE=yesterday --config=ANOTHER_KEY=foo
-    multiflexi-cli runtemplate get --id=230 --format=json
-    multiflexi-cli runtemplate create --name="Import" --app_id=6e2b2c2e-7c2a-4b1a-8e2d-123456789abc --company_id=1
-    multiflexi-cli runtemplate schedule --id=123 --schedule_time="2025-07-01 10:00:00" --executor=Native --env=FOO=bar --env=BAZ=qux
+    multiflexi-cli run-template:create --name="Import Yesterday" --app_id=19 --company_id=1 --config=IMPORT_SCOPE=yesterday --config=ANOTHER_KEY=foo
+    multiflexi-cli run-template:update --id=230 --config=IMPORT_SCOPE=yesterday --config=ANOTHER_KEY=foo
+    multiflexi-cli run-template:get --id=230 --format=json
+    multiflexi-cli run-template:create --name="Import" --app_id=6e2b2c2e-7c2a-4b1a-8e2d-123456789abc --company_id=1
+
+    # One-time backfill with a custom IMPORT_SCOPE — value is NOT saved to run-template:
+    multiflexi-cli run-template:schedule --id=167 --env=IMPORT_SCOPE=2025-11-1>2026-01-07
+
+    # Regular schedule with future time:
+    multiflexi-cli run-template:schedule --id=123 --schedule_time="2025-07-01 10:00:00" --executor=Native --env=FOO=bar --env=BAZ=qux
 
 user
 ----

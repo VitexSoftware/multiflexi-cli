@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.5.3] - 2026-05-20
+
+### Added
+- `--env KEY=VALUE` option to `run-template:schedule` for one-time environment variable overrides that are passed to the scheduled job but never saved back to the run-template settings
+
+### Removed
+- Legacy unified `runtemplate <action>` command (`RunTemplateCommand`) — use the dedicated `run-template:*` subcommands instead
+
 ### Changed
 - `company-app:list` no longer requires `--company_id` / `--app_id`; all filters are now optional and listing works without any arguments
 - `company-app:list` output limited to meaningful fields: runtemplate `id`, company (`id`, `name`, `slug`), app (`id`, `name`, `uuid`)
