@@ -118,9 +118,11 @@ use Symfony\Component\Console\Command\CompleteCommand;
 
 $globalOptions = getopt('e::', ['environment::']);
 
+$defaultEnv = \Phar::running() ? '/etc/multiflexi/multiflexi.env' : __DIR__.'/../.env';
+
 Shared::init(
     ['DB_CONNECTION', 'DB_HOST', 'DB_PORT', 'DB_DATABASE', 'DB_USERNAME', 'DB_PASSWORD'],
-    \array_key_exists('environment', $globalOptions) ? $globalOptions['environment'] : (\array_key_exists('e', $globalOptions) ? $globalOptions['e'] : __DIR__.'/../.env'),
+    \array_key_exists('environment', $globalOptions) ? $globalOptions['environment'] : (\array_key_exists('e', $globalOptions) ? $globalOptions['e'] : $defaultEnv),
 );
 
 $loggers = ['syslog', '\MultiFlexi\LogToSQL'];
