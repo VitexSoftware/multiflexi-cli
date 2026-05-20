@@ -1,10 +1,8 @@
 # MultiFlexi CLI
 
 [![PHP Composer](https://github.com/VitexSoftware/multiflexi-cli/actions/workflows/php.yml/badge.svg)](https://github.com/VitexSoftware/multiflexi-cli/actions/workflows/php.yml)
-[![Latest Stable Version](https://poser.pugx.org/vitexsoftware/multiflexi-cli/v/stable)](https://packagist.org/packages/vitexsoftware/multiflexi-cli)
-[![Total Downloads](https://poser.pugx.org/vitexsoftware/multiflexi-cli/downloads)](https://packagist.org/packages/vitexsoftware/multiflexi-cli)
-[![License](https://poser.pugx.org/vitexsoftware/multiflexi-cli/license)](https://packagist.org/packages/vitexsoftware/multiflexi-cli)
-[![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/VitexSoftware/multiflexi-cli?utm_source=oss&utm_medium=github&utm_campaign=VitexSoftware%2Fmultiflexi-cli&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)](https://coderabbit.ai)
+[![License](https://img.shields.io/github/license/VitexSoftware/multiflexi-cli)](https://github.com/VitexSoftware/multiflexi-cli/blob/main/LICENSE)
+[![Last commit](https://img.shields.io/github/last-commit/VitexSoftware/multiflexi-cli)](https://github.com/VitexSoftware/multiflexi-cli/commits/main)
 
 [![MultiFlexi CLI](multiflexi-cli.svg)](https://multiflexi.eu)
 
