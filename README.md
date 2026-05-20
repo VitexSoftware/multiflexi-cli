@@ -1,5 +1,9 @@
 # MultiFlexi CLI
 
+[![PHP Composer](https://github.com/VitexSoftware/multiflexi-cli/actions/workflows/php.yml/badge.svg)](https://github.com/VitexSoftware/multiflexi-cli/actions/workflows/php.yml)
+[![Latest Stable Version](https://poser.pugx.org/vitexsoftware/multiflexi-cli/v/stable)](https://packagist.org/packages/vitexsoftware/multiflexi-cli)
+[![Total Downloads](https://poser.pugx.org/vitexsoftware/multiflexi-cli/downloads)](https://packagist.org/packages/vitexsoftware/multiflexi-cli)
+[![License](https://poser.pugx.org/vitexsoftware/multiflexi-cli/license)](https://packagist.org/packages/vitexsoftware/multiflexi-cli)
 [![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/VitexSoftware/multiflexi-cli?utm_source=oss&utm_medium=github&utm_campaign=VitexSoftware%2Fmultiflexi-cli&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)](https://coderabbit.ai)
 
 MultiFlexi CLI (`multiflexi-cli`) is a command-line tool for managing MultiFlexi applications, jobs, users, companies, and more. It is designed to provide flexible automation and integration for MultiFlexi server environments.
