@@ -3,6 +3,9 @@
 [![PHP Composer](https://github.com/VitexSoftware/multiflexi-cli/actions/workflows/php.yml/badge.svg)](https://github.com/VitexSoftware/multiflexi-cli/actions/workflows/php.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Last commit](https://img.shields.io/github/last-commit/VitexSoftware/multiflexi-cli)](https://github.com/VitexSoftware/multiflexi-cli/commits/main)
+![PHP](https://img.shields.io/badge/PHP-777BB4?style=flat&logo=php&logoColor=white)
+![Debian](https://img.shields.io/badge/Debian-A81D33?style=flat&logo=debian&logoColor=white)
+![Linux](https://img.shields.io/badge/Linux-FCC624?style=flat&logo=linux&logoColor=black)
 
 [![MultiFlexi CLI](multiflexi-cli.svg)](https://multiflexi.eu)
 
