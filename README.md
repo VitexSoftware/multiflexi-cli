@@ -1,7 +1,7 @@
 # MultiFlexi CLI
 
 [![PHP Composer](https://github.com/VitexSoftware/multiflexi-cli/actions/workflows/php.yml/badge.svg)](https://github.com/VitexSoftware/multiflexi-cli/actions/workflows/php.yml)
-[![License](https://img.shields.io/github/license/VitexSoftware/multiflexi-cli)](https://github.com/VitexSoftware/multiflexi-cli/blob/main/LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Last commit](https://img.shields.io/github/last-commit/VitexSoftware/multiflexi-cli)](https://github.com/VitexSoftware/multiflexi-cli/commits/main)
 
 [![MultiFlexi CLI](multiflexi-cli.svg)](https://multiflexi.eu)
