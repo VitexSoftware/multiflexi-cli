@@ -17,17 +17,6 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:cc="http://creativecommons.org/ns#"
    xmlns:dc="http://purl.org/dc/elements/1.1/">
-  <style>
-    #g249 {
-      animation: spin 4s linear infinite;
-      transform-box: fill-box;
-      transform-origin: center;
-    }
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to   { transform: rotate(360deg); }
-    }
-  </style>
   <defs
      id="defs26">
     <linearGradient
@@ -372,16 +361,25 @@
        id="g249"
        transform="matrix(0.32939742,0,0,0.32939742,97.473877,52.332051)"
        style="fill:#ffd42a;fill-opacity:1;filter:url(#filter776)">
-      <path
-         id="path5740"
-         style="color:#000000;text-indent:0;text-transform:none;fill:#ffd42a;fill-opacity:1;fill-rule:evenodd"
-         inkscape:connector-curvature="0"
-         d="m 713.47,204.89 v 74.226 c -91.83,18.86 -161.52,100.63 -161.52,197.79 0,96.668 69.012,178.12 160.15,197.51 L 645.092,607.408 686.15,566.35 c -26.951,-20.333 -44.214,-52.667 -44.214,-89.444 0,-48.051 29.471,-88.501 71.524,-104.52 v 115.53 L 854.98,346.396 713.47,204.886 Z" />
-      <path
-         id="path2985"
-         style="color:#000000;text-indent:0;text-transform:none;fill:#ffd42a;fill-opacity:1;fill-rule:evenodd"
-         inkscape:connector-curvature="0"
-         d="m 795.61,279.41 67.008,66.993 -41.074,41.074 c 26.961,20.328 44.23,52.647 44.23,89.428 0,48.051 -29.47,88.512 -71.524,104.54 v -115.55 l -141.52,141.52 141.52,141.52 v -74.226 c 91.812,-18.87 161.51,-100.65 161.51,-197.79 0,-96.667 -69.01,-178.1 -160.15,-197.49 z" />
+      <g>
+        <animateTransform
+           attributeName="transform"
+           type="rotate"
+           from="0 754 477"
+           to="360 754 477"
+           dur="4s"
+           repeatCount="indefinite" />
+        <path
+           id="path5740"
+           style="color:#000000;text-indent:0;text-transform:none;fill:#ffd42a;fill-opacity:1;fill-rule:evenodd"
+           inkscape:connector-curvature="0"
+           d="m 713.47,204.89 v 74.226 c -91.83,18.86 -161.52,100.63 -161.52,197.79 0,96.668 69.012,178.12 160.15,197.51 L 645.092,607.408 686.15,566.35 c -26.951,-20.333 -44.214,-52.667 -44.214,-89.444 0,-48.051 29.471,-88.501 71.524,-104.52 v 115.53 L 854.98,346.396 713.47,204.886 Z" />
+        <path
+           id="path2985"
+           style="color:#000000;text-indent:0;text-transform:none;fill:#ffd42a;fill-opacity:1;fill-rule:evenodd"
+           inkscape:connector-curvature="0"
+           d="m 795.61,279.41 67.008,66.993 -41.074,41.074 c 26.961,20.328 44.23,52.647 44.23,89.428 0,48.051 -29.47,88.512 -71.524,104.54 v -115.55 l -141.52,141.52 141.52,141.52 v -74.226 c 91.812,-18.87 161.51,-100.65 161.51,-197.79 0,-96.667 -69.01,-178.1 -160.15,-197.49 z" />
+      </g>
     </g>
   </g>
   <metadata
