@@ -51,7 +51,7 @@ The MultiFlexi CLI provides the following main commands:
 - **company:\***         - Manage companies and their settings
 - **company-app:\***     - Manage company-application relations (list, assign, unassign)
 - **job:\***             - Manage job execution and monitoring
-- **run-template:\***    - Manage run templates and scheduling
+- **run-template:\***    - Manage run templates, scheduling, and credential assignment
 - **user:\***            - User account management
 - **user-erasure:\***    - GDPR user data erasure management
 - **token:\***           - API token management
@@ -290,7 +290,7 @@ Examples:
 run-template
 ------------
 
-Manage run templates (list, get, create, update, delete, schedule).
+Manage run templates (list, get, create, update, delete, schedule, and credential assignment).
 
 .. code-block:: bash
 
@@ -300,6 +300,9 @@ Manage run templates (list, get, create, update, delete, schedule).
     multiflexi-cli run-template:update --id=<id> [options]
     multiflexi-cli run-template:delete --id=<id>
     multiflexi-cli run-template:schedule --id=<id> [options]
+    multiflexi-cli run-template:assign-credential --runtemplate_id=<id> --credential_id=<id> [options]
+    multiflexi-cli run-template:unassign-credential --runtemplate_id=<id> --credential_id=<id> [options]
+    multiflexi-cli run-template:list-credentials --runtemplate_id=<id> [options]
 
 Common options:
   --id           RunTemplate ID
@@ -315,6 +318,10 @@ Schedule-specific options:
   --env          One-time environment override key=value — passed to the job but NOT saved to run-template (repeatable)
   --schedule_time Schedule time (Y-m-d H:i:s or "now", default: now)
   --executor     Executor to use for this job
+
+Credential assignment options:
+  --runtemplate_id  RunTemplate ID
+  --credential_id   Credential ID
 
 .. note::
 
@@ -336,6 +343,16 @@ Examples:
 
     # Regular schedule with future time:
     multiflexi-cli run-template:schedule --id=123 --schedule_time="2025-07-01 10:00:00" --executor=Native --env=FOO=bar --env=BAZ=qux
+
+    # Assign a credential to a run template:
+    multiflexi-cli run-template:assign-credential --runtemplate_id=5 --credential_id=12
+
+    # Remove a credential assignment from a run template:
+    multiflexi-cli run-template:unassign-credential --runtemplate_id=5 --credential_id=12
+
+    # List all credentials assigned to a run template:
+    multiflexi-cli run-template:list-credentials --runtemplate_id=5
+    multiflexi-cli run-template:list-credentials --runtemplate_id=5 --format=json
 
 user
 ----

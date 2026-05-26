@@ -1,4 +1,14 @@
-multiflexi-cli (2.5.3) UNRELEASED; urgency=medium
+multiflexi-cli (2.5.4) UNRELEASED; urgency=medium
+
+  * Add run-template:assign-credential command
+  * Add run-template:unassign-credential command
+  * Add run-template:list-credentials command
+  * Update tests for credential assignment commands
+  * Update documentation for credential assignment commands
+
+ -- Vítězslav Dvořák <info@vitexsoftware.cz>  Mon, 26 May 2026 00:00:00 +0200
+
+multiflexi-cli (2.5.3) stable; urgency=medium
 
   * Add --env option to run-template:schedule for one-time env overrides
     that are passed to the job but not saved to the run-template

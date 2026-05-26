@@ -42,6 +42,24 @@ Options: --id, --schedule_time, --executor, --env (repeatable, one-time override
 Note: Only run-templates with active=1 can be scheduled.
 .RE
 .TP
+.B run-template:assign-credential
+Assign a credential to a run template.
+.RS
+Options: --runtemplate_id, --credential_id, --format
+.RE
+.TP
+.B run-template:unassign-credential
+Remove a credential assignment from a run template.
+.RS
+Options: --runtemplate_id, --credential_id, --format
+.RE
+.TP
+.B run-template:list-credentials
+List all credentials assigned to a run template.
+.RS
+Options: --runtemplate_id, --format
+.RE
+.TP
 .B job:list / job:get / job:create / job:update / job:delete
 Manage jobs.
 .RS
@@ -222,6 +240,15 @@ Schedule a run-template immediately:
 .TP
 Schedule with a one-time environment override (not saved to run-template):
 .B multiflexi-cli run-template:schedule --id=167 --env=IMPORT_SCOPE=2025-11-01>2026-01-07
+.TP
+Assign a credential to a run template:
+.B multiflexi-cli run-template:assign-credential --runtemplate_id=5 --credential_id=12
+.TP
+Remove a credential assignment from a run template:
+.B multiflexi-cli run-template:unassign-credential --runtemplate_id=5 --credential_id=12
+.TP
+List credentials assigned to a run template:
+.B multiflexi-cli run-template:list-credentials --runtemplate_id=5
 .TP
 List failed jobs:
 .B multiflexi-cli job:list --status=failed
