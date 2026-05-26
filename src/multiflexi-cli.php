@@ -87,11 +87,14 @@ use MultiFlexi\Cli\Command\Queue\FixCommand as QueueFixCommand;
 use MultiFlexi\Cli\Command\Queue\ListCommand as QueueListCommand;
 use MultiFlexi\Cli\Command\Queue\OverviewCommand as QueueOverviewCommand;
 use MultiFlexi\Cli\Command\Queue\TruncateCommand as QueueTruncateCommand;
+use MultiFlexi\Cli\Command\RunTemplate\AssignCredentialCommand as RunTemplateAssignCredentialCommand;
 use MultiFlexi\Cli\Command\RunTemplate\CreateCommand as RunTemplateCreateCommand;
 use MultiFlexi\Cli\Command\RunTemplate\DeleteCommand as RunTemplateDeleteCommand;
 use MultiFlexi\Cli\Command\RunTemplate\GetCommand as RunTemplateGetCommand;
 use MultiFlexi\Cli\Command\RunTemplate\ListCommand as RunTemplateListCommand;
+use MultiFlexi\Cli\Command\RunTemplate\ListCredentialsCommand as RunTemplateListCredentialsCommand;
 use MultiFlexi\Cli\Command\RunTemplate\ScheduleCommand as RunTemplateScheduleCommand;
+use MultiFlexi\Cli\Command\RunTemplate\UnassignCredentialCommand as RunTemplateUnassignCredentialCommand;
 use MultiFlexi\Cli\Command\RunTemplate\UpdateCommand as RunTemplateUpdateCommand;
 use MultiFlexi\Cli\Command\StatusCommand;
 use MultiFlexi\Cli\Command\TelemetryTestCommand;
@@ -240,6 +243,9 @@ $application->add(new RunTemplateCreateCommand());
 $application->add(new RunTemplateUpdateCommand());
 $application->add(new RunTemplateDeleteCommand());
 $application->add(new RunTemplateScheduleCommand());
+$application->add(new RunTemplateAssignCredentialCommand());
+$application->add(new RunTemplateUnassignCredentialCommand());
+$application->add(new RunTemplateListCredentialsCommand());
 
 // Token
 $application->add(new TokenListCommand());
