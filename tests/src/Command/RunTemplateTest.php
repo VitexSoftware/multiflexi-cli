@@ -15,15 +15,24 @@ declare(strict_types=1);
 
 namespace Test\MultiFlexi\Cli\Command;
 
+use MultiFlexi\Cli\Command\RunTemplate\AssignCredentialCommand;
+use MultiFlexi\Cli\Command\RunTemplate\ListCredentialsCommand;
 use MultiFlexi\Cli\Command\RunTemplate\ScheduleCommand;
+use MultiFlexi\Cli\Command\RunTemplate\UnassignCredentialCommand;
 
 class RunTemplateTest extends \PHPUnit\Framework\TestCase
 {
     protected ScheduleCommand $schedule;
+    protected AssignCredentialCommand $assignCredential;
+    protected UnassignCredentialCommand $unassignCredential;
+    protected ListCredentialsCommand $listCredentials;
 
     protected function setUp(): void
     {
         $this->schedule = new ScheduleCommand();
+        $this->assignCredential = new AssignCredentialCommand();
+        $this->unassignCredential = new UnassignCredentialCommand();
+        $this->listCredentials = new ListCredentialsCommand();
     }
 
     public function testScheduleCommandHasEnvOption(): void
@@ -56,5 +65,68 @@ class RunTemplateTest extends \PHPUnit\Framework\TestCase
         $definition = $this->schedule->getDefinition();
         $option = $definition->getOption('config');
         $this->assertTrue($option->isArray(), '--config must accept multiple values (VALUE_IS_ARRAY)');
+    }
+
+    public function testAssignCredentialCommandName(): void
+    {
+        $this->assertSame('run-template:assign-credential', $this->assignCredential->getName());
+    }
+
+    public function testAssignCredentialCommandHasRuntemplateIdOption(): void
+    {
+        $definition = $this->assignCredential->getDefinition();
+        $this->assertTrue($definition->hasOption('runtemplate_id'), '--runtemplate_id option must be defined on run-template:assign-credential');
+    }
+
+    public function testAssignCredentialCommandHasCredentialIdOption(): void
+    {
+        $definition = $this->assignCredential->getDefinition();
+        $this->assertTrue($definition->hasOption('credential_id'), '--credential_id option must be defined on run-template:assign-credential');
+    }
+
+    public function testAssignCredentialCommandHasFormatOption(): void
+    {
+        $definition = $this->assignCredential->getDefinition();
+        $this->assertTrue($definition->hasOption('format'), '--format option must be defined on run-template:assign-credential');
+    }
+
+    public function testUnassignCredentialCommandName(): void
+    {
+        $this->assertSame('run-template:unassign-credential', $this->unassignCredential->getName());
+    }
+
+    public function testUnassignCredentialCommandHasRuntemplateIdOption(): void
+    {
+        $definition = $this->unassignCredential->getDefinition();
+        $this->assertTrue($definition->hasOption('runtemplate_id'), '--runtemplate_id option must be defined on run-template:unassign-credential');
+    }
+
+    public function testUnassignCredentialCommandHasCredentialIdOption(): void
+    {
+        $definition = $this->unassignCredential->getDefinition();
+        $this->assertTrue($definition->hasOption('credential_id'), '--credential_id option must be defined on run-template:unassign-credential');
+    }
+
+    public function testUnassignCredentialCommandHasFormatOption(): void
+    {
+        $definition = $this->unassignCredential->getDefinition();
+        $this->assertTrue($definition->hasOption('format'), '--format option must be defined on run-template:unassign-credential');
+    }
+
+    public function testListCredentialsCommandName(): void
+    {
+        $this->assertSame('run-template:list-credentials', $this->listCredentials->getName());
+    }
+
+    public function testListCredentialsCommandHasRuntemplateIdOption(): void
+    {
+        $definition = $this->listCredentials->getDefinition();
+        $this->assertTrue($definition->hasOption('runtemplate_id'), '--runtemplate_id option must be defined on run-template:list-credentials');
+    }
+
+    public function testListCredentialsCommandHasFormatOption(): void
+    {
+        $definition = $this->listCredentials->getDefinition();
+        $this->assertTrue($definition->hasOption('format'), '--format option must be defined on run-template:list-credentials');
     }
 }
