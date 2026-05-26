@@ -33,7 +33,8 @@ class GetCommand extends MultiFlexiCommand
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('id', null, InputOption::VALUE_REQUIRED, 'User ID')
             ->addOption('login', null, InputOption::VALUE_REQUIRED, 'Login')
-            ->addOption('email', null, InputOption::VALUE_REQUIRED, 'Email');
+            ->addOption('email', null, InputOption::VALUE_REQUIRED, 'Email')
+            ->addOption('fields', null, InputOption::VALUE_OPTIONAL, 'Comma-separated list of fields to display');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

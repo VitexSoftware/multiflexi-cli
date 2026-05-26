@@ -31,7 +31,8 @@ class GetCommand extends MultiFlexiCommand
             ->setName('credential:get')
             ->setDescription('Get a credential by ID')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
-            ->addOption('id', null, InputOption::VALUE_REQUIRED, 'Credential ID');
+            ->addOption('id', null, InputOption::VALUE_REQUIRED, 'Credential ID')
+            ->addOption('fields', null, InputOption::VALUE_OPTIONAL, 'Comma-separated list of fields to display');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

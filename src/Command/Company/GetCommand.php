@@ -34,7 +34,8 @@ class GetCommand extends MultiFlexiCommand
             ->addOption('id', null, InputOption::VALUE_REQUIRED, 'Company ID')
             ->addOption('ic', null, InputOption::VALUE_OPTIONAL, 'IC')
             ->addOption('name', null, InputOption::VALUE_REQUIRED, 'Company name')
-            ->addOption('slug', null, InputOption::VALUE_REQUIRED, 'Company slug');
+            ->addOption('slug', null, InputOption::VALUE_REQUIRED, 'Company slug')
+            ->addOption('fields', null, InputOption::VALUE_OPTIONAL, 'Comma-separated list of fields to display');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
