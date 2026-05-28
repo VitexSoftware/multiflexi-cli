@@ -30,7 +30,7 @@ class UnassignCredentialCommand extends BaseCommand
             ->setName('run-template:unassign-credential')
             ->setDescription('Remove a credential assignment from a run template')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
-            ->addOption('runtemplate_id', null, InputOption::VALUE_REQUIRED, 'RunTemplate ID')
+            ->addOption('id', null, InputOption::VALUE_REQUIRED, 'RunTemplate ID')
             ->addOption('credential_id', null, InputOption::VALUE_REQUIRED, 'Credential ID');
     }
 
@@ -38,11 +38,11 @@ class UnassignCredentialCommand extends BaseCommand
     {
         $format = strtolower($input->getOption('format'));
 
-        $runtemplateId = $input->getOption('runtemplate_id');
+        $runtemplateId = $input->getOption('id');
         $credentialId = $input->getOption('credential_id');
 
         if (empty($runtemplateId) || !is_numeric($runtemplateId)) {
-            $msg = 'Missing or invalid --runtemplate_id';
+            $msg = 'Missing or invalid --id';
             $output->writeln($format === 'json' ? json_encode(['status' => 'error', 'message' => $msg]) : "<error>{$msg}</error>");
 
             return self::FAILURE;
