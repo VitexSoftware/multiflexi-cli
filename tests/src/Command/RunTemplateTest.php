@@ -72,10 +72,10 @@ class RunTemplateTest extends \PHPUnit\Framework\TestCase
         $this->assertSame('run-template:assign-credential', $this->assignCredential->getName());
     }
 
-    public function testAssignCredentialCommandHasRuntemplateIdOption(): void
+    public function testAssignCredentialCommandHasIdOption(): void
     {
         $definition = $this->assignCredential->getDefinition();
-        $this->assertTrue($definition->hasOption('runtemplate_id'), '--runtemplate_id option must be defined on run-template:assign-credential');
+        $this->assertTrue($definition->hasOption('id'), '--id option must be defined on run-template:assign-credential');
     }
 
     public function testAssignCredentialCommandHasCredentialIdOption(): void
@@ -95,10 +95,10 @@ class RunTemplateTest extends \PHPUnit\Framework\TestCase
         $this->assertSame('run-template:unassign-credential', $this->unassignCredential->getName());
     }
 
-    public function testUnassignCredentialCommandHasRuntemplateIdOption(): void
+    public function testUnassignCredentialCommandHasIdOption(): void
     {
         $definition = $this->unassignCredential->getDefinition();
-        $this->assertTrue($definition->hasOption('runtemplate_id'), '--runtemplate_id option must be defined on run-template:unassign-credential');
+        $this->assertTrue($definition->hasOption('id'), '--id option must be defined on run-template:unassign-credential');
     }
 
     public function testUnassignCredentialCommandHasCredentialIdOption(): void
@@ -118,10 +118,10 @@ class RunTemplateTest extends \PHPUnit\Framework\TestCase
         $this->assertSame('run-template:list-credentials', $this->listCredentials->getName());
     }
 
-    public function testListCredentialsCommandHasRuntemplateIdOption(): void
+    public function testListCredentialsCommandHasIdOption(): void
     {
         $definition = $this->listCredentials->getDefinition();
-        $this->assertTrue($definition->hasOption('runtemplate_id'), '--runtemplate_id option must be defined on run-template:list-credentials');
+        $this->assertTrue($definition->hasOption('id'), '--id option must be defined on run-template:list-credentials');
     }
 
     public function testListCredentialsCommandHasFormatOption(): void

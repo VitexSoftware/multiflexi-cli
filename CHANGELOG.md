@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.5.5] - 2026-05-28
+
+### Fixed
+- `run-template:assign-credential`, `run-template:unassign-credential`, and `run-template:list-credentials` now use `--id` (not `--runtemplate_id`) for the RunTemplate ID, consistent with all other `run-template:*` commands
+
+## [2.5.4] - 2026-05-26
+
+### Added
+- `run-template:assign-credential --id <id> --credential_id <cid>` — assign a credential to a run template
+- `run-template:unassign-credential --id <id> --credential_id <cid>` — remove a credential assignment from a run template
+- `run-template:list-credentials --id <id>` — list credentials assigned to a run template
+
 ## [2.5.3] - 2026-05-20
 
 ### Added

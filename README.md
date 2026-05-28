@@ -39,6 +39,9 @@ multiflexi-cli <command> [options]
 | `run-template:list` | List run templates |
 | `run-template:schedule --id <id>` | Schedule a run template as a job |
 | `run-template:schedule --id <id> --env KEY=VALUE` | Schedule with one-time env override |
+| `run-template:list-credentials --id <id>` | List credentials assigned to a run template |
+| `run-template:assign-credential --id <id> --credential_id <cid>` | Assign a credential to a run template |
+| `run-template:unassign-credential --id <id> --credential_id <cid>` | Remove a credential from a run template |
 | `job:list` | List jobs |
 | `job:get --id <id>` | Get job details |
 | `job:status --id <id>` | Get job status |
@@ -78,6 +81,9 @@ multiflexi-cli application:delete --id 456
 multiflexi-cli run-template:list
 multiflexi-cli run-template:schedule --id 167
 multiflexi-cli run-template:schedule --id 167 --env IMPORT_SCOPE=2025-11-01>2026-01-07
+multiflexi-cli run-template:list-credentials --id 186 --format json
+multiflexi-cli run-template:assign-credential --id 186 --credential_id 12
+multiflexi-cli run-template:unassign-credential --id 186 --credential_id 12
 
 # Jobs
 multiflexi-cli job:list

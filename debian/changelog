@@ -1,3 +1,13 @@
+multiflexi-cli (2.5.5) UNRELEASED; urgency=medium
+
+  * Fix: rename --runtemplate_id to --id on run-template:assign-credential,
+    run-template:unassign-credential, and run-template:list-credentials
+    to be consistent with all other run-template:* commands
+  * Update tests: replace --runtemplate_id assertions with --id
+  * Update documentation with corrected option names
+
+ -- Vítězslav Dvořák <info@vitexsoftware.cz>  Wed, 28 May 2026 00:00:00 +0200
+
 multiflexi-cli (2.5.4) UNRELEASED; urgency=medium
 
   * Add run-template:assign-credential command
