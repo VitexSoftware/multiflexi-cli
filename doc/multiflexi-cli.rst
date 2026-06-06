@@ -50,6 +50,8 @@ The MultiFlexi CLI provides the following main commands:
 - **application:\***     - Manage applications (list, get, create, update, delete, import/export/remove JSON, show config)
 - **company:\***         - Manage companies and their settings
 - **company-app:\***     - Manage company-application relations (list, assign, unassign)
+- **user-company:\***    - Assign/unassign users to companies
+- **user-role:\***       - Set RBAC roles for users
 - **job:\***             - Manage job execution and monitoring
 - **run-template:\***    - Manage run templates, scheduling, and credential assignment
 - **user:\***            - User account management
@@ -143,6 +145,48 @@ Examples:
     multiflexi-cli company-app:assign --company_id=1 --app_id=2
     multiflexi-cli company-app:assign --company_id=1 --app_uuid=uuid-123 --format=json
     multiflexi-cli company-app:unassign --company_id=1 --app_id=2
+
+user-company
+------------
+
+Manage user-company assignments (assign, unassign).
+
+Options:
+  --company_id   Company ID (required)
+  --user_id      User ID (required unless --login/--email is used)
+  --login        User login (alternative to --user_id)
+  --email        User email (alternative to --user_id)
+  --role         Assignment role for ``company_user.role`` (assign only, default: ``viewer``)
+  -f, --format   Output format: text or json (default: text)
+
+Examples:
+
+.. code-block:: bash
+
+    multiflexi-cli user-company:assign --company_id=2 --user_id=10 --role=viewer
+    multiflexi-cli user-company:assign --company_id=2 --login=jsmith --role=editor
+    multiflexi-cli user-company:unassign --company_id=2 --email=john@example.com
+
+user-role
+---------
+
+Set RBAC roles for users.
+
+Options:
+  --user_id      User ID (required unless --login/--email is used)
+  --login        User login (alternative to --user_id)
+  --email        User email (alternative to --user_id)
+  --roles        Comma-separated role names (e.g. ``admin,viewer``)
+  --replace      Replace existing assignments (true/false, default: true)
+  --assigned_by  Optional user ID to store as assigner
+  -f, --format   Output format: text or json (default: text)
+
+Examples:
+
+.. code-block:: bash
+
+    multiflexi-cli user-role:set --user_id=10 --roles=admin,viewer --replace=true
+    multiflexi-cli user-role:set --login=jsmith --roles=editor --replace=false --assigned_by=1
 
 credential-type
 ---------------

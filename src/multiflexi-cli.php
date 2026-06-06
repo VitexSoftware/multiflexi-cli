@@ -109,6 +109,9 @@ use MultiFlexi\Cli\Command\User\DeleteCommand as UserDeleteCommand;
 use MultiFlexi\Cli\Command\User\GetCommand as UserGetCommand;
 use MultiFlexi\Cli\Command\User\ListCommand as UserListCommand;
 use MultiFlexi\Cli\Command\User\UpdateCommand as UserUpdateCommand;
+use MultiFlexi\Cli\Command\UserCompany\AssignCommand as UserCompanyAssignCommand;
+use MultiFlexi\Cli\Command\UserCompany\UnassignCommand as UserCompanyUnassignCommand;
+use MultiFlexi\Cli\Command\UserRole\SetCommand as UserRoleSetCommand;
 use MultiFlexi\Cli\Command\UserErasure\ApproveCommand as UserErasureApproveCommand;
 use MultiFlexi\Cli\Command\UserErasure\AuditCommand as UserErasureAuditCommand;
 use MultiFlexi\Cli\Command\UserErasure\CleanupCommand as UserErasureCleanupCommand;
@@ -261,6 +264,13 @@ $application->add(new UserGetCommand());
 $application->add(new UserCreateCommand());
 $application->add(new UserUpdateCommand());
 $application->add(new UserDeleteCommand());
+
+// User Company Assignment
+$application->add(new UserCompanyAssignCommand());
+$application->add(new UserCompanyUnassignCommand());
+
+// User RBAC Roles
+$application->add(new UserRoleSetCommand());
 
 // User Erasure (GDPR)
 $application->add(new UserErasureListCommand());

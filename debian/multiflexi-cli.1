@@ -80,6 +80,18 @@ Manage users.
 Options: --id, --login, --email, --firstname, --lastname, --password, --plaintext, --enabled, --format
 .RE
 .TP
+.B user-company:assign / user-company:unassign
+Assign and unassign users to/from companies.
+.RS
+Options: --company_id, --user_id, --login, --email, --role (assign only), --format
+.RE
+.TP
+.B user-role:set
+Set RBAC roles for a user.
+.RS
+Options: --user_id, --login, --email, --roles, --replace, --assigned_by, --format
+.RE
+.TP
 .B user-erasure:list / user-erasure:create / user-erasure:approve / user-erasure:reject / user-erasure:process / user-erasure:audit / user-erasure:cleanup
 Manage GDPR user data erasure requests (Article 17 Right to Erasure).
 .RS
@@ -267,6 +279,15 @@ Generate a new token for user ID 2:
 .TP
 Assign application to company:
 .B multiflexi-cli company-app:assign --company_id=1 --app_id=5
+.TP
+Assign user to company:
+.B multiflexi-cli user-company:assign --company_id=2 --login=jsmith --role=viewer
+.TP
+Unassign user from company:
+.B multiflexi-cli user-company:unassign --company_id=2 --login=jsmith
+.TP
+Set RBAC roles for user:
+.B multiflexi-cli user-role:set --login=jsmith --roles=admin,viewer --replace=true
 .TP
 Import credential type from JSON:
 .B multiflexi-cli credential-type:import-json --file=credtype.json

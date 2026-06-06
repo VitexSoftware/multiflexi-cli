@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.5.6] - 2026-06-06
+
+### Added
+- `user-company:assign --company_id <id> (--user_id <id> | --login <login> | --email <email>) [--role <role>]` - assign a user to a company with an optional company-scoped role
+- `user-company:unassign --company_id <id> (--user_id <id> | --login <login> | --email <email>)` - remove a user-company assignment
+- `user-role:set (--user_id <id> | --login <login> | --email <email>) --roles <role1,role2,...> [--replace] [--assigned_by <id>]` - assign RBAC roles by role name
+
+### Changed
+- Updated command documentation in `README.md`, `doc/multiflexi-cli.rst`, and `debian/multiflexi-cli.1`
+- Added command metadata tests in `tests/src/Command/UserAccessCommandsTest.php`
+
 ## [2.5.5] - 2026-05-28
 
 ### Fixed
