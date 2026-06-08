@@ -19,7 +19,7 @@ PKG_SOURCE  := $(shell jq -r '.name' composer.json)
 
 override_dh_install:
 	mkdir -p debian/tmp/
-	jq '.version = "'`dpkg-parsechangelog | sed -n 's/^Version: //p'| sed 's/~.*//'`'"'  debian/conf/composer.json |sponge debian/tmp/composer.json
+	jq '.version = "'`dpkg-parsechangelog | sed -n 's/^Version: //p'| sed 's/~.*//'`'"'  composer.json |sponge debian/tmp/composer.json
 	dh_install
 	# Install Debian autoloader
 	install -D -m 0644 debian/autoload.php debian/multiflexi-cli/usr/share/php/multiflexi-cli/autoload.php
