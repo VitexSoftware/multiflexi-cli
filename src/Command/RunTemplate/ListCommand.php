@@ -31,6 +31,7 @@ class ListCommand extends BaseCommand
             ->setDescription('List run templates')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('company', null, InputOption::VALUE_REQUIRED, 'Filter by company slug or ID')
+            ->addOption('company_id', null, InputOption::VALUE_REQUIRED, 'Filter by company ID (numeric)')
             ->addOption('app_uuid', null, InputOption::VALUE_REQUIRED, 'Filter by application UUID')
             ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit number of results')
             ->addOption('offset', null, InputOption::VALUE_REQUIRED, 'Offset for results')
@@ -45,8 +46,11 @@ class ListCommand extends BaseCommand
         $query = $rt->listingQuery();
 
         $companyOption = $input->getOption('company');
+        $companyIdOption = $input->getOption('company_id');
 
-        if ($companyOption) {
+        if ($companyIdOption !== null) {
+            $query->where('runtemplate.company_id', (int) $companyIdOption);
+        } elseif ($companyOption) {
             $query->join('company ON company.id = runtemplate.company_id');
 
             if (is_numeric($companyOption)) {
