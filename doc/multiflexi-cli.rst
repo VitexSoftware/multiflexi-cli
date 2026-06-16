@@ -601,28 +601,46 @@ JSON output includes:
 Init Action
 ^^^^^^^^^^^
 
-Re-initialize encryption keys:
+Initialize the ``credentials`` encryption key. This is safe to run repeatedly: if a real
+(non-placeholder) key already exists, the command does nothing unless ``--force`` is given.
 
 .. code-block:: bash
 
-    # Re-initialize encryption keys
+    # Initialize (no-op if already initialized)
     multiflexi-cli encryption:init
 
-    # Re-initialize with JSON output
+    # Initialize with JSON output
     multiflexi-cli encryption:init -f json
 
-Sample output:
+    # Force-rotate an already-initialized key (invalidates existing encrypted credentials)
+    multiflexi-cli encryption:init --force
+
+Sample output (first run / not yet initialized):
 
 .. code-block:: text
 
     Encryption key initialized successfully
     Key name: credentials
     Algorithm: aes-256-gcm
+
+Sample output (already initialized, no ``--force``):
+
+.. code-block:: text
+
+    Credentials encryption key is already initialized; skipping. Use --force to rotate it (this invalidates existing encrypted credentials).
+
+Sample output (``--force`` on an already-initialized key):
+
+.. code-block:: text
+
+    Encryption key rotated successfully
+    Key name: credentials
+    Algorithm: aes-256-gcm
     WARNING: All existing encrypted credentials are now invalid and must be re-entered
 
-**Warning**: Re-initializing encryption keys will invalidate all previously encrypted credentials. All sensitive data must be re-entered after running this command. Use this command only during:
+**Warning**: ``--force`` invalidates all previously encrypted credentials. All sensitive data
+must be re-entered after running it. Use ``--force`` only during:
 
-- Initial system setup
 - After master key rotation
 - Security incident response
 - Explicit security policy requirements
