@@ -28,6 +28,7 @@ class RemoveCommand extends MultiFlexiCommand
     protected function configure(): void
     {
         $this
+            ->setName('company:remove')
             ->setDescription('Remove a company')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('id', null, InputOption::VALUE_REQUIRED, 'Company ID');

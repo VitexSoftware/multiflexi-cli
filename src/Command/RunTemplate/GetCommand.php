@@ -27,10 +27,12 @@ class GetCommand extends BaseCommand
     protected function configure(): void
     {
         $this
+            ->setName('run-template:get')
             ->setDescription('Get a run template by ID or name')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('id', null, InputOption::VALUE_REQUIRED, 'RunTemplate ID')
-            ->addOption('name', null, InputOption::VALUE_REQUIRED, 'RunTemplate name');
+            ->addOption('name', null, InputOption::VALUE_REQUIRED, 'RunTemplate name')
+            ->addOption('fields', null, InputOption::VALUE_OPTIONAL, 'Comma-separated list of fields to display');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

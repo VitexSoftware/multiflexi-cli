@@ -1,6 +1,14 @@
 # MultiFlexi CLI
 
-[![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/VitexSoftware/multiflexi-cli?utm_source=oss&utm_medium=github&utm_campaign=VitexSoftware%2Fmultiflexi-cli&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)](https://coderabbit.ai)
+[![PHP Composer](https://github.com/VitexSoftware/multiflexi-cli/actions/workflows/php.yml/badge.svg)](https://github.com/VitexSoftware/multiflexi-cli/actions/workflows/php.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Last commit](https://img.shields.io/github/last-commit/VitexSoftware/multiflexi-cli)](https://github.com/VitexSoftware/multiflexi-cli/commits/main)
+![PHP](https://img.shields.io/badge/PHP-777BB4?style=flat&logo=php&logoColor=white)
+![Symfony](https://img.shields.io/badge/Symfony-000000?style=flat&logo=symfony&logoColor=white)
+![Debian](https://img.shields.io/badge/Debian-A81D33?style=flat&logo=debian&logoColor=white)
+![Linux](https://img.shields.io/badge/Linux-FCC624?style=flat&logo=linux&logoColor=black)
+
+[![MultiFlexi CLI](multiflexi-cli.svg)](https://multiflexi.eu)
 
 MultiFlexi CLI (`multiflexi-cli`) is a command-line tool for managing MultiFlexi applications, jobs, users, companies, and more. It is designed to provide flexible automation and integration for MultiFlexi server environments.
 
@@ -22,83 +30,103 @@ multiflexi-cli <command> [options]
 
 ## Common Commands
 
-- `list`: List entities (apps, jobs, users, etc.)
-- `get`: Get details of a specific entity
-- `create`: Create a new entity
-- `delete`: Delete an entity
-- `describe`: Show available commands and features
-- `status`: Show MultiFlexi status (includes encryption, Zabbix, OpenTelemetry)
-- `application import-json`: Import application from JSON file
-- `credtype import-json`: Import credential type from JSON file
-- `telemetry:test`: Test OpenTelemetry metrics export
-- `encryption`: Manage encryption keys (status, init)
-- `prune`: Remove obsolete data
-- `queue`: Manage job queue (list with sorting/filtering, truncate, fix orphaned jobs, overview metrics)
-- `eventsource`: Manage event sources (list, get, create, update, remove, test connection)
-- `eventrule`: Manage event rules (list, get, create, update, remove)
-- `token`: Manage authentication tokens
+| Command | Description |
+|---|---|
+| `application:list` | List all applications |
+| `application:get --id <id>` | Get application details |
+| `application:import-json --file <file>` | Import application from JSON |
+| `application:export-json --id <id> --file <file>` | Export application to JSON |
+| `run-template:list` | List run templates |
+| `run-template:schedule --id <id>` | Schedule a run template as a job |
+| `run-template:schedule --id <id> --env KEY=VALUE` | Schedule with one-time env override |
+| `run-template:list-credentials --id <id>` | List credentials assigned to a run template |
+| `run-template:assign-credential --id <id> --credential_id <cid>` | Assign a credential to a run template |
+| `run-template:unassign-credential --id <id> --credential_id <cid>` | Remove a credential from a run template |
+| `job:list` | List jobs |
+| `job:get --id <id>` | Get job details |
+| `job:status --id <id>` | Get job status |
+| `company:list` | List companies |
+| `company-app:list` | List company–application assignments |
+| `user-company:assign --company_id <id> --user_id <id>` | Assign user to company |
+| `user-company:unassign --company_id <id> --user_id <id>` | Unassign user from company |
+| `user-role:set --user_id <id> --roles <r1,r2>` | Set RBAC roles for user |
+| `credential-type:list` | List credential types |
+| `credential-type:import-json --file <file>` | Import credential type from JSON |
+| `user:list` | List users |
+| `user:create --login <login> --email <email>` | Create a user |
+| `token:list` | List API tokens |
+| `event-source:list` | List event sources |
+| `event-rule:list` | List event rules |
+| `queue:overview` | Show queue metrics |
+| `queue:list` | List scheduled queue entries |
+| `queue:fix` | Fix orphaned jobs |
+| `encryption:status` | Show encryption status |
+| `encryption:init` | Initialize encryption keys |
+| `telemetry:test` | Test OpenTelemetry export |
+| `prune` | Remove obsolete data |
+| `status` | Show overall system status |
+| `describe` | List all available commands |
 
 ## Output Formats
 
-By default, all commands output human-readable text format suitable for terminal viewing. For programmatic integration or automation, you can request JSON format using the `--format json` option.
-
-## Options
-
-- `--format json`: Output results in JSON format (default is human-readable text)
-- `--help`: Show help for a command
+All commands default to human-readable text. Use `--format json` for machine-readable output.
 
 ## Examples
 
 ```bash
-multiflexi-cli list apps --format json
-multiflexi-cli get job 123
-multiflexi-cli create user --login "jsmith" --email "john@example.com"
-multiflexi-cli delete app 456
-multiflexi-cli describe
+# Applications
+multiflexi-cli application:list
+multiflexi-cli application:get --id 19 --format json
+multiflexi-cli application:import-json --file app-definition.json
+multiflexi-cli application:delete --id 456
 
-# JSON Import/Export
-multiflexi-cli application import-json --file app-definition.json
-multiflexi-cli credtype import-json --file credential-type.json
-multiflexi-cli credtype validate-json --file credential-type.json
+# Run templates
+multiflexi-cli run-template:list
+multiflexi-cli run-template:schedule --id 167
+multiflexi-cli run-template:schedule --id 167 --env IMPORT_SCOPE=2025-11-01>2026-01-07
+multiflexi-cli run-template:list-credentials --id 186 --format json
+multiflexi-cli run-template:assign-credential --id 186 --credential_id 12
+multiflexi-cli run-template:unassign-credential --id 186 --credential_id 12
 
-# System status (includes encryption, Zabbix, OpenTelemetry)
-multiflexi-cli status
+# Jobs
+multiflexi-cli job:list
+multiflexi-cli job:get --id 123 --format json
+multiflexi-cli job:status --id 123
+
+# Users
+multiflexi-cli user:create --login "jsmith" --email "john@example.com"
+multiflexi-cli user:list --format json
+
+# User-company assignments
+multiflexi-cli user-company:assign --company_id 2 --login "jsmith" --role viewer
+multiflexi-cli user-company:unassign --company_id 2 --login "jsmith"
+
+# User RBAC roles
+multiflexi-cli user-role:set --login "jsmith" --roles admin,viewer --replace=true
+multiflexi-cli user-role:set --login "jsmith" --roles editor --replace=false
+
+# Credential types
+multiflexi-cli credential-type:list
+multiflexi-cli credential-type:get --uuid "d3d3ae58-d64a-4ab4-afb5-ba439ffc8587"
+multiflexi-cli credential-type:import-json --file credential-type.json
+
+# Event sources and rules
+multiflexi-cli event-source:list
+multiflexi-cli event-source:create --name "Webhooks" --db_database webhooks --db_host localhost
+multiflexi-cli event-source:test --id 1
+multiflexi-cli event-rule:list
+multiflexi-cli event-rule:create --event_source_id 1 --evidence faktura-vydana --operation create --runtemplate_id 42
+
+# Queue
+multiflexi-cli queue:overview
+multiflexi-cli queue:list --order after --limit 10
+multiflexi-cli queue:list --fields "id,after,schedule_type" --format json
+multiflexi-cli queue:fix
+
+# System
+multiflexi-cli encryption:status
 multiflexi-cli status --format json
-
-# Queue management with enhanced features
-multiflexi-cli queue                                    # Show queue overview metrics inclusive orphaned jobs
-multiflexi-cli queue fix                                # Fix orphaned jobs and queue inconsistencies
-multiflexi-cli queue list --order after --limit 10     # List jobs by scheduled time
-multiflexi-cli queue list --order after --direction DESC --limit 5  # Latest jobs first
-multiflexi-cli queue list --fields "id,after,schedule_type" --format json  # Custom fields JSON
-
-# Event source management
-multiflexi-cli eventsource list
-multiflexi-cli eventsource create --name "Webhooks" --db_database webhooks --db_host localhost
-multiflexi-cli eventsource test --id 1
-
-# Event rule management
-multiflexi-cli eventrule list
-multiflexi-cli eventrule create --event_source_id 1 --evidence faktura-vydana --operation create --runtemplate_id 42
-
-# Credential type management
-multiflexi-cli credtype list
-multiflexi-cli credtype get --uuid "d3d3ae58-d64a-4ab4-afb5-ba439ffc8587"
-
-# Encryption management
-multiflexi-cli encryption status
-
-# OpenTelemetry testing
 multiflexi-cli telemetry:test
-```
-
-```bash
-EASE_LOGGER=console multiflexi-cli remove app 15
-02/20/2024 23:48:51 🌼 ❲MultiFlexi cli⦒(15)AbraFlexi send@MultiFlexi\Application❳ Unassigned from 3 companys
-02/20/2024 23:48:53 🌼 ❲MultiFlexi cli⦒(15)AbraFlexi send@MultiFlexi\Application❳ 2 RunTemplate removal
-02/20/2024 23:48:56 🌼 ❲MultiFlexi cli⦒(15)AbraFlexi send@MultiFlexi\Application❳ 2 Config fields removed
-02/20/2024 23:48:57 🌼 ❲MultiFlexi cli⦒(15)AbraFlexi send@MultiFlexi\Application❳ 881 Jobs removed
-Done.
 ```
 
 ## Documentation

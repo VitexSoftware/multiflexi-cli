@@ -27,6 +27,7 @@ class GetCommand extends BaseCommand
     protected function configure(): void
     {
         $this
+            ->setName('credential-type:get')
             ->setDescription('Get a credential type by id or uuid')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('id', null, InputOption::VALUE_REQUIRED, 'Credential Type ID')

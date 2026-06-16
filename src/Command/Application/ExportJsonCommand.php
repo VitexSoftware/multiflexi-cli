@@ -28,6 +28,7 @@ class ExportJsonCommand extends MultiFlexiCommand
     protected function configure(): void
     {
         $this
+            ->setName('application:export-json')
             ->setDescription('Export an application to a JSON file')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('id', null, InputOption::VALUE_REQUIRED, 'Application ID')

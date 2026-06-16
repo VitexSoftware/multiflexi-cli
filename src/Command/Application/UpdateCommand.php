@@ -28,6 +28,7 @@ class UpdateCommand extends MultiFlexiCommand
     protected function configure(): void
     {
         $this
+            ->setName('application:update')
             ->setDescription('Update an application')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('id', null, InputOption::VALUE_REQUIRED, 'Application ID')
@@ -54,6 +55,8 @@ class UpdateCommand extends MultiFlexiCommand
             return self::FAILURE;
         }
 
+        $whereCondition = [];
+
         if (!empty($uuid)) {
             $found = (new Application())->listingQuery()->where(['uuid' => $uuid])->fetch();
 
@@ -64,6 +67,9 @@ class UpdateCommand extends MultiFlexiCommand
             }
 
             $id = $found['id'];
+            $whereCondition = ['uuid' => $uuid];
+        } else {
+            $whereCondition = ['id' => (int) $id];
         }
 
         $data = [];
@@ -83,7 +89,7 @@ class UpdateCommand extends MultiFlexiCommand
         }
 
         $app = new Application((int) $id);
-        $app->updateToSQL($data, ['id' => $id]);
+        $app->updateToSQL($data, $whereCondition);
 
         if ($output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
             $full = $app->getData();

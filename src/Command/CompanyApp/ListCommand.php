@@ -29,13 +29,16 @@ class ListCommand extends MultiFlexiCommand
     protected function configure(): void
     {
         $this
+            ->setName('company-app:list')
             ->setDescription('List run templates for a company+app combination')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('company_id', null, InputOption::VALUE_REQUIRED, 'Company ID')
             ->addOption('app_id', null, InputOption::VALUE_REQUIRED, 'Application ID')
             ->addOption('app_uuid', null, InputOption::VALUE_REQUIRED, 'Application UUID')
             ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit number of results')
-            ->addOption('order', null, InputOption::VALUE_REQUIRED, 'Sort order: A (ascending) or D (descending)');
+            ->addOption('order', null, InputOption::VALUE_REQUIRED, 'Sort order: A (ascending) or D (descending)')
+            ->addOption('offset', null, InputOption::VALUE_REQUIRED, 'Offset for pagination')
+            ->addOption('fields', null, InputOption::VALUE_REQUIRED, 'Comma-separated list of fields to display');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -44,12 +47,6 @@ class ListCommand extends MultiFlexiCommand
         $companyId = $input->getOption('company_id');
         $appId = $input->getOption('app_id');
         $appUuid = $input->getOption('app_uuid');
-
-        if (empty($companyId) || (empty($appId) && empty($appUuid))) {
-            $output->writeln('<error>--company_id and either --app_id or --app_uuid are required.</error>');
-
-            return self::FAILURE;
-        }
 
         if (!empty($appUuid)) {
             $found = (new Application())->listingQuery()->where(['uuid' => $appUuid])->fetch();
@@ -63,7 +60,29 @@ class ListCommand extends MultiFlexiCommand
             $appId = $found['id'];
         }
 
-        $query = (new RunTemplate())->listingQuery()->where(['company_id' => $companyId, 'app_id' => $appId]);
+        $conditions = [];
+
+        if (!empty($companyId)) {
+            $conditions['company_id'] = $companyId;
+        }
+
+        if (!empty($appId)) {
+            $conditions['app_id'] = $appId;
+        }
+
+        $query = (new RunTemplate())->listingQuery()
+            ->select([
+                'runtemplate.id',
+                'company.id AS company_id',
+                'company.name AS company_name',
+                'company.slug AS company_slug',
+                'apps.id AS app_id',
+                'apps.name AS app_name',
+                'apps.uuid AS app_uuid',
+            ], true)
+            ->leftJoin('apps ON apps.id = runtemplate.app_id')
+            ->leftJoin('company ON company.id = runtemplate.company_id')
+            ->where($conditions);
 
         $order = $input->getOption('order');
 
@@ -84,6 +103,15 @@ class ListCommand extends MultiFlexiCommand
         }
 
         $runtemplates = $query->fetchAll();
+
+        $fields = $input->getOption('fields');
+
+        if (!empty($fields)) {
+            $fieldList = array_map('trim', explode(',', $fields));
+            $runtemplates = array_map(static function ($rt) use ($fieldList) {
+                return array_intersect_key($rt, array_flip($fieldList));
+            }, $runtemplates);
+        }
 
         if ($format === 'json') {
             $output->writeln(json_encode($runtemplates, \JSON_PRETTY_PRINT));

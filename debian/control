@@ -2,7 +2,8 @@ Source: multiflexi-cli
 Section: web
 Priority: optional
 Maintainer: "Vítězslav Dvořák" <info@vitexsoftware.cz>
-Build-Depends: debhelper-compat (= 12), jq, moreutils, composer, pkg-php-tools, php-yaml, php-intl, php-simplexml
+Build-Depends: debhelper-compat (= 12), jq, moreutils, composer, pkg-php-tools, php-yaml, php-intl, php-simplexml,
+ php-vitexsoftware-multiflexi-core, php-symfony-console, php-symfony-process, php-phplucidframe-console-table
 Standards-Version: 4.1.4
 Homepage: https://github.com/VitexSoftware/multiflexi-cli
 
@@ -14,7 +15,9 @@ Depends: ${misc:Depends},
  locales-all,
  adduser (>= 3.11),
  php-symfony-console,
- php-symfony-yaml,
+ php-symfony-process,
+ php-symfony-polyfill-php80,
+ php-yaml,
  php-json-schema,
  php-symfony-dependency-injection,
  php-phplucidframe-console-table,

@@ -28,6 +28,7 @@ class CreateCommand extends MultiFlexiCommand
     protected function configure(): void
     {
         $this
+            ->setName('application:create')
             ->setDescription('Create an application')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('name', null, InputOption::VALUE_REQUIRED, 'Name')

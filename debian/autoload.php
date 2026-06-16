@@ -1,6 +1,10 @@
 <?php
 
 require_once '/usr/share/php/Composer/InstalledVersions.php';
+if (\PHP_VERSION_ID < 80000 && file_exists('/usr/share/php/Symfony/Polyfill/php80/bootstrap.php')) {
+    require_once '/usr/share/php/Symfony/Polyfill/php80/Php80.php';
+    require_once '/usr/share/php/Symfony/Polyfill/php80/bootstrap.php';
+}
 require_once '/usr/share/php/MultiFlexi/autoload.php';
 require_once '/usr/share/php/Symfony/Component/Process/autoload.php';
 require_once '/usr/share/php/Symfony/Component/Console/autoload.php';

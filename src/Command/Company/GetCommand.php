@@ -28,12 +28,14 @@ class GetCommand extends MultiFlexiCommand
     protected function configure(): void
     {
         $this
+            ->setName('company:get')
             ->setDescription('Get a company by id, ic, name, or slug')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('id', null, InputOption::VALUE_REQUIRED, 'Company ID')
             ->addOption('ic', null, InputOption::VALUE_OPTIONAL, 'IC')
             ->addOption('name', null, InputOption::VALUE_REQUIRED, 'Company name')
-            ->addOption('slug', null, InputOption::VALUE_REQUIRED, 'Company slug');
+            ->addOption('slug', null, InputOption::VALUE_REQUIRED, 'Company slug')
+            ->addOption('fields', null, InputOption::VALUE_OPTIONAL, 'Comma-separated list of fields to display');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

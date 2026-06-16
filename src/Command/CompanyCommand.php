@@ -55,7 +55,9 @@ class CompanyCommand extends MultiFlexiCommand
             ->addOption('slug', null, InputOption::VALUE_REQUIRED, 'Company Slug')
             ->addOption('zabbix_host', null, InputOption::VALUE_OPTIONAL, 'Zabbix Host')
             ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit number of results for list action')
-            ->addOption('order', null, InputOption::VALUE_REQUIRED, 'Sort order for list action: A (ascending) or D (descending)');
+            ->addOption('order', null, InputOption::VALUE_REQUIRED, 'Sort order for list action: A (ascending) or D (descending)')
+            ->addOption('offset', null, InputOption::VALUE_REQUIRED, 'Offset for pagination')
+            ->addOption('fields', null, InputOption::VALUE_REQUIRED, 'Comma-separated list of fields to display');
         // Add more options as needed
     }
 
@@ -275,7 +277,7 @@ class CompanyCommand extends MultiFlexiCommand
                 $data = [];
 
                 foreach ([
-                    'name', 'customer', 'enabled', 'settings', 'logo', 'ic', 'DatCreate', 'DatUpdate', 'email',
+                    'name', 'customer', 'enabled', 'settings', 'logo', 'ic', 'DatCreate', 'DatUpdate', 'email', 'slug',
                 ] as $field) {
                     $val = $input->getOption($field);
 

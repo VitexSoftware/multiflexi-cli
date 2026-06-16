@@ -28,6 +28,7 @@ class TestCommand extends MultiFlexiCommand
     protected function configure(): void
     {
         $this
+            ->setName('event-source:test')
             ->setDescription('Test connectivity to an event source adapter database')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('id', null, InputOption::VALUE_REQUIRED, 'Event Source ID');

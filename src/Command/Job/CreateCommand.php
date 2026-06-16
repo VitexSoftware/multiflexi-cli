@@ -28,6 +28,7 @@ class CreateCommand extends MultiFlexiCommand
     protected function configure(): void
     {
         $this
+            ->setName('job:create')
             ->setDescription('Create a job')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('runtemplate_id', null, InputOption::VALUE_REQUIRED, 'RunTemplate ID')

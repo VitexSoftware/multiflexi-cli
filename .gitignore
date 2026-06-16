@@ -12,3 +12,4 @@ tests/bootstrap.php
 /nbproject/
 /.build/
 debian/tmp/
+*.phar

@@ -79,6 +79,8 @@ $CLI_CMD application:list --format json
 $CLI_CMD application:list --limit 2
 $CLI_CMD application:list --limit 1 --order D
 $CLI_CMD application:list --limit 1 --order A --format json
+$CLI_CMD application:list --limit 1 --offset 0
+$CLI_CMD application:list --limit 1 --offset 1 --format json
 
 ###############################################################################
 # User command (CRUD)
@@ -131,9 +133,18 @@ $CLI_CMD company:list
 $CLI_CMD company:list --format json
 $CLI_CMD company:list --limit 1
 $CLI_CMD company:list --limit 1 --order D
+$CLI_CMD company:list --limit 1 --offset 0
 $CLI_CMD company:get --slug testco
 $CLI_CMD company:get --slug testco --format json
 $CLI_CMD company:get --slug testco --fields id,name,slug
+
+# Update with --slug
+TESTCO_ID=$($CLI_CMD company:get --slug testco --format json | jq -r '.id // empty')
+if [ -n "$TESTCO_ID" ]; then
+    $CLI_CMD company:update --id "$TESTCO_ID" --slug testco-updated
+    $CLI_CMD company:update --id "$TESTCO_ID" --slug testco
+    echo "✓ Company update --slug tested"
+fi
 
 ###############################################################################
 # RunTemplate command
@@ -211,6 +222,15 @@ $CLI_CMD credential-type:list
 $CLI_CMD credential-type:list --format json
 $CLI_CMD credential-type:list --limit 2
 $CLI_CMD credential-type:list --limit 1 --order D
+$CLI_CMD credential-type:list --limit 1 --offset 0
+
+# Test --class option in update (use first available credtype)
+CREDTYPE_ID=$($CLI_CMD credential-type:list --format json --limit 1 | jq -r '.[0].id // empty')
+if [ -n "$CREDTYPE_ID" ]; then
+    CREDTYPE_CLASS=$($CLI_CMD credential-type:list --format json --limit 1 | jq -r '.[0].class // empty')
+    $CLI_CMD credential-type:update --id "$CREDTYPE_ID" --class "$CREDTYPE_CLASS"
+    echo "✓ Credential type update --class tested"
+fi
 
 ###############################################################################
 # Credential command
@@ -232,11 +252,33 @@ COMPANY_IDS=$($CLI_CMD company:list --format json --limit 1 | jq -r '.[0].id // 
 APP_IDS=$($CLI_CMD application:list --format json --limit 1 | jq -r '.[0].id // empty')
 
 if [ -n "$COMPANY_IDS" ] && [ -n "$APP_IDS" ]; then
+    echo "--- assign ---"
+    ASSIGN_RESULT=$($CLI_CMD company-app:assign --company_id "$COMPANY_IDS" --app_id "$APP_IDS" --format json)
+    echo "$ASSIGN_RESULT"
+    if echo "$ASSIGN_RESULT" | jq . >/dev/null 2>&1; then
+        echo "✓ CompanyApp assign JSON valid"
+    else
+        echo "ERROR: CompanyApp assign JSON invalid!"
+        exit 1
+    fi
+
+    echo "--- list after assign ---"
     $CLI_CMD company-app:list --company_id "$COMPANY_IDS" --app_id "$APP_IDS"
     $CLI_CMD company-app:list --company_id "$COMPANY_IDS" --app_id "$APP_IDS" --format json
     $CLI_CMD company-app:list --company_id "$COMPANY_IDS" --app_id "$APP_IDS" --limit 1
-    $CLI_CMD company-app:list --company_id "$COMPANY_IDS" --app_id "$APP_IDS" --limit 1 --order D
-    echo "✓ CompanyApp list tests passed"
+    $CLI_CMD company-app:list --company_id "$COMPANY_IDS" --app_id "$APP_IDS" --limit 1 --offset 0 --order D
+
+    echo "--- unassign ---"
+    UNASSIGN_RESULT=$($CLI_CMD company-app:unassign --company_id "$COMPANY_IDS" --app_id "$APP_IDS" --format json)
+    echo "$UNASSIGN_RESULT"
+    if echo "$UNASSIGN_RESULT" | jq . >/dev/null 2>&1; then
+        echo "✓ CompanyApp unassign JSON valid"
+    else
+        echo "ERROR: CompanyApp unassign JSON invalid!"
+        exit 1
+    fi
+
+    echo "✓ CompanyApp assign/unassign tests passed"
 else
     echo "⚠ Skipping company-app tests: no companies or applications found"
 fi

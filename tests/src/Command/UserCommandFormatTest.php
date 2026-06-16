@@ -35,9 +35,7 @@ class UserCommandFormatTest extends TestCase
     {
         // Mock the MultiFlexi\User class to avoid database dependency
         $mockUser = $this->createMock(\MultiFlexi\User::class);
-        $mockUser->method('listingQuery')->willReturn(
-            $this->createMock(\stdClass::class),
-        );
+        $mockUser->method('listingQuery')->willReturn($this->createMock(\stdClass::class));
 
         $command = new UserCommand();
         $tester = new CommandTester($command);

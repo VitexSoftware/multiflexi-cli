@@ -28,6 +28,7 @@ class CreateCommand extends MultiFlexiCommand
     protected function configure(): void
     {
         $this
+            ->setName('event-rule:create')
             ->setDescription('Create an event rule')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('event_source_id', null, InputOption::VALUE_REQUIRED, 'Event Source ID')

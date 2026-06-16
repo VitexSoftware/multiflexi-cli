@@ -54,6 +54,8 @@ class CredentialTypeCommand extends MultiFlexiCommand
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'The output format: text or json. Defaults to text.', 'text')
             ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit number of results for list action')
             ->addOption('order', null, InputOption::VALUE_REQUIRED, 'Sort order for list action: A (ascending) or D (descending)')
+            ->addOption('offset', null, InputOption::VALUE_REQUIRED, 'Offset for pagination')
+            ->addOption('fields', null, InputOption::VALUE_REQUIRED, 'Comma-separated list of fields to display')
             ->setHelp('This command manages Credential Types');
     }
 
@@ -149,6 +151,7 @@ class CredentialTypeCommand extends MultiFlexiCommand
 
                 if (empty($companyId) || empty($className)) {
                     $output->writeln('<error>Missing --company-id or --class for credtype create</error>');
+
                     return MultiFlexiCommand::FAILURE;
                 }
 
@@ -158,7 +161,8 @@ class CredentialTypeCommand extends MultiFlexiCommand
                 $proto = $protoQuery->fetch();
 
                 if (!$proto) {
-                    $output->writeln('<error>No credential prototype found for class: ' . $className . '</error>');
+                    $output->writeln('<error>No credential prototype found for class: '.$className.'</error>');
+
                     return MultiFlexiCommand::FAILURE;
                 }
 
@@ -175,12 +179,14 @@ class CredentialTypeCommand extends MultiFlexiCommand
 
                 if ($result) {
                     $createdData = $credType->getData();
+
                     if ($format === 'json') {
                         $output->writeln(json_encode($createdData, \JSON_PRETTY_PRINT));
                     } else {
                         $output->writeln('Credential type created successfully');
-                        $output->writeln('ID: ' . $credType->getMyKey());
+                        $output->writeln('ID: '.$credType->getMyKey());
                     }
+
                     return MultiFlexiCommand::SUCCESS;
                 }
 
@@ -189,8 +195,8 @@ class CredentialTypeCommand extends MultiFlexiCommand
                 } else {
                     $output->writeln('<error>Failed to create credential type</error>');
                 }
-                return MultiFlexiCommand::FAILURE;
 
+                return MultiFlexiCommand::FAILURE;
             case 'update':
                 $id = $input->getOption('id');
                 $uuid = $input->getOption('uuid');
@@ -216,7 +222,7 @@ class CredentialTypeCommand extends MultiFlexiCommand
 
                 $data = [];
 
-                foreach (['name'] as $field) {
+                foreach (['name', 'class'] as $field) {
                     $val = $input->getOption($field);
 
                     if ($val !== null) {

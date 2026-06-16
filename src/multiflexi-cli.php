@@ -38,7 +38,9 @@ use MultiFlexi\Cli\Command\Company\GetCommand as CompanyGetCommand;
 use MultiFlexi\Cli\Command\Company\ListCommand as CompanyListCommand;
 use MultiFlexi\Cli\Command\Company\RemoveCommand as CompanyRemoveCommand;
 use MultiFlexi\Cli\Command\Company\UpdateCommand as CompanyUpdateCommand;
+use MultiFlexi\Cli\Command\CompanyApp\AssignCommand as CompanyAppAssignCommand;
 use MultiFlexi\Cli\Command\CompanyApp\ListCommand as CompanyAppListCommand;
+use MultiFlexi\Cli\Command\CompanyApp\UnassignCommand as CompanyAppUnassignCommand;
 use MultiFlexi\Cli\Command\Credential\CreateCommand as CredentialCreateCommand;
 use MultiFlexi\Cli\Command\Credential\GetCommand as CredentialGetCommand;
 use MultiFlexi\Cli\Command\Credential\ListCommand as CredentialListCommand;
@@ -85,11 +87,14 @@ use MultiFlexi\Cli\Command\Queue\FixCommand as QueueFixCommand;
 use MultiFlexi\Cli\Command\Queue\ListCommand as QueueListCommand;
 use MultiFlexi\Cli\Command\Queue\OverviewCommand as QueueOverviewCommand;
 use MultiFlexi\Cli\Command\Queue\TruncateCommand as QueueTruncateCommand;
+use MultiFlexi\Cli\Command\RunTemplate\AssignCredentialCommand as RunTemplateAssignCredentialCommand;
 use MultiFlexi\Cli\Command\RunTemplate\CreateCommand as RunTemplateCreateCommand;
 use MultiFlexi\Cli\Command\RunTemplate\DeleteCommand as RunTemplateDeleteCommand;
 use MultiFlexi\Cli\Command\RunTemplate\GetCommand as RunTemplateGetCommand;
 use MultiFlexi\Cli\Command\RunTemplate\ListCommand as RunTemplateListCommand;
+use MultiFlexi\Cli\Command\RunTemplate\ListCredentialsCommand as RunTemplateListCredentialsCommand;
 use MultiFlexi\Cli\Command\RunTemplate\ScheduleCommand as RunTemplateScheduleCommand;
+use MultiFlexi\Cli\Command\RunTemplate\UnassignCredentialCommand as RunTemplateUnassignCredentialCommand;
 use MultiFlexi\Cli\Command\RunTemplate\UpdateCommand as RunTemplateUpdateCommand;
 use MultiFlexi\Cli\Command\StatusCommand;
 use MultiFlexi\Cli\Command\TelemetryTestCommand;
@@ -104,6 +109,9 @@ use MultiFlexi\Cli\Command\User\DeleteCommand as UserDeleteCommand;
 use MultiFlexi\Cli\Command\User\GetCommand as UserGetCommand;
 use MultiFlexi\Cli\Command\User\ListCommand as UserListCommand;
 use MultiFlexi\Cli\Command\User\UpdateCommand as UserUpdateCommand;
+use MultiFlexi\Cli\Command\UserCompany\AssignCommand as UserCompanyAssignCommand;
+use MultiFlexi\Cli\Command\UserCompany\UnassignCommand as UserCompanyUnassignCommand;
+use MultiFlexi\Cli\Command\UserRole\SetCommand as UserRoleSetCommand;
 use MultiFlexi\Cli\Command\UserErasure\ApproveCommand as UserErasureApproveCommand;
 use MultiFlexi\Cli\Command\UserErasure\AuditCommand as UserErasureAuditCommand;
 use MultiFlexi\Cli\Command\UserErasure\CleanupCommand as UserErasureCleanupCommand;
@@ -113,13 +121,14 @@ use MultiFlexi\Cli\Command\UserErasure\ProcessCommand as UserErasureProcessComma
 use MultiFlexi\Cli\Command\UserErasure\RejectCommand as UserErasureRejectCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\CompleteCommand;
-use Symfony\Component\Console\Input\InputOption;
 
 $globalOptions = getopt('e::', ['environment::']);
 
+$defaultEnv = \Phar::running() ? '/etc/multiflexi/multiflexi.env' : __DIR__.'/../.env';
+
 Shared::init(
     ['DB_CONNECTION', 'DB_HOST', 'DB_PORT', 'DB_DATABASE', 'DB_USERNAME', 'DB_PASSWORD'],
-    \array_key_exists('environment', $globalOptions) ? $globalOptions['environment'] : (\array_key_exists('e', $globalOptions) ? $globalOptions['e'] : __DIR__ . '/../.env'),
+    \array_key_exists('environment', $globalOptions) ? $globalOptions['environment'] : (\array_key_exists('e', $globalOptions) ? $globalOptions['e'] : $defaultEnv),
 );
 
 $loggers = ['syslog', '\MultiFlexi\LogToSQL'];
@@ -167,6 +176,8 @@ $application->add(new CompanyRemoveCommand());
 
 // CompanyApp
 $application->add(new CompanyAppListCommand());
+$application->add(new CompanyAppAssignCommand());
+$application->add(new CompanyAppUnassignCommand());
 
 // Credential
 $application->add(new CredentialListCommand());
@@ -235,6 +246,9 @@ $application->add(new RunTemplateCreateCommand());
 $application->add(new RunTemplateUpdateCommand());
 $application->add(new RunTemplateDeleteCommand());
 $application->add(new RunTemplateScheduleCommand());
+$application->add(new RunTemplateAssignCredentialCommand());
+$application->add(new RunTemplateUnassignCredentialCommand());
+$application->add(new RunTemplateListCredentialsCommand());
 
 // Token
 $application->add(new TokenListCommand());
@@ -250,6 +264,13 @@ $application->add(new UserGetCommand());
 $application->add(new UserCreateCommand());
 $application->add(new UserUpdateCommand());
 $application->add(new UserDeleteCommand());
+
+// User Company Assignment
+$application->add(new UserCompanyAssignCommand());
+$application->add(new UserCompanyUnassignCommand());
+
+// User RBAC Roles
+$application->add(new UserRoleSetCommand());
 
 // User Erasure (GDPR)
 $application->add(new UserErasureListCommand());
@@ -267,6 +288,4 @@ $application->add(new PruneCommand());
 $application->add(new TelemetryTestCommand());
 $application->add(new CompleteCommand());
 
-$application->getDefinition()->addOption(new InputOption('fields', null, InputOption::VALUE_OPTIONAL, 'Comma-separated list of fields to display'));
-$application->getDefinition()->addOption(new InputOption('offset', null, InputOption::VALUE_OPTIONAL, 'Number of records to skip for list action'));
 $application->run();

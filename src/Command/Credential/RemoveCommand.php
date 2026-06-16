@@ -28,6 +28,7 @@ class RemoveCommand extends MultiFlexiCommand
     protected function configure(): void
     {
         $this
+            ->setName('credential:remove')
             ->setDescription('Remove a credential')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('id', null, InputOption::VALUE_REQUIRED, 'Credential ID');

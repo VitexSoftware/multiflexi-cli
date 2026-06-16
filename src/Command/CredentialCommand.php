@@ -49,6 +49,8 @@ class CredentialCommand extends MultiFlexiCommand
             ->addOption('credential-type-id', null, InputOption::VALUE_REQUIRED, 'Credential Type ID')
             ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit number of results for list action')
             ->addOption('order', null, InputOption::VALUE_REQUIRED, 'Sort order for list action: A (ascending) or D (descending)')
+            ->addOption('offset', null, InputOption::VALUE_REQUIRED, 'Offset for pagination')
+            ->addOption('fields', null, InputOption::VALUE_REQUIRED, 'Comma-separated list of fields to display')
             ->setHelp('This command manages credentials. Use create action to create a new credential based on a credential type.');
     }
 

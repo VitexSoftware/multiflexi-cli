@@ -27,11 +27,15 @@ class ListCommand extends BaseCommand
     protected function configure(): void
     {
         $this
+            ->setName('run-template:list')
             ->setDescription('List run templates')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('company', null, InputOption::VALUE_REQUIRED, 'Filter by company slug or ID')
+            ->addOption('company_id', null, InputOption::VALUE_REQUIRED, 'Filter by company ID (numeric)')
             ->addOption('app_uuid', null, InputOption::VALUE_REQUIRED, 'Filter by application UUID')
             ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit number of results')
+            ->addOption('offset', null, InputOption::VALUE_REQUIRED, 'Offset for results')
+            ->addOption('fields', null, InputOption::VALUE_REQUIRED, 'Comma-separated list of fields to include in output')
             ->addOption('order', null, InputOption::VALUE_REQUIRED, 'Sort order: A (ascending) or D (descending)');
     }
 
@@ -42,8 +46,11 @@ class ListCommand extends BaseCommand
         $query = $rt->listingQuery();
 
         $companyOption = $input->getOption('company');
+        $companyIdOption = $input->getOption('company_id');
 
-        if ($companyOption) {
+        if ($companyIdOption !== null) {
+            $query->where('runtemplate.company_id', (int) $companyIdOption);
+        } elseif ($companyOption) {
             $query->join('company ON company.id = runtemplate.company_id');
 
             if (is_numeric($companyOption)) {
@@ -53,10 +60,12 @@ class ListCommand extends BaseCommand
             }
         }
 
+        $query->leftJoin('apps ON apps.id = runtemplate.app_id');
+        $query->select('apps.uuid AS app_uuid');
+
         $appUuid = $input->getOption('app_uuid');
 
         if ($appUuid) {
-            $query->join('apps ON apps.id = runtemplate.app_id');
             $query->where('apps.uuid', $appUuid);
         }
 

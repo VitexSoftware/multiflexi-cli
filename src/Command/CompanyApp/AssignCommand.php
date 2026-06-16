@@ -1,0 +1,123 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * This file is part of the MultiFlexi package
+ *
+ * https://multiflexi.eu/
+ *
+ * (c) Vítězslav Dvořák <http://vitexsoftware.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace MultiFlexi\Cli\Command\CompanyApp;
+
+use MultiFlexi\Application;
+use MultiFlexi\Cli\Command\MultiFlexiCommand;
+use MultiFlexi\Company;
+use MultiFlexi\CompanyApp;
+use MultiFlexi\RunTemplate;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
+
+class AssignCommand extends MultiFlexiCommand
+{
+    protected static $defaultName = 'company-app:assign';
+
+    protected function configure(): void
+    {
+        $this
+            ->setName('company-app:assign')
+            ->setDescription('Assign an application to a company and create a default RunTemplate')
+            ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
+            ->addOption('company_id', null, InputOption::VALUE_REQUIRED, 'Company ID')
+            ->addOption('app_id', null, InputOption::VALUE_REQUIRED, 'Application ID')
+            ->addOption('app_uuid', null, InputOption::VALUE_REQUIRED, 'Application UUID');
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        $format = strtolower($input->getOption('format'));
+        $companyId = $input->getOption('company_id');
+        $appId = $input->getOption('app_id');
+        $appUuid = $input->getOption('app_uuid');
+
+        if (!empty($appUuid) && empty($appId)) {
+            $found = (new Application())->listingQuery()->where(['uuid' => $appUuid])->fetch();
+
+            if (!$found) {
+                $msg = 'No application found with given UUID';
+                $format === 'json'
+                    ? $output->writeln(json_encode(['status' => 'error', 'message' => $msg], \JSON_PRETTY_PRINT))
+                    : $output->writeln("<error>{$msg}</error>");
+
+                return self::FAILURE;
+            }
+
+            $appId = $found['id'];
+        }
+
+        if (empty($companyId) || empty($appId)) {
+            $msg = '--company_id and either --app_id or --app_uuid are required.';
+            $format === 'json'
+                ? $output->writeln(json_encode(['status' => 'error', 'message' => $msg], \JSON_PRETTY_PRINT))
+                : $output->writeln("<error>{$msg}</error>");
+
+            return self::FAILURE;
+        }
+
+        $company = new Company((int) $companyId);
+
+        if (empty($company->getData())) {
+            $msg = "Company ID {$companyId} not found.";
+            $format === 'json'
+                ? $output->writeln(json_encode(['status' => 'error', 'message' => $msg], \JSON_PRETTY_PRINT))
+                : $output->writeln("<error>{$msg}</error>");
+
+            return self::FAILURE;
+        }
+
+        $existing = (new CompanyApp())->listingQuery()
+            ->where(['company_id' => $companyId, 'app_id' => $appId])
+            ->fetch();
+
+        if ($existing) {
+            $result = ['status' => 'ok', 'message' => 'Already assigned', 'company_id' => (int) $companyId, 'app_id' => (int) $appId];
+            $format === 'json'
+                ? $output->writeln(json_encode($result, \JSON_PRETTY_PRINT))
+                : $output->writeln("Application {$appId} already assigned to company {$companyId}");
+
+            return self::SUCCESS;
+        }
+
+        $companyApp = new CompanyApp();
+        $companyApp->insertToSQL(['company_id' => (int) $companyId, 'app_id' => (int) $appId]);
+
+        $allApps = (new Application())->listingQuery()->select(['id', 'name'], true)->fetchAll('id');
+        $appName = isset($allApps[$appId]) ? $allApps[$appId]['name'] : (string) $appId;
+
+        $runTemplate = new RunTemplate();
+        $runTemplate->setDataValue('app_id', (int) $appId);
+        $runTemplate->setDataValue('company_id', (int) $companyId);
+        $runTemplate->setDataValue('interv', 'n');
+        $runTemplate->setDataValue('name', $appName);
+        $rtId = $runTemplate->insertToSQL();
+
+        $result = [
+            'status' => 'success',
+            'message' => 'Application assigned to company',
+            'company_id' => (int) $companyId,
+            'app_id' => (int) $appId,
+            'runtemplate_id' => $rtId,
+        ];
+        $format === 'json'
+            ? $output->writeln(json_encode($result, \JSON_PRETTY_PRINT))
+            : $output->writeln("Application {$appId} ({$appName}) assigned to company {$companyId}, RunTemplate {$rtId} created.");
+
+        return self::SUCCESS;
+    }
+}

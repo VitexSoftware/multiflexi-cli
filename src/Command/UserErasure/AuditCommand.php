@@ -28,6 +28,7 @@ class AuditCommand extends Command
     protected function configure(): void
     {
         $this
+            ->setName('user-erasure:audit')
             ->setDescription('Show audit trail for a GDPR user data erasure request')
             ->addOption('request-id', 'r', InputOption::VALUE_REQUIRED, 'Deletion request ID')
             ->addOption('export-audit', 'e', InputOption::VALUE_OPTIONAL, 'Export audit trail to file');

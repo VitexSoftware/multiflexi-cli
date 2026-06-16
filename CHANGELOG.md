@@ -7,6 +7,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.5.6] - 2026-06-06
+
+### Added
+- `user-company:assign --company_id <id> (--user_id <id> | --login <login> | --email <email>) [--role <role>]` - assign a user to a company with an optional company-scoped role
+- `user-company:unassign --company_id <id> (--user_id <id> | --login <login> | --email <email>)` - remove a user-company assignment
+- `user-role:set (--user_id <id> | --login <login> | --email <email>) --roles <role1,role2,...> [--replace] [--assigned_by <id>]` - assign RBAC roles by role name
+
+### Changed
+- Updated command documentation in `README.md`, `doc/multiflexi-cli.rst`, and `debian/multiflexi-cli.1`
+- Added command metadata tests in `tests/src/Command/UserAccessCommandsTest.php`
+
+## [2.5.5] - 2026-05-28
+
+### Fixed
+- `run-template:assign-credential`, `run-template:unassign-credential`, and `run-template:list-credentials` now use `--id` (not `--runtemplate_id`) for the RunTemplate ID, consistent with all other `run-template:*` commands
+
+## [2.5.4] - 2026-05-26
+
+### Added
+- `run-template:assign-credential --id <id> --credential_id <cid>` — assign a credential to a run template
+- `run-template:unassign-credential --id <id> --credential_id <cid>` — remove a credential assignment from a run template
+- `run-template:list-credentials --id <id>` — list credentials assigned to a run template
+
+## [2.5.3] - 2026-05-20
+
+### Added
+- `--env KEY=VALUE` option to `run-template:schedule` for one-time environment variable overrides that are passed to the scheduled job but never saved back to the run-template settings
+
+### Removed
+- Legacy unified `runtemplate <action>` command (`RunTemplateCommand`) — use the dedicated `run-template:*` subcommands instead
+
+### Changed
+- `company-app:list` no longer requires `--company_id` / `--app_id`; all filters are now optional and listing works without any arguments
+- `company-app:list` output limited to meaningful fields: runtemplate `id`, company (`id`, `name`, `slug`), app (`id`, `name`, `uuid`)
+
 ### Fixed
 - Fixed `--file` option usage in ApplicationCommand for JSON operations
   - Changed from `--json` to `--file` for: `import-json`, `export-json`, `remove-json`, `validate-json` actions
@@ -22,3 +57,13 @@ multiflexi-cli application export-json --id=123 --file=output.json
 multiflexi-cli application validate-json --file=app.json
 multiflexi-cli application remove-json --file=app.json
 ```
+
+## [2.5.1] - 2026-04-24
+
+### Added
+- `--offset` pagination support to all list commands
+- `--fields` filter support to all list commands that were missing it
+- `companyapp assign` action: assigns an application to a company and creates a default RunTemplate
+- `companyapp unassign` action: removes RunTemplate configs and the company-app relation
+- `--slug` option to `company update` action
+- `--class` option to `credential-type update` action

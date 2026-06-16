@@ -28,11 +28,13 @@ class GetCommand extends MultiFlexiCommand
     protected function configure(): void
     {
         $this
+            ->setName('application:get')
             ->setDescription('Get an application by id, uuid, or name')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('id', null, InputOption::VALUE_REQUIRED, 'Application ID')
             ->addOption('uuid', null, InputOption::VALUE_REQUIRED, 'Application UUID')
-            ->addOption('name', null, InputOption::VALUE_REQUIRED, 'Application name');
+            ->addOption('name', null, InputOption::VALUE_REQUIRED, 'Application name')
+            ->addOption('fields', null, InputOption::VALUE_OPTIONAL, 'Comma-separated list of fields to display');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

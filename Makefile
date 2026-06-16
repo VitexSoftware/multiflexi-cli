@@ -61,3 +61,14 @@ reset:
 	git fetch origin
 	git reset --hard origin/$(git rev-parse --abbrev-ref HEAD)
 
+.PHONY: phar
+phar: ## Build standalone multiflexi.phar executable via phar-composer
+	$(eval BUILDDIR := $(shell mktemp -d))
+	cp composer.json composer.lock $(BUILDDIR)/
+	cp -r src $(BUILDDIR)/
+	cd $(BUILDDIR) && composer install --no-dev --prefer-dist --no-interaction
+	php -d phar.readonly=0 /usr/bin/phar-composer build $(BUILDDIR) $(CURDIR)/multiflexi.phar
+	chmod +x multiflexi.phar
+	rm -rf $(BUILDDIR)
+	@echo "Built: $(CURDIR)/multiflexi.phar"
+

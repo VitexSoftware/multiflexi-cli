@@ -30,6 +30,7 @@ class ApproveCommand extends Command
     protected function configure(): void
     {
         $this
+            ->setName('user-erasure:approve')
             ->setDescription('Approve a GDPR user data erasure request')
             ->addOption('request-id', 'r', InputOption::VALUE_REQUIRED, 'Deletion request ID')
             ->addOption('notes', null, InputOption::VALUE_REQUIRED, 'Review notes')

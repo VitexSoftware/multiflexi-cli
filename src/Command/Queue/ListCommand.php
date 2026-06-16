@@ -24,16 +24,18 @@ use Symfony\Component\Console\Output\OutputInterface;
 class ListCommand extends MultiFlexiCommand
 {
     protected static $defaultName = 'queue:list';
-
     private ?string $postSortField = null;
     private ?string $postSortDirection = null;
 
     protected function configure(): void
     {
         $this
+            ->setName('queue:list')
             ->setDescription('List queued jobs')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit number of results')
+            ->addOption('offset', null, InputOption::VALUE_REQUIRED, 'Offset for results')
+            ->addOption('fields', null, InputOption::VALUE_REQUIRED, 'Comma-separated list of fields to include in output')
             ->addOption('order', null, InputOption::VALUE_REQUIRED, 'Sort field: after|id|job|schedule_type|runtemplate_id|runtemplate_name|app_id|app_name|company_id|company_name')
             ->addOption('direction', null, InputOption::VALUE_REQUIRED, 'Sort direction: ASC or DESC (default: ASC)');
     }

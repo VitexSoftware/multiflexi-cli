@@ -30,6 +30,7 @@ class CreateCommand extends MultiFlexiCommand
     protected function configure(): void
     {
         $this
+            ->setName('credential:create')
             ->setDescription('Create a credential')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('name', null, InputOption::VALUE_REQUIRED, 'Credential name')

@@ -27,6 +27,7 @@ class GetCommand extends BaseCommand
     protected function configure(): void
     {
         $this
+            ->setName('credential-prototype:get')
             ->setDescription('Get a credential prototype by id, uuid, or code')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('id', null, InputOption::VALUE_REQUIRED, 'Credential Prototype ID')

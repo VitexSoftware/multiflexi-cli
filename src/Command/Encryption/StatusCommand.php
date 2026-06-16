@@ -26,6 +26,7 @@ class StatusCommand extends BaseCommand
     protected function configure(): void
     {
         $this
+            ->setName('encryption:status')
             ->setDescription('Show encryption key status')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text');
     }

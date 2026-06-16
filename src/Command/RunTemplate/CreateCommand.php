@@ -27,6 +27,7 @@ class CreateCommand extends BaseCommand
     protected function configure(): void
     {
         $this
+            ->setName('run-template:create')
             ->setDescription('Create a run template')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('name', null, InputOption::VALUE_REQUIRED, 'Name')

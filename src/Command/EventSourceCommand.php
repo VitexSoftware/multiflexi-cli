@@ -50,6 +50,8 @@ class EventSourceCommand extends MultiFlexiCommand
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'The output format: text or json. Defaults to text.', 'text')
             ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit number of results for list action')
             ->addOption('order', null, InputOption::VALUE_REQUIRED, 'Sort order for list action: A (ascending) or D (descending)')
+            ->addOption('offset', null, InputOption::VALUE_REQUIRED, 'Offset for pagination')
+            ->addOption('fields', null, InputOption::VALUE_REQUIRED, 'Comma-separated list of fields to display')
             ->setHelp('This command manages Event Sources (webhook adapter database connections)');
     }
 
@@ -100,7 +102,6 @@ class EventSourceCommand extends MultiFlexiCommand
                 }
 
                 return MultiFlexiCommand::SUCCESS;
-
             case 'get':
                 $id = $input->getOption('id');
 
@@ -122,7 +123,6 @@ class EventSourceCommand extends MultiFlexiCommand
                 }
 
                 return MultiFlexiCommand::SUCCESS;
-
             case 'create':
                 $name = $input->getOption('name');
 
@@ -161,7 +161,6 @@ class EventSourceCommand extends MultiFlexiCommand
                 $output->writeln('<error>Failed to create Event Source</error>');
 
                 return MultiFlexiCommand::FAILURE;
-
             case 'update':
                 $id = $input->getOption('id');
 
@@ -197,7 +196,6 @@ class EventSourceCommand extends MultiFlexiCommand
                 }
 
                 return MultiFlexiCommand::SUCCESS;
-
             case 'remove':
                 $id = $input->getOption('id');
 
@@ -222,7 +220,6 @@ class EventSourceCommand extends MultiFlexiCommand
                 $output->writeln('<error>Failed to remove Event Source</error>');
 
                 return MultiFlexiCommand::FAILURE;
-
             case 'test':
                 $id = $input->getOption('id');
 

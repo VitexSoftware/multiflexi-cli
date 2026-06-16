@@ -30,6 +30,7 @@ class ProcessCommand extends Command
     protected function configure(): void
     {
         $this
+            ->setName('user-erasure:process')
             ->setDescription('Process an approved GDPR user data erasure request')
             ->addOption('request-id', 'r', InputOption::VALUE_REQUIRED, 'Deletion request ID');
     }

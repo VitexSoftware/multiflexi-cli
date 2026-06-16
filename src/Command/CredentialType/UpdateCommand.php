@@ -27,11 +27,13 @@ class UpdateCommand extends BaseCommand
     protected function configure(): void
     {
         $this
+            ->setName('credential-type:update')
             ->setDescription('Update a credential type')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('id', null, InputOption::VALUE_REQUIRED, 'Credential Type ID')
             ->addOption('uuid', null, InputOption::VALUE_REQUIRED, 'Credential Type UUID')
-            ->addOption('name', null, InputOption::VALUE_REQUIRED, 'Name');
+            ->addOption('name', null, InputOption::VALUE_REQUIRED, 'Name')
+            ->addOption('class', null, InputOption::VALUE_REQUIRED, 'Class');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -46,6 +48,8 @@ class UpdateCommand extends BaseCommand
             return self::FAILURE;
         }
 
+        $whereCondition = [];
+
         if (!empty($uuid)) {
             $found = (new CredentialType())->listingQuery()->where(['uuid' => $uuid])->fetch();
 
@@ -56,13 +60,19 @@ class UpdateCommand extends BaseCommand
             }
 
             $id = $found['id'];
+            $whereCondition = ['uuid' => $uuid];
+        } else {
+            $whereCondition = ['id' => (int) $id];
         }
 
         $data = [];
-        $name = $input->getOption('name');
 
-        if ($name !== null) {
-            $data['name'] = $name;
+        foreach (['name', 'class'] as $field) {
+            $val = $input->getOption($field);
+
+            if ($val !== null) {
+                $data[$field] = $val;
+            }
         }
 
         if (empty($data)) {
@@ -72,7 +82,7 @@ class UpdateCommand extends BaseCommand
         }
 
         $credType = new CredentialType((int) $id);
-        $credType->updateToSQL($data, ['id' => $id]);
+        $credType->updateToSQL($data, $whereCondition);
 
         if ($format === 'json') {
             $output->writeln(json_encode(['updated' => true], \JSON_PRETTY_PRINT));

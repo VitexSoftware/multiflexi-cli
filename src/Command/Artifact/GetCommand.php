@@ -28,9 +28,11 @@ class GetCommand extends MultiFlexiCommand
     protected function configure(): void
     {
         $this
+            ->setName('artifact:get')
             ->setDescription('Get an artifact by ID')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
-            ->addOption('id', null, InputOption::VALUE_REQUIRED, 'Artifact ID');
+            ->addOption('id', null, InputOption::VALUE_REQUIRED, 'Artifact ID')
+            ->addOption('fields', null, InputOption::VALUE_OPTIONAL, 'Comma-separated list of fields to display');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

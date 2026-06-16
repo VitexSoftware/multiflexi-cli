@@ -28,6 +28,7 @@ class GenerateCommand extends MultiFlexiCommand
     protected function configure(): void
     {
         $this
+            ->setName('token:generate')
             ->setDescription('Generate a new token for a user')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('user', null, InputOption::VALUE_REQUIRED, 'User ID');

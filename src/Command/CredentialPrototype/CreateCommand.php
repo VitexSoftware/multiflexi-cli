@@ -27,6 +27,7 @@ class CreateCommand extends BaseCommand
     protected function configure(): void
     {
         $this
+            ->setName('credential-prototype:create')
             ->setDescription('Create a credential prototype')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('code', null, InputOption::VALUE_REQUIRED, 'Code')

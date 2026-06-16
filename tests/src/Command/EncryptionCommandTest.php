@@ -55,10 +55,7 @@ class EncryptionCommandTest extends TestCase
         $output = $this->commandTester->getDisplay();
 
         // Should contain either success output or error message
-        $this->assertTrue(
-            str_contains($output, 'Encryption Status')
-            || str_contains($output, 'Failed to retrieve encryption status'),
-        );
+        $this->assertTrue(str_contains($output, 'Encryption Status') || str_contains($output, 'Failed to retrieve encryption status'));
     }
 
     /**

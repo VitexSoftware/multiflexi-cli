@@ -42,10 +42,15 @@ abstract class BaseCommand extends MultiFlexiCommand
 
     protected function parseConfigOptions(InputInterface $input): array
     {
-        $configs = $input->getOption('config') ?? [];
+        return $this->parseOptions($input, 'config');
+    }
+
+    protected function parseOptions(InputInterface $input, string $optionName): array
+    {
+        $items = $input->hasOption($optionName) ? ($input->getOption($optionName) ?? []) : [];
         $result = [];
 
-        foreach ($configs as $item) {
+        foreach ($items as $item) {
             if (str_contains($item, '=')) {
                 [$key, $value] = explode('=', $item, 2);
                 $result[$key] = $value;
@@ -57,10 +62,13 @@ abstract class BaseCommand extends MultiFlexiCommand
 
     protected function buildOverridedEnv(InputInterface $input): ConfigFields
     {
-        $overrideEnv = $this->parseConfigOptions($input);
         $overridedEnv = new ConfigFields('CommandlineOverride');
 
-        foreach ($overrideEnv as $key => $value) {
+        foreach ($this->parseOptions($input, 'config') as $key => $value) {
+            $overridedEnv->addField(new ConfigField($key, 'string', $key, '', '', $value));
+        }
+
+        foreach ($this->parseOptions($input, 'env') as $key => $value) {
             $overridedEnv->addField(new ConfigField($key, 'string', $key, '', '', $value));
         }
 

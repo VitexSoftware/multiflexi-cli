@@ -47,6 +47,8 @@ class EventRuleCommand extends MultiFlexiCommand
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'The output format: text or json. Defaults to text.', 'text')
             ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit number of results for list action')
             ->addOption('order', null, InputOption::VALUE_REQUIRED, 'Sort order for list action: A (ascending) or D (descending)')
+            ->addOption('offset', null, InputOption::VALUE_REQUIRED, 'Offset for pagination')
+            ->addOption('fields', null, InputOption::VALUE_REQUIRED, 'Comma-separated list of fields to display')
             ->setHelp('This command manages Event Rules (event-to-RunTemplate mappings)');
     }
 
@@ -103,7 +105,6 @@ class EventRuleCommand extends MultiFlexiCommand
                 }
 
                 return MultiFlexiCommand::SUCCESS;
-
             case 'get':
                 $id = $input->getOption('id');
 
@@ -125,7 +126,6 @@ class EventRuleCommand extends MultiFlexiCommand
                 }
 
                 return MultiFlexiCommand::SUCCESS;
-
             case 'create':
                 $sourceId = $input->getOption('event_source_id');
                 $runtemplateId = $input->getOption('runtemplate_id');
@@ -170,7 +170,6 @@ class EventRuleCommand extends MultiFlexiCommand
                 $output->writeln('<error>Failed to create Event Rule</error>');
 
                 return MultiFlexiCommand::FAILURE;
-
             case 'update':
                 $id = $input->getOption('id');
 
@@ -212,7 +211,6 @@ class EventRuleCommand extends MultiFlexiCommand
                 }
 
                 return MultiFlexiCommand::SUCCESS;
-
             case 'remove':
                 $id = $input->getOption('id');
 

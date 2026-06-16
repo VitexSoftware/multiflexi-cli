@@ -28,6 +28,7 @@ class CreateCommand extends MultiFlexiCommand
     protected function configure(): void
     {
         $this
+            ->setName('user:create')
             ->setDescription('Create a user')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('login', null, InputOption::VALUE_REQUIRED, 'Login')
@@ -62,6 +63,10 @@ class CreateCommand extends MultiFlexiCommand
             $output->writeln('<error>Missing --email</error>');
 
             return self::FAILURE;
+        }
+
+        if (!isset($data['enabled'])) {
+            $data['enabled'] = true;
         }
 
         $plaintextPassword = $input->getOption('plaintext');

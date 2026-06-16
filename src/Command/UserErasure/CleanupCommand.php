@@ -26,7 +26,7 @@ class CleanupCommand extends Command
 
     protected function configure(): void
     {
-        $this->setDescription('Clean up old GDPR audit logs (7-year retention)');
+        $this->setName('user-erasure:cleanup')->setDescription('Clean up old GDPR audit logs (7-year retention)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
