@@ -116,9 +116,29 @@ class ListCommand extends MultiFlexiCommand
         unset($jobData);
 
         $fields = $input->getOption('fields');
+        $fieldList = !empty($fields) ? array_map('trim', explode(',', $fields)) : [];
 
-        if (!empty($fields)) {
-            $fieldList = array_map('trim', explode(',', $fields));
+        // Hydrate stdout/stderr from job_output_lines when explicitly requested
+        $needsStdout = empty($fieldList) ? false : \in_array('stdout', $fieldList, true);
+        $needsStderr = empty($fieldList) ? false : \in_array('stderr', $fieldList, true);
+
+        if ($needsStdout || $needsStderr) {
+            foreach ($jobs as &$jobRow) {
+                $jobObj = new Job((int) $jobRow['id']);
+
+                if ($needsStdout) {
+                    $jobRow['stdout'] = $jobObj->getOutput();
+                }
+
+                if ($needsStderr) {
+                    $jobRow['stderr'] = $jobObj->getErrorOutput();
+                }
+            }
+
+            unset($jobObj);
+        }
+
+        if (!empty($fieldList)) {
             $jobs = array_map(static fn ($job) => array_intersect_key($job, array_flip($fieldList)), $jobs);
         }
 

@@ -52,12 +52,22 @@ class GetCommand extends MultiFlexiCommand
 
         $job = new Job((int) $id);
         $fields = $input->getOption('fields');
+        $fieldsArray = $fields ? array_map('trim', explode(',', $fields)) : [];
 
-        if ($fields) {
-            $fieldsArray = explode(',', $fields);
-            $data = array_filter($job->getData(), static fn ($key) => \in_array($key, $fieldsArray, true), \ARRAY_FILTER_USE_KEY);
-        } else {
-            $data = $job->getData();
+        // Base data from the DB row (no longer contains stdout/stderr columns)
+        $data = $job->getData();
+
+        // Always inject stdout/stderr from job_output_lines so callers get the full picture
+        if (empty($fieldsArray) || \in_array('stdout', $fieldsArray, true)) {
+            $data['stdout'] = $job->getOutput();
+        }
+
+        if (empty($fieldsArray) || \in_array('stderr', $fieldsArray, true)) {
+            $data['stderr'] = $job->getErrorOutput();
+        }
+
+        if ($fieldsArray) {
+            $data = array_filter($data, static fn ($key) => \in_array($key, $fieldsArray, true), \ARRAY_FILTER_USE_KEY);
         }
 
         if ($format === 'json') {
