@@ -97,6 +97,9 @@ use MultiFlexi\Cli\Command\RunTemplate\ScheduleCommand as RunTemplateScheduleCom
 use MultiFlexi\Cli\Command\RunTemplate\UnassignCredentialCommand as RunTemplateUnassignCredentialCommand;
 use MultiFlexi\Cli\Command\RunTemplate\UpdateCommand as RunTemplateUpdateCommand;
 use MultiFlexi\Cli\Command\StatusCommand;
+use MultiFlexi\Cli\Command\Task\GetCommand as TaskGetCommand;
+use MultiFlexi\Cli\Command\Task\ListCommand as TaskListCommand;
+use MultiFlexi\Cli\Command\Task\StatusCommand as TaskStatusCommand;
 use MultiFlexi\Cli\Command\TelemetryTestCommand;
 use MultiFlexi\Cli\Command\Token\CreateCommand as TokenCreateCommand;
 use MultiFlexi\Cli\Command\Token\DeleteCommand as TokenDeleteCommand;
@@ -249,6 +252,11 @@ $application->add(new RunTemplateScheduleCommand());
 $application->add(new RunTemplateAssignCredentialCommand());
 $application->add(new RunTemplateUnassignCredentialCommand());
 $application->add(new RunTemplateListCredentialsCommand());
+
+// Task
+$application->add(new TaskStatusCommand());
+$application->add(new TaskListCommand());
+$application->add(new TaskGetCommand());
 
 // Token
 $application->add(new TokenListCommand());

@@ -331,6 +331,37 @@ Examples:
     multiflexi-cli job:update --id=123 --executor=Native
     multiflexi-cli job:delete --id=123
 
+task
+----
+
+Inspect tasks — the scheduling-window obligation units produced by RunTemplates. Each task
+tracks whether a periodic run was fulfilled on time, fulfilled late, failed, or missed.
+
+Options:
+  --id               Task ID (``task:get`` only)
+  --runtemplate_id   Filter by RunTemplate ID (``task:list`` only)
+  --state            Filter by state: ``open``, ``running``, ``fulfilled``, ``fulfilled_late``, ``failed``, ``missed``
+  --with-jobs        Include the list of job attempts in the output (``task:get`` only)
+  --limit            Limit number of results
+  --offset           Offset for pagination
+  --order            Sort order: A (ascending) or D (descending)
+  --fields           Comma-separated list of fields to include in output
+  -f, --format       Output format: text or json (default: text)
+
+Examples:
+
+.. code-block:: bash
+
+    multiflexi-cli task:list
+    multiflexi-cli task:list --runtemplate_id=5
+    multiflexi-cli task:list --state=failed --format=json
+    multiflexi-cli task:list --state=open --limit=20 --order=D
+    multiflexi-cli task:get --id=42
+    multiflexi-cli task:get --id=42 --with-jobs
+    multiflexi-cli task:get --id=42 --format=json
+    multiflexi-cli task:status
+    multiflexi-cli task:status --format=json
+
 run-template
 ------------
 
@@ -357,6 +388,13 @@ Common options:
   --active       Active
   --config       Config key=value, saved persistently to run-template (repeatable, used with create/update)
   -f, --format   Output format: text or json (default: text)
+
+Task SLA options (create/update):
+  --deadline_offset  Deadline offset from window start: ``+3h``, ``+30m``, or absolute time-of-day ``08:00`` (default: window end)
+  --max_attempts     Maximum job attempts per task window (default: 1)
+  --retry_backoff    Retry backoff strategy: ``none``, ``fixed``, ``linear``, ``exponential`` (default: none)
+  --retry_min_gap    Minimum seconds between retry attempts (default: 0)
+  --allow_late       Count a post-deadline success as ``fulfilled_late``: ``true`` or ``false`` (default: false)
 
 Schedule-specific options:
   --env          One-time environment override key=value — passed to the job but NOT saved to run-template (repeatable)

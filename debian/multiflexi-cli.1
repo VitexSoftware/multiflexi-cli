@@ -32,6 +32,8 @@ Options: --id, --uuid, --format
 Manage run templates.
 .RS
 Options: --id, --name, --app_id, --company_id, --interv, --active, --config, --format
+.br
+Task SLA options (create/update): --deadline_offset, --max_attempts, --retry_backoff (none|fixed|linear|exponential), --retry_min_gap, --allow_late
 .RE
 .TP
 .B run-template:schedule
@@ -72,6 +74,24 @@ Options: --id, --runtemplate_id, --scheduled, --executor, --schedule_type, --app
 Show job status aggregation.
 .RS
 Options: --id, --format
+.RE
+.TP
+.B task:list
+List tasks (scheduling window obligations produced by RunTemplates).
+.RS
+Options: --runtemplate_id, --state (open|running|fulfilled|fulfilled_late|failed|missed), --limit, --offset, --order, --fields, --format
+.RE
+.TP
+.B task:get
+Get a task by ID.
+.RS
+Options: --id, --with-jobs (include job attempts), --fields, --format
+.RE
+.TP
+.B task:status
+Show aggregate task counts by state.
+.RS
+Options: --format
 .RE
 .TP
 .B user:list / user:get / user:create / user:update / user:delete

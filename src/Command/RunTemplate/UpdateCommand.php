@@ -39,7 +39,12 @@ class UpdateCommand extends BaseCommand
             ->addOption('cron', null, InputOption::VALUE_OPTIONAL, 'Crontab expression')
             ->addOption('active', null, InputOption::VALUE_REQUIRED, 'Active')
             ->addOption('executor', null, InputOption::VALUE_REQUIRED, 'Executor')
-            ->addOption('config', null, InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Config key=value (repeatable)');
+            ->addOption('config', null, InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Config key=value (repeatable)')
+            ->addOption('deadline_offset', null, InputOption::VALUE_REQUIRED, 'Task deadline offset from window start: "+3h" or absolute time "08:00" (null = window end)')
+            ->addOption('max_attempts', null, InputOption::VALUE_REQUIRED, 'Maximum job attempts per task window (default: 1)')
+            ->addOption('retry_backoff', null, InputOption::VALUE_REQUIRED, 'Retry backoff strategy: none, fixed, linear, exponential (default: none)')
+            ->addOption('retry_min_gap', null, InputOption::VALUE_REQUIRED, 'Minimum seconds between retry attempts (default: 0)')
+            ->addOption('allow_late', null, InputOption::VALUE_REQUIRED, 'Allow fulfilled_late state for post-deadline successes: true or false (default: false)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -56,7 +61,7 @@ class UpdateCommand extends BaseCommand
         $rt = new RunTemplate((int) $id);
         $data = [];
 
-        foreach (['name', 'app_id', 'company_id', 'interv', 'cron', 'active', 'executor'] as $field) {
+        foreach (['name', 'app_id', 'company_id', 'interv', 'cron', 'active', 'executor', 'deadline_offset', 'max_attempts', 'retry_backoff', 'retry_min_gap', 'allow_late'] as $field) {
             $val = $input->getOption($field);
 
             if ($field === 'cron' && $val !== null && !$this->isValidCronExpression($val)) {
