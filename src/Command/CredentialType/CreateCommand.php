@@ -56,7 +56,7 @@ class CreateCommand extends BaseCommand
         }
 
         $credType = new CredentialType();
-        $data = ['company_id' => (int) $companyId, 'class' => $className, 'name' => $proto['name'] ?? $className, 'uuid' => $proto['uuid'] ?? null, 'version' => $proto['version'] ?? '1.0'];
+        $data = ['company_id' => (int) $companyId, 'prototype' => $className, 'name' => $proto['name'] ?? $className, 'uuid' => $proto['uuid'] ?? null, 'version' => (int) ($proto['version'] ?? 1)];
         $result = $credType->insertToSQL($data);
 
         if ($result) {

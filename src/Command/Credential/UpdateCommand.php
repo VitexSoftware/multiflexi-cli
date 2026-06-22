@@ -36,7 +36,8 @@ class UpdateCommand extends MultiFlexiCommand
             ->addOption('id', null, InputOption::VALUE_REQUIRED, 'Credential ID')
             ->addOption('name', null, InputOption::VALUE_REQUIRED, 'Credential name')
             ->addOption('company-id', null, InputOption::VALUE_REQUIRED, 'Company ID')
-            ->addOption('credential-type-id', null, InputOption::VALUE_REQUIRED, 'Credential Type ID');
+            ->addOption('credential-type-id', null, InputOption::VALUE_REQUIRED, 'Credential Type ID')
+            ->addOption('field', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Credential field as KEYWORD:VALUE (repeatable)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -89,11 +90,25 @@ class UpdateCommand extends MultiFlexiCommand
             $data['credential_type_id'] = (int) $credentialTypeId;
         }
 
+        foreach ($input->getOption('field') as $fieldArg) {
+            $colonPos = strpos($fieldArg, ':');
+
+            if ($colonPos === false) {
+                $format === 'json' ? $this->jsonError($output, "Invalid --field format, expected KEYWORD:VALUE: {$fieldArg}") : $output->writeln("<error>Invalid --field format, expected KEYWORD:VALUE: {$fieldArg}</error>");
+
+                return self::FAILURE;
+            }
+
+            $data[substr($fieldArg, 0, $colonPos)] = substr($fieldArg, $colonPos + 1);
+        }
+
         if (empty($data)) {
             $format === 'json' ? $this->jsonError($output, 'No fields to update') : $output->writeln('<error>No fields to update</error>');
 
             return self::FAILURE;
         }
+
+        $data['credential_type_id'] = $data['credential_type_id'] ?? $credential->getDataValue('credential_type_id');
 
         try {
             $credential->updateToSQL($data, ['id' => $id]);
