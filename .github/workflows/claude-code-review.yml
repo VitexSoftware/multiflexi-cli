@@ -12,11 +12,10 @@ on:
 
 jobs:
   claude-review:
-    # Optional: Filter by PR author
-    # if: |
-    #   github.event.pull_request.user.login == 'external-contributor' ||
-    #   github.event.pull_request.user.login == 'new-developer' ||
-    #   github.event.pull_request.author_association == 'FIRST_TIME_CONTRIBUTOR'
+    # Skip bot-authored PRs (e.g. Dependabot version bumps) — nothing for
+    # Claude to meaningfully review there, and the action refuses to run
+    # for non-human actors unless explicitly allow-listed.
+    if: github.event.pull_request.user.login != 'dependabot[bot]'
 
     runs-on: ubuntu-latest
     permissions:
