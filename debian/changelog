@@ -1,3 +1,12 @@
+multiflexi-cli (2.5.8) UNRELEASED; urgency=medium
+
+  * Add task:list command (filter by state, runtemplate, from/to, limit)
+  * Add task:get command (shows task details with embedded job history)
+  * Add open-telemetry/sdk and open-telemetry/exporter-otlp so
+    telemetry:test works standalone (was reporting "SDK not installed")
+
+ -- vitex <info@vitexsoftware.cz>  Sat, 14 Jun 2026 10:00:00 +0200
+
 multiflexi-cli (2.5.7) UNRELEASED; urgency=medium
 
   * Add user-company:assign command
