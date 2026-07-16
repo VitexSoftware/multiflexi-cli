@@ -61,7 +61,7 @@ class GetCommand extends BaseCommand
             $runtemplate = new RunTemplate((int) $row['id']);
         }
 
-        $fields = $input->getOption('fields');
+        $fields = $input->hasOption('fields') ? $input->getOption('fields') : null;
 
         if ($fields) {
             $fieldsArray = explode(',', $fields);
