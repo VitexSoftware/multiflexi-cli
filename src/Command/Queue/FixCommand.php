@@ -39,8 +39,11 @@ class FixCommand extends MultiFlexiCommand
         $scheduler = new Scheduler();
         $scheduler->cleanupOrphanedJobs();
         $scheduler->purgeBrokenQueueRecords();
-        $scheduler->initializeScheduling();
 
+        // Delete orphaned jobs (job rows with no matching schedule entry) before
+        // initializeScheduling() runs, so it correctly sees their runtemplates as
+        // missing a job and resets next_schedule instead of finding the
+        // soon-to-be-deleted orphan and leaving next_schedule stuck.
         $jobModel = new \MultiFlexi\Job();
         $orphanedJobs = $jobModel->listingQuery()
             ->where('job.begin IS NULL')
@@ -61,6 +64,8 @@ class FixCommand extends MultiFlexiCommand
                 'info',
             );
         }
+
+        $scheduler->initializeScheduling();
 
         $messages = [];
 

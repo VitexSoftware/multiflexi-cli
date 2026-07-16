@@ -456,10 +456,11 @@ class QueueCommand extends MultiFlexiCommand
                 $scheduler = new Scheduler();
                 $scheduler->cleanupOrphanedJobs();
                 $scheduler->purgeBrokenQueueRecords();
-                $scheduler->initializeScheduling();
 
-                // Delete orphaned jobs: jobs that haven't started, haven't finished,
-                // and have no corresponding entry in the schedule table.
+                // Delete orphaned jobs (job rows with no matching schedule entry) before
+                // initializeScheduling() runs, so it correctly sees their runtemplates as
+                // missing a job and resets next_schedule instead of finding the
+                // soon-to-be-deleted orphan and leaving next_schedule stuck.
                 // These jobs are stuck and will never execute.
                 $jobModel = new \MultiFlexi\Job();
                 $orphanedJobs = $jobModel->listingQuery()
@@ -481,6 +482,8 @@ class QueueCommand extends MultiFlexiCommand
                         'info',
                     );
                 }
+
+                $scheduler->initializeScheduling();
 
                 $messages = [];
 
