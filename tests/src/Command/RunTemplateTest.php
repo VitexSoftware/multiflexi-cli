@@ -16,6 +16,7 @@ declare(strict_types=1);
 namespace Test\MultiFlexi\Cli\Command;
 
 use MultiFlexi\Cli\Command\RunTemplate\AssignCredentialCommand;
+use MultiFlexi\Cli\Command\RunTemplate\GetCommand;
 use MultiFlexi\Cli\Command\RunTemplate\ListCredentialsCommand;
 use MultiFlexi\Cli\Command\RunTemplate\ScheduleCommand;
 use MultiFlexi\Cli\Command\RunTemplate\UnassignCredentialCommand;
@@ -23,6 +24,7 @@ use MultiFlexi\Cli\Command\RunTemplate\UnassignCredentialCommand;
 class RunTemplateTest extends \PHPUnit\Framework\TestCase
 {
     protected ScheduleCommand $schedule;
+    protected GetCommand $get;
     protected AssignCredentialCommand $assignCredential;
     protected UnassignCredentialCommand $unassignCredential;
     protected ListCredentialsCommand $listCredentials;
@@ -30,6 +32,7 @@ class RunTemplateTest extends \PHPUnit\Framework\TestCase
     protected function setUp(): void
     {
         $this->schedule = new ScheduleCommand();
+        $this->get = new GetCommand();
         $this->assignCredential = new AssignCredentialCommand();
         $this->unassignCredential = new UnassignCredentialCommand();
         $this->listCredentials = new ListCredentialsCommand();
@@ -45,6 +48,12 @@ class RunTemplateTest extends \PHPUnit\Framework\TestCase
     {
         $definition = $this->schedule->getDefinition();
         $this->assertTrue($definition->hasOption('config'), '--config option must be defined on run-template:schedule');
+    }
+
+    public function testGetCommandHasFieldsOption(): void
+    {
+        $definition = $this->get->getDefinition();
+        $this->assertTrue($definition->hasOption('fields'), '--fields option must be defined on run-template:get');
     }
 
     public function testScheduleCommandHasScheduleTimeOption(): void
