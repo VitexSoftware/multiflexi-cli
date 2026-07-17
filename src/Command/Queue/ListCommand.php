@@ -127,8 +127,8 @@ class ListCommand extends MultiFlexiCommand
             ];
 
             if (!empty($row['after'])) {
-                $scheduledTime = new \DateTime($row['after']);
-                $now = new \DateTime();
+                $scheduledTime = new \DateTime($row['after'], \MultiFlexi\DateTimeHelper::getConfiguredTimezone());
+                $now = \MultiFlexi\DateTimeHelper::createDateTime();
                 $interval = $now->diff($scheduledTime);
                 $waitingTime = '';
 

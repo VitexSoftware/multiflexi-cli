@@ -134,6 +134,8 @@ Shared::init(
     \array_key_exists('environment', $globalOptions) ? $globalOptions['environment'] : (\array_key_exists('e', $globalOptions) ? $globalOptions['e'] : $defaultEnv),
 );
 
+date_default_timezone_set(\MultiFlexi\DateTimeHelper::getConfiguredTimezoneString());
+
 $loggers = ['syslog', '\MultiFlexi\LogToSQL'];
 
 if (Shared::cfg('ZABBIX_SERVER') && Shared::cfg('ZABBIX_HOST') && class_exists('\MultiFlexi\LogToZabbix')) {
