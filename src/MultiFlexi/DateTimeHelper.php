@@ -26,28 +26,17 @@ class DateTimeHelper
      * Autodetect the server's timezone from Linux system configuration.
      *
      * Attempts to detect timezone in the following order:
-     * 1. PHP's own date.timezone ini setting
-     * 2. Read from /etc/timezone file (Debian/Ubuntu)
-     * 3. Read symlink from /etc/localtime (most Linux distributions)
-     * 4. Use timedatectl command if available
+     * 1. Read from /etc/timezone file (Debian/Ubuntu)
+     * 2. Read symlink from /etc/localtime (most Linux distributions)
+     * 3. Use timedatectl command if available
+     * 4. PHP's own date.timezone ini setting (last resort — PHP reports "UTC"
+     *    here even when nothing was ever explicitly configured, so it is not
+     *    trustworthy evidence of the actual server timezone)
      *
      * @return null|string The detected timezone string or null if detection fails
      */
     public static function autodetectServerTimezone(): ?string
     {
-        // Method 0: PHP's own date.timezone ini setting — no filesystem access needed.
-        $timezone = ini_get('date.timezone');
-
-        if (!empty($timezone)) {
-            try {
-                new \DateTimeZone($timezone);
-
-                return $timezone;
-            } catch (\Exception $e) {
-                error_log('Invalid timezone from date.timezone ini: '.$timezone);
-            }
-        }
-
         // Method 1: Read /etc/timezone file (Debian/Ubuntu)
         if (file_exists('/etc/timezone')) {
             $timezone = trim(file_get_contents('/etc/timezone'));
@@ -97,6 +86,23 @@ class DateTimeHelper
                 } catch (\Exception $e) {
                     error_log('Invalid timezone from timedatectl: '.$timezone);
                 }
+            }
+        }
+
+        // Method 4 (last resort): PHP's own date.timezone ini setting.
+        // Unreliable as a *first* check because PHP's date extension reports
+        // "UTC" via ini_get('date.timezone') even when nothing ever configured
+        // it (it's the engine's own runtime fallback, not evidence of an
+        // explicit admin choice) — trust OS-level detection above it instead.
+        $timezone = ini_get('date.timezone');
+
+        if (!empty($timezone)) {
+            try {
+                new \DateTimeZone($timezone);
+
+                return $timezone;
+            } catch (\Exception $e) {
+                error_log('Invalid timezone from date.timezone ini: '.$timezone);
             }
         }
 
