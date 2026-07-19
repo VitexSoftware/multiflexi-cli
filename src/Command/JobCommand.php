@@ -170,28 +170,10 @@ EOD;
 
                 $jobs = $query->fetchAll();
 
-                // Process env column: unserialize and convert to key-value pairs
+                // Process env column: unserialize, redact secrets, convert to key-value pairs
                 foreach ($jobs as &$jobData) {
                     if (isset($jobData['env']) && \Ease\Functions::isSerialized($jobData['env'])) {
-                        $envUnserialized = unserialize($jobData['env']);
-
-                        if ($envUnserialized instanceof \MultiFlexi\ConfigFields) {
-                            // New format: ConfigFields object
-                            $jobData['env'] = $envUnserialized->getEnvArray();
-                        } elseif (\is_array($envUnserialized)) {
-                            // Old format: array with metadata - extract just values
-                            $envArray = [];
-
-                            foreach ($envUnserialized as $key => $envInfo) {
-                                if (\is_array($envInfo) && isset($envInfo['value'])) {
-                                    $envArray[$key] = $envInfo['value'];
-                                } elseif (\is_object($envInfo) && method_exists($envInfo, 'getValue')) {
-                                    $envArray[$key] = $envInfo->getValue();
-                                }
-                            }
-
-                            $jobData['env'] = $envArray;
-                        }
+                        $jobData['env'] = $this->redactSerializedEnv($jobData['env']);
                     }
                 }
 
@@ -240,10 +222,16 @@ EOD;
                 $job = new Job((int) $id);
                 $fields = $input->getOption('fields');
 
+                $jobData = $job->getData();
+
+                if (isset($jobData['env']) && \Ease\Functions::isSerialized($jobData['env'])) {
+                    $jobData['env'] = $this->redactSerializedEnv($jobData['env']);
+                }
+
                 if ($fields) {
                     $fieldsArray = explode(',', $fields);
                     $filteredData = array_filter(
-                        $job->getData(),
+                        $jobData,
                         static fn ($key) => \in_array($key, $fieldsArray, true),
                         \ARRAY_FILTER_USE_KEY,
                     );
@@ -253,16 +241,16 @@ EOD;
                         $output->writeln($jsonResult !== false ? $jsonResult : '{}');
                     } else {
                         foreach ($filteredData as $k => $v) {
-                            $output->writeln("{$k}: {$v}");
+                            $output->writeln("{$k}: ".(\is_array($v) ? json_encode($v) : $v));
                         }
                     }
                 } else {
                     if ($format === 'json') {
-                        $jsonResult = json_encode($job->getData(), \JSON_PRETTY_PRINT | \JSON_INVALID_UTF8_SUBSTITUTE);
+                        $jsonResult = json_encode($jobData, \JSON_PRETTY_PRINT | \JSON_INVALID_UTF8_SUBSTITUTE);
                         $output->writeln($jsonResult !== false ? $jsonResult : '{}');
                     } else {
-                        foreach ($job->getData() as $k => $v) {
-                            $output->writeln("{$k}: {$v}");
+                        foreach ($jobData as $k => $v) {
+                            $output->writeln("{$k}: ".(\is_array($v) ? json_encode($v) : $v));
                         }
                     }
                 }

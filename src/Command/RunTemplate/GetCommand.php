@@ -76,13 +76,13 @@ class GetCommand extends BaseCommand
             }
         } else {
             if ($format === 'json') {
-                $output->writeln(json_encode(array_merge($runtemplate->getData(), $runtemplate->getEnvironment()->getEnvArray()), \JSON_PRETTY_PRINT));
+                $output->writeln(json_encode(array_merge($runtemplate->getData(), $runtemplate->getEnvironment()->getRedactedArray()), \JSON_PRETTY_PRINT));
             } else {
                 foreach ($runtemplate->getData() as $k => $v) {
                     $output->writeln("{$k}: {$v}");
                 }
 
-                foreach ($runtemplate->getRuntemplateEnvironment()->getEnvArray() as $k => $v) {
+                foreach ($runtemplate->getRuntemplateEnvironment()->getRedactedArray() as $k => $v) {
                     $output->writeln("{$k}: {$v}");
                 }
             }

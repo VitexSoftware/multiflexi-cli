@@ -239,6 +239,41 @@ abstract class MultiFlexiCommand extends \Symfony\Component\Console\Command\Comm
     }
 
     /**
+     * Unserialize a job's stored `env` column and return it as a redacted
+     * (secret values masked) key => value array, safe for CLI output.
+     *
+     * Handles both the current ConfigFields-object serialization and the
+     * legacy plain-array format.
+     *
+     * @return array<string, mixed>
+     */
+    protected function redactSerializedEnv(string $serializedEnv): array
+    {
+        $envUnserialized = unserialize($serializedEnv);
+
+        if ($envUnserialized instanceof \MultiFlexi\ConfigFields) {
+            return $envUnserialized->getRedactedArray();
+        }
+
+        $envArray = [];
+
+        if (\is_array($envUnserialized)) {
+            foreach ($envUnserialized as $key => $envInfo) {
+                if (\is_array($envInfo) && \array_key_exists('value', $envInfo)) {
+                    $isSecret = !empty($envInfo['secret']) || \in_array($envInfo['type'] ?? '', ['password', 'secret'], true);
+                    $envArray[$key] = $isSecret ? \MultiFlexi\ConfigField::maskValue($envInfo['value']) : $envInfo['value'];
+                } elseif (\is_object($envInfo) && method_exists($envInfo, 'getValue')) {
+                    $envArray[$key] = method_exists($envInfo, 'isRedactable') && $envInfo->isRedactable()
+                        ? \MultiFlexi\ConfigField::maskValue($envInfo->getValue())
+                        : $envInfo->getValue();
+                }
+            }
+        }
+
+        return $envArray;
+    }
+
+    /**
      * Output a JSON error response with status and message fields.
      */
     protected function jsonError(OutputInterface $output, string $message, string $status = 'error'): void

@@ -93,23 +93,7 @@ class ListCommand extends MultiFlexiCommand
 
         foreach ($jobs as &$jobData) {
             if (isset($jobData['env']) && \Ease\Functions::isSerialized($jobData['env'])) {
-                $envUnserialized = unserialize($jobData['env']);
-
-                if ($envUnserialized instanceof \MultiFlexi\ConfigFields) {
-                    $jobData['env'] = $envUnserialized->getEnvArray();
-                } elseif (\is_array($envUnserialized)) {
-                    $envArray = [];
-
-                    foreach ($envUnserialized as $key => $envInfo) {
-                        if (\is_array($envInfo) && isset($envInfo['value'])) {
-                            $envArray[$key] = $envInfo['value'];
-                        } elseif (\is_object($envInfo) && method_exists($envInfo, 'getValue')) {
-                            $envArray[$key] = $envInfo->getValue();
-                        }
-                    }
-
-                    $jobData['env'] = $envArray;
-                }
+                $jobData['env'] = $this->redactSerializedEnv($jobData['env']);
             }
         }
 
