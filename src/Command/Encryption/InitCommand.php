@@ -77,25 +77,13 @@ class InitCommand extends BaseCommand
                 return self::SUCCESS;
             }
 
-            $key = random_bytes(32);
-            $iv = random_bytes(16);
-            $hashedMasterKey = hash('sha256', $masterKey, true);
-            $encryptedKey = openssl_encrypt($key, 'aes-256-cbc', $hashedMasterKey, \OPENSSL_RAW_DATA, $iv);
-
-            if ($encryptedKey === false) {
-                throw new \RuntimeException('Failed to encrypt key: '.openssl_error_string());
-            }
-
-            $keyData = base64_encode($iv.$encryptedKey);
-
-            $deleteStmt = $pdo->prepare("DELETE FROM encryption_keys WHERE key_name = 'credentials'");
-            $deleteStmt->execute();
-
-            $insertStmt = $pdo->prepare(<<<'EOD'
-INSERT INTO encryption_keys (key_name, key_data, algorithm, created_at, is_active)
-                 VALUES ('credentials', :key_data, 'aes-256-gcm', NOW(), TRUE)
-EOD, );
-            $insertStmt->execute(['key_data' => $keyData]);
+            // Delegate to DataEncryption::generateKey(), which versions the
+            // key row (deactivate old version, insert new one) instead of
+            // deleting prior key material — deleting it here would
+            // permanently break decryption of anything already encrypted
+            // under the key being replaced.
+            $dataEncryption = new \MultiFlexi\Security\DataEncryption($pdo);
+            $dataEncryption->generateKey('credentials', \MultiFlexi\Security\DataEncryption::ALGORITHM_AES_256_GCM);
 
             $successMsg = $alreadyInitialized ? 'Encryption key rotated successfully' : 'Encryption key initialized successfully';
 

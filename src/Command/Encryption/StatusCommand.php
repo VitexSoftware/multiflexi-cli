@@ -42,7 +42,7 @@ class StatusCommand extends BaseCommand
             $masterKey = self::getMasterKey();
             $masterKeyStatus = $masterKey ? 'configured' : 'missing';
 
-            $stmt = $pdo->query('SELECT key_name, algorithm, created_at, rotated_at, is_active FROM encryption_keys ORDER BY created_at DESC');
+            $stmt = $pdo->query('SELECT key_name, version, algorithm, created_at, rotated_at, is_active FROM encryption_keys ORDER BY key_name, version DESC');
             $keys = $stmt->fetchAll(\PDO::FETCH_ASSOC);
             $activeKeys = array_filter($keys, static fn ($key) => $key['is_active']);
 
@@ -67,6 +67,7 @@ class StatusCommand extends BaseCommand
                     foreach ($keys as $key) {
                         $table[] = [
                             $key['key_name'],
+                            $key['version'],
                             $key['algorithm'],
                             $key['is_active'] ? 'active' : 'inactive',
                             $key['created_at'],
@@ -74,7 +75,7 @@ class StatusCommand extends BaseCommand
                         ];
                     }
 
-                    $output->writeln(self::outputTable($table, 200, ['Key Name', 'Algorithm', 'Status', 'Created', 'Rotated']));
+                    $output->writeln(self::outputTable($table, 200, ['Key Name', 'Version', 'Algorithm', 'Status', 'Created', 'Rotated']));
                 }
             }
 

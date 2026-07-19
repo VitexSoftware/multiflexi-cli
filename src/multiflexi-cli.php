@@ -63,6 +63,7 @@ use MultiFlexi\Cli\Command\CredentialType\ListCommand as CredentialTypeListComma
 use MultiFlexi\Cli\Command\CredentialType\UpdateCommand as CredentialTypeUpdateCommand;
 use MultiFlexi\Cli\Command\CredentialType\ValidateJsonCommand as CredentialTypeValidateJsonCommand;
 use MultiFlexi\Cli\Command\DescribeCommand;
+use MultiFlexi\Cli\Command\Encryption\EncryptExistingCommand;
 use MultiFlexi\Cli\Command\Encryption\InitCommand as EncryptionInitCommand;
 use MultiFlexi\Cli\Command\Encryption\StatusCommand as EncryptionStatusCommand;
 use MultiFlexi\Cli\Command\EventRule\CreateCommand as EventRuleCreateCommand;
@@ -214,6 +215,7 @@ $application->add(new CredentialTypeValidateJsonCommand());
 // Encryption
 $application->add(new EncryptionStatusCommand());
 $application->add(new EncryptionInitCommand());
+$application->add(new EncryptExistingCommand());
 
 // Event Rule
 $application->add(new EventRuleListCommand());
