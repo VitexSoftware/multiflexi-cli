@@ -1,3 +1,10 @@
+multiflexi-cli (2.5.9) UNRELEASED; urgency=medium
+
+  * Add run-template:stale command listing active run-templates whose
+    next_schedule is stuck in the past (used as a Zabbix watchdog input).
+
+ -- Vítězslav Dvořák <info@vitexsoftware.cz>  Mon, 20 Jul 2026 15:45:00 +0200
+
 multiflexi-cli (2.5.8) UNRELEASED; urgency=medium
 
   * Add task:list command (filter by state, runtemplate, from/to, limit)
