@@ -276,7 +276,7 @@ EOD;
                 $env = new \MultiFlexi\ConfigFields('Job Env');
                 $scheduledDT = new \DateTime($scheduled);
                 $executor = $input->getOption('executor') ?? 'Native';
-                $scheduleType = $input->getOption('schedule_type') ?? 'adhoc';
+                $scheduleType = $input->getOption('schedule_type') ?? Job::SCHEDULE_TYPE_ADHOC_CLI;
                 $job = new Job();
                 $jobId = $job->newJob(new \MultiFlexi\RunTemplate((int) $runtemplateId), $env, $scheduledDT, $executor, $scheduleType);
 

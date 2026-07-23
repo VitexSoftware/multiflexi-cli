@@ -77,7 +77,7 @@ class ScheduleCommand extends BaseCommand
             $scheduleDateTime = new \DateTime($scheduleTime);
             $now = new \DateTime();
             $isImmediate = ($scheduleDateTime->getTimestamp() <= $now->getTimestamp() + 5);
-            $scheduleType = $isImmediate ? 'adhoc' : 'cli';
+            $scheduleType = $isImmediate ? Job::SCHEDULE_TYPE_ADHOC_CLI : Job::SCHEDULE_TYPE_COMMAND_LINE;
 
             $jobber->prepareJob($rt, $overridedEnv, $scheduleDateTime, $executor, $scheduleType);
 
