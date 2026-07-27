@@ -219,7 +219,7 @@ class ListCommand extends MultiFlexiCommand
         }
 
         if ($format === 'json') {
-            $output->writeln(json_encode(['jobs' => $rows, 'total' => $totalCount], \JSON_PRETTY_PRINT));
+            $output->writeln(json_encode($rows, \JSON_PRETTY_PRINT)); 
         } else {
             if (!empty($rows)) {
                 $output->writeln(self::outputTable($rows));
