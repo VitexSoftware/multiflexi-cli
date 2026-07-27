@@ -18,6 +18,7 @@ namespace Tests\MultiFlexi\Cli\Command;
 use MultiFlexi\Cli\Command\CredentialTypeCommand;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
+use MultiFlexi\Cli\ConsoleCompat;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
@@ -36,7 +37,7 @@ final class CredentialTypeCommandIntegrationTest extends TestCase
     {
         $this->application = new Application();
         $this->command = new CredentialTypeCommand();
-        $this->application->add($this->command);
+        ConsoleCompat::addCommand($this->application, $this->command);
     }
 
     /**

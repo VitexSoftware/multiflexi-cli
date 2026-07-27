@@ -55,7 +55,7 @@ class CompanyAppCommandTest extends \PHPUnit\Framework\TestCase
     public function testCommandIsRegistrable(): void
     {
         $application = new \Symfony\Component\Console\Application();
-        $application->add($this->object);
+        \MultiFlexi\Cli\ConsoleCompat::addCommand($application, $this->object);
         $this->assertSame('companyapp', $application->find('companyapp')->getName());
     }
 

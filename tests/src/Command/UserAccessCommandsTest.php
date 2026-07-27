@@ -8,6 +8,7 @@ use MultiFlexi\Cli\Command\UserCompany\AssignCommand as UserCompanyAssignCommand
 use MultiFlexi\Cli\Command\UserCompany\UnassignCommand as UserCompanyUnassignCommand;
 use MultiFlexi\Cli\Command\UserRole\SetCommand as UserRoleSetCommand;
 use Symfony\Component\Console\Application;
+use MultiFlexi\Cli\ConsoleCompat;
 
 class UserAccessCommandsTest extends \PHPUnit\Framework\TestCase
 {
@@ -68,9 +69,9 @@ class UserAccessCommandsTest extends \PHPUnit\Framework\TestCase
     public function testCommandsAreRegistrable(): void
     {
         $application = new Application();
-        $application->add($this->userCompanyAssign);
-        $application->add($this->userCompanyUnassign);
-        $application->add($this->userRoleSet);
+        ConsoleCompat::addCommand($application, $this->userCompanyAssign);
+        ConsoleCompat::addCommand($application, $this->userCompanyUnassign);
+        ConsoleCompat::addCommand($application, $this->userRoleSet);
 
         $this->assertSame('user-company:assign', $application->find('user-company:assign')->getName());
         $this->assertSame('user-company:unassign', $application->find('user-company:unassign')->getName());

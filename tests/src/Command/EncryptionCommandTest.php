@@ -18,6 +18,7 @@ namespace MultiFlexi\Cli\Test\Command;
 use MultiFlexi\Cli\Command\EncryptionCommand;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
+use MultiFlexi\Cli\ConsoleCompat;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
@@ -34,7 +35,7 @@ class EncryptionCommandTest extends TestCase
     {
         $this->command = new EncryptionCommand();
         $application = new Application();
-        $application->add($this->command);
+        ConsoleCompat::addCommand($application, $this->command);
         $this->commandTester = new CommandTester($this->command);
     }
 

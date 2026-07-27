@@ -16,6 +16,7 @@ declare(strict_types=1);
 use MultiFlexi\Cli\Command\CredentialProtoTypeCommand;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
+use MultiFlexi\Cli\ConsoleCompat;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
@@ -31,7 +32,7 @@ class CredentialProtoTypeCommandTest extends TestCase
     public function testListJsonOutput(): void
     {
         $application = new Application();
-        $application->add(new CredentialProtoTypeCommand());
+        ConsoleCompat::addCommand($application, new CredentialProtoTypeCommand());
         $command = $application->find('crprototype');
         $tester = new CommandTester($command);
 
@@ -53,7 +54,7 @@ class CredentialProtoTypeCommandTest extends TestCase
     public function testListDefaultTextOutput(): void
     {
         $application = new Application();
-        $application->add(new CredentialProtoTypeCommand());
+        ConsoleCompat::addCommand($application, new CredentialProtoTypeCommand());
         $command = $application->find('crprototype');
         $tester = new CommandTester($command);
 
@@ -73,7 +74,7 @@ class CredentialProtoTypeCommandTest extends TestCase
     public function testCreateWithValidData(): void
     {
         $application = new Application();
-        $application->add(new CredentialProtoTypeCommand());
+        ConsoleCompat::addCommand($application, new CredentialProtoTypeCommand());
         $command = $application->find('crprototype');
         $tester = new CommandTester($command);
 
@@ -100,7 +101,7 @@ class CredentialProtoTypeCommandTest extends TestCase
     public function testCreateMissingRequiredFields(): void
     {
         $application = new Application();
-        $application->add(new CredentialProtoTypeCommand());
+        ConsoleCompat::addCommand($application, new CredentialProtoTypeCommand());
         $command = $application->find('crprototype');
         $tester = new CommandTester($command);
 
@@ -122,7 +123,7 @@ class CredentialProtoTypeCommandTest extends TestCase
     public function testImportJsonMissingFile(): void
     {
         $application = new Application();
-        $application->add(new CredentialProtoTypeCommand());
+        ConsoleCompat::addCommand($application, new CredentialProtoTypeCommand());
         $command = $application->find('crprototype');
         $tester = new CommandTester($command);
 
@@ -148,7 +149,7 @@ class CredentialProtoTypeCommandTest extends TestCase
     public function testImportJsonWithDirectory(): void
     {
         $application = new Application();
-        $application->add(new CredentialProtoTypeCommand());
+        ConsoleCompat::addCommand($application, new CredentialProtoTypeCommand());
         $command = $application->find('crprototype');
         $tester = new CommandTester($command);
 
@@ -175,7 +176,7 @@ class CredentialProtoTypeCommandTest extends TestCase
     public function testValidateJsonMissingFile(): void
     {
         $application = new Application();
-        $application->add(new CredentialProtoTypeCommand());
+        ConsoleCompat::addCommand($application, new CredentialProtoTypeCommand());
         $command = $application->find('crprototype');
         $tester = new CommandTester($command);
 
@@ -201,7 +202,7 @@ class CredentialProtoTypeCommandTest extends TestCase
     public function testGetMissingIdentifiers(): void
     {
         $application = new Application();
-        $application->add(new CredentialProtoTypeCommand());
+        ConsoleCompat::addCommand($application, new CredentialProtoTypeCommand());
         $command = $application->find('crprototype');
         $tester = new CommandTester($command);
 

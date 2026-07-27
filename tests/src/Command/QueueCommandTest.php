@@ -17,6 +17,7 @@ namespace Test\MultiFlexi\Cli\Command;
 
 use MultiFlexi\Cli\Command\QueueCommand;
 use Symfony\Component\Console\Application;
+use MultiFlexi\Cli\ConsoleCompat;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
@@ -36,7 +37,7 @@ class QueueCommandTest extends \PHPUnit\Framework\TestCase
         $this->object = new QueueCommand();
 
         $application = new Application();
-        $application->add($this->object);
+        ConsoleCompat::addCommand($application, $this->object);
 
         $command = $application->find('queue');
         $this->commandTester = new CommandTester($command);

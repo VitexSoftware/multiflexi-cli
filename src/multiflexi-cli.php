@@ -20,6 +20,7 @@ require_once __DIR__.'/../vendor/autoload.php';
 
 use Ease\Anonym;
 use Ease\Shared;
+use MultiFlexi\Cli\ConsoleCompat;
 use MultiFlexi\Cli\Command\Application\CreateCommand as ApplicationCreateCommand;
 use MultiFlexi\Cli\Command\Application\DeleteCommand as ApplicationDeleteCommand;
 use MultiFlexi\Cli\Command\Application\ExportJsonCommand as ApplicationExportJsonCommand;
@@ -158,148 +159,148 @@ Shared::user((Shared::cfg('DB_CONNECTION') === 'dummy') ? new Anonym() : new \Mu
 $application = new Application(Shared::appName(), Shared::appVersion());
 
 // Application
-$application->add(new ApplicationListCommand());
-$application->add(new ApplicationGetCommand());
-$application->add(new ApplicationCreateCommand());
-$application->add(new ApplicationUpdateCommand());
-$application->add(new ApplicationDeleteCommand());
-$application->add(new ApplicationImportJsonCommand());
-$application->add(new ApplicationExportJsonCommand());
-$application->add(new ApplicationRemoveJsonCommand());
-$application->add(new ApplicationValidateJsonCommand());
-$application->add(new ApplicationShowConfigCommand());
+ConsoleCompat::addCommand($application, new ApplicationListCommand());
+ConsoleCompat::addCommand($application, new ApplicationGetCommand());
+ConsoleCompat::addCommand($application, new ApplicationCreateCommand());
+ConsoleCompat::addCommand($application, new ApplicationUpdateCommand());
+ConsoleCompat::addCommand($application, new ApplicationDeleteCommand());
+ConsoleCompat::addCommand($application, new ApplicationImportJsonCommand());
+ConsoleCompat::addCommand($application, new ApplicationExportJsonCommand());
+ConsoleCompat::addCommand($application, new ApplicationRemoveJsonCommand());
+ConsoleCompat::addCommand($application, new ApplicationValidateJsonCommand());
+ConsoleCompat::addCommand($application, new ApplicationShowConfigCommand());
 
 // Artifact
-$application->add(new ArtifactListCommand());
-$application->add(new ArtifactGetCommand());
-$application->add(new ArtifactSaveCommand());
+ConsoleCompat::addCommand($application, new ArtifactListCommand());
+ConsoleCompat::addCommand($application, new ArtifactGetCommand());
+ConsoleCompat::addCommand($application, new ArtifactSaveCommand());
 
 // Company
-$application->add(new CompanyListCommand());
-$application->add(new CompanyGetCommand());
-$application->add(new CompanyCreateCommand());
-$application->add(new CompanyUpdateCommand());
-$application->add(new CompanyRemoveCommand());
+ConsoleCompat::addCommand($application, new CompanyListCommand());
+ConsoleCompat::addCommand($application, new CompanyGetCommand());
+ConsoleCompat::addCommand($application, new CompanyCreateCommand());
+ConsoleCompat::addCommand($application, new CompanyUpdateCommand());
+ConsoleCompat::addCommand($application, new CompanyRemoveCommand());
 
 // CompanyApp
-$application->add(new CompanyAppListCommand());
-$application->add(new CompanyAppAssignCommand());
-$application->add(new CompanyAppUnassignCommand());
+ConsoleCompat::addCommand($application, new CompanyAppListCommand());
+ConsoleCompat::addCommand($application, new CompanyAppAssignCommand());
+ConsoleCompat::addCommand($application, new CompanyAppUnassignCommand());
 
 // Credential
-$application->add(new CredentialListCommand());
-$application->add(new CredentialGetCommand());
-$application->add(new CredentialCreateCommand());
-$application->add(new CredentialUpdateCommand());
-$application->add(new CredentialRemoveCommand());
+ConsoleCompat::addCommand($application, new CredentialListCommand());
+ConsoleCompat::addCommand($application, new CredentialGetCommand());
+ConsoleCompat::addCommand($application, new CredentialCreateCommand());
+ConsoleCompat::addCommand($application, new CredentialUpdateCommand());
+ConsoleCompat::addCommand($application, new CredentialRemoveCommand());
 
 // Credential Prototype
-$application->add(new CredentialPrototypeListCommand());
-$application->add(new CredentialPrototypeGetCommand());
-$application->add(new CredentialPrototypeCreateCommand());
-$application->add(new CredentialPrototypeUpdateCommand());
-$application->add(new CredentialPrototypeDeleteCommand());
-$application->add(new CredentialPrototypeImportJsonCommand());
-$application->add(new CredentialPrototypeExportJsonCommand());
-$application->add(new CredentialPrototypeValidateJsonCommand());
-$application->add(new CredentialPrototypeSyncCommand());
+ConsoleCompat::addCommand($application, new CredentialPrototypeListCommand());
+ConsoleCompat::addCommand($application, new CredentialPrototypeGetCommand());
+ConsoleCompat::addCommand($application, new CredentialPrototypeCreateCommand());
+ConsoleCompat::addCommand($application, new CredentialPrototypeUpdateCommand());
+ConsoleCompat::addCommand($application, new CredentialPrototypeDeleteCommand());
+ConsoleCompat::addCommand($application, new CredentialPrototypeImportJsonCommand());
+ConsoleCompat::addCommand($application, new CredentialPrototypeExportJsonCommand());
+ConsoleCompat::addCommand($application, new CredentialPrototypeValidateJsonCommand());
+ConsoleCompat::addCommand($application, new CredentialPrototypeSyncCommand());
 
 // Credential Type
-$application->add(new CredentialTypeListCommand());
-$application->add(new CredentialTypeGetCommand());
-$application->add(new CredentialTypeCreateCommand());
-$application->add(new CredentialTypeUpdateCommand());
-$application->add(new CredentialTypeDeleteCommand());
-$application->add(new CredentialTypeImportJsonCommand());
-$application->add(new CredentialTypeValidateJsonCommand());
+ConsoleCompat::addCommand($application, new CredentialTypeListCommand());
+ConsoleCompat::addCommand($application, new CredentialTypeGetCommand());
+ConsoleCompat::addCommand($application, new CredentialTypeCreateCommand());
+ConsoleCompat::addCommand($application, new CredentialTypeUpdateCommand());
+ConsoleCompat::addCommand($application, new CredentialTypeDeleteCommand());
+ConsoleCompat::addCommand($application, new CredentialTypeImportJsonCommand());
+ConsoleCompat::addCommand($application, new CredentialTypeValidateJsonCommand());
 
 // Encryption
-$application->add(new EncryptionStatusCommand());
-$application->add(new EncryptionInitCommand());
-$application->add(new EncryptExistingCommand());
+ConsoleCompat::addCommand($application, new EncryptionStatusCommand());
+ConsoleCompat::addCommand($application, new EncryptionInitCommand());
+ConsoleCompat::addCommand($application, new EncryptExistingCommand());
 
 // Event Rule
-$application->add(new EventRuleListCommand());
-$application->add(new EventRuleGetCommand());
-$application->add(new EventRuleCreateCommand());
-$application->add(new EventRuleUpdateCommand());
-$application->add(new EventRuleRemoveCommand());
+ConsoleCompat::addCommand($application, new EventRuleListCommand());
+ConsoleCompat::addCommand($application, new EventRuleGetCommand());
+ConsoleCompat::addCommand($application, new EventRuleCreateCommand());
+ConsoleCompat::addCommand($application, new EventRuleUpdateCommand());
+ConsoleCompat::addCommand($application, new EventRuleRemoveCommand());
 
 // Event Source
-$application->add(new EventSourceListCommand());
-$application->add(new EventSourceGetCommand());
-$application->add(new EventSourceCreateCommand());
-$application->add(new EventSourceUpdateCommand());
-$application->add(new EventSourceRemoveCommand());
-$application->add(new EventSourceTestCommand());
+ConsoleCompat::addCommand($application, new EventSourceListCommand());
+ConsoleCompat::addCommand($application, new EventSourceGetCommand());
+ConsoleCompat::addCommand($application, new EventSourceCreateCommand());
+ConsoleCompat::addCommand($application, new EventSourceUpdateCommand());
+ConsoleCompat::addCommand($application, new EventSourceRemoveCommand());
+ConsoleCompat::addCommand($application, new EventSourceTestCommand());
 
 // Job
-$application->add(new JobStatusCommand());
-$application->add(new JobListCommand());
-$application->add(new JobGetCommand());
-$application->add(new JobCreateCommand());
-$application->add(new JobUpdateCommand());
-$application->add(new JobDeleteCommand());
+ConsoleCompat::addCommand($application, new JobStatusCommand());
+ConsoleCompat::addCommand($application, new JobListCommand());
+ConsoleCompat::addCommand($application, new JobGetCommand());
+ConsoleCompat::addCommand($application, new JobCreateCommand());
+ConsoleCompat::addCommand($application, new JobUpdateCommand());
+ConsoleCompat::addCommand($application, new JobDeleteCommand());
 
 // Queue
-$application->add(new QueueOverviewCommand());
-$application->add(new QueueListCommand());
-$application->add(new QueueTruncateCommand());
-$application->add(new QueueFixCommand());
+ConsoleCompat::addCommand($application, new QueueOverviewCommand());
+ConsoleCompat::addCommand($application, new QueueListCommand());
+ConsoleCompat::addCommand($application, new QueueTruncateCommand());
+ConsoleCompat::addCommand($application, new QueueFixCommand());
 
 // Run Template
-$application->add(new RunTemplateListCommand());
-$application->add(new RunTemplateGetCommand());
-$application->add(new RunTemplateCreateCommand());
-$application->add(new RunTemplateUpdateCommand());
-$application->add(new RunTemplateDeleteCommand());
-$application->add(new RunTemplateScheduleCommand());
-$application->add(new RunTemplateStaleCommand());
-$application->add(new RunTemplateAssignCredentialCommand());
-$application->add(new RunTemplateUnassignCredentialCommand());
-$application->add(new RunTemplateListCredentialsCommand());
+ConsoleCompat::addCommand($application, new RunTemplateListCommand());
+ConsoleCompat::addCommand($application, new RunTemplateGetCommand());
+ConsoleCompat::addCommand($application, new RunTemplateCreateCommand());
+ConsoleCompat::addCommand($application, new RunTemplateUpdateCommand());
+ConsoleCompat::addCommand($application, new RunTemplateDeleteCommand());
+ConsoleCompat::addCommand($application, new RunTemplateScheduleCommand());
+ConsoleCompat::addCommand($application, new RunTemplateStaleCommand());
+ConsoleCompat::addCommand($application, new RunTemplateAssignCredentialCommand());
+ConsoleCompat::addCommand($application, new RunTemplateUnassignCredentialCommand());
+ConsoleCompat::addCommand($application, new RunTemplateListCredentialsCommand());
 
 // Task
-$application->add(new TaskStatusCommand());
-$application->add(new TaskListCommand());
-$application->add(new TaskGetCommand());
+ConsoleCompat::addCommand($application, new TaskStatusCommand());
+ConsoleCompat::addCommand($application, new TaskListCommand());
+ConsoleCompat::addCommand($application, new TaskGetCommand());
 
 // Token
-$application->add(new TokenListCommand());
-$application->add(new TokenGetCommand());
-$application->add(new TokenCreateCommand());
-$application->add(new TokenGenerateCommand());
-$application->add(new TokenUpdateCommand());
-$application->add(new TokenDeleteCommand());
+ConsoleCompat::addCommand($application, new TokenListCommand());
+ConsoleCompat::addCommand($application, new TokenGetCommand());
+ConsoleCompat::addCommand($application, new TokenCreateCommand());
+ConsoleCompat::addCommand($application, new TokenGenerateCommand());
+ConsoleCompat::addCommand($application, new TokenUpdateCommand());
+ConsoleCompat::addCommand($application, new TokenDeleteCommand());
 
 // User
-$application->add(new UserListCommand());
-$application->add(new UserGetCommand());
-$application->add(new UserCreateCommand());
-$application->add(new UserUpdateCommand());
-$application->add(new UserDeleteCommand());
+ConsoleCompat::addCommand($application, new UserListCommand());
+ConsoleCompat::addCommand($application, new UserGetCommand());
+ConsoleCompat::addCommand($application, new UserCreateCommand());
+ConsoleCompat::addCommand($application, new UserUpdateCommand());
+ConsoleCompat::addCommand($application, new UserDeleteCommand());
 
 // User Company Assignment
-$application->add(new UserCompanyAssignCommand());
-$application->add(new UserCompanyUnassignCommand());
+ConsoleCompat::addCommand($application, new UserCompanyAssignCommand());
+ConsoleCompat::addCommand($application, new UserCompanyUnassignCommand());
 
 // User RBAC Roles
-$application->add(new UserRoleSetCommand());
+ConsoleCompat::addCommand($application, new UserRoleSetCommand());
 
 // User Erasure (GDPR)
-$application->add(new UserErasureListCommand());
-$application->add(new UserErasureCreateCommand());
-$application->add(new UserErasureApproveCommand());
-$application->add(new UserErasureRejectCommand());
-$application->add(new UserErasureProcessCommand());
-$application->add(new UserErasureAuditCommand());
-$application->add(new UserErasureCleanupCommand());
+ConsoleCompat::addCommand($application, new UserErasureListCommand());
+ConsoleCompat::addCommand($application, new UserErasureCreateCommand());
+ConsoleCompat::addCommand($application, new UserErasureApproveCommand());
+ConsoleCompat::addCommand($application, new UserErasureRejectCommand());
+ConsoleCompat::addCommand($application, new UserErasureProcessCommand());
+ConsoleCompat::addCommand($application, new UserErasureAuditCommand());
+ConsoleCompat::addCommand($application, new UserErasureCleanupCommand());
 
 // Standalone
-$application->add(new DescribeCommand());
-$application->add(new StatusCommand());
-$application->add(new PruneCommand());
-$application->add(new TelemetryTestCommand());
-$application->add(new CompleteCommand());
+ConsoleCompat::addCommand($application, new DescribeCommand());
+ConsoleCompat::addCommand($application, new StatusCommand());
+ConsoleCompat::addCommand($application, new PruneCommand());
+ConsoleCompat::addCommand($application, new TelemetryTestCommand());
+ConsoleCompat::addCommand($application, new CompleteCommand());
 
 $application->run();

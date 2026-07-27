@@ -55,7 +55,7 @@ class UserDataErasureCommandTest extends \PHPUnit\Framework\TestCase
     public function testCommandIsRegistrable(): void
     {
         $application = new \Symfony\Component\Console\Application();
-        $application->add($this->object);
+        \MultiFlexi\Cli\ConsoleCompat::addCommand($application, $this->object);
         $this->assertSame('user:data-erasure', $application->find('user:data-erasure')->getName());
     }
 }

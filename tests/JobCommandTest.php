@@ -16,6 +16,7 @@ declare(strict_types=1);
 use MultiFlexi\Cli\Command\JobCommand;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
+use MultiFlexi\Cli\ConsoleCompat;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
@@ -31,7 +32,7 @@ class JobCommandTest extends TestCase
     public function testStatusJsonOutput(): void
     {
         $application = new Application();
-        $application->add(new JobCommand());
+        ConsoleCompat::addCommand($application, new JobCommand());
         $command = $application->find('job');
         $tester = new CommandTester($command);
         $tester->execute([
@@ -50,7 +51,7 @@ class JobCommandTest extends TestCase
     public function testListJsonOutput(): void
     {
         $application = new Application();
-        $application->add(new JobCommand());
+        ConsoleCompat::addCommand($application, new JobCommand());
         $command = $application->find('job');
         $tester = new CommandTester($command);
         $tester->execute([
@@ -67,7 +68,7 @@ class JobCommandTest extends TestCase
     public function testGetMissingId(): void
     {
         $application = new Application();
-        $application->add(new JobCommand());
+        ConsoleCompat::addCommand($application, new JobCommand());
         $command = $application->find('job');
         $tester = new CommandTester($command);
         $tester->execute([
@@ -86,7 +87,7 @@ class JobCommandTest extends TestCase
     public function testCreateMissingParams(): void
     {
         $application = new Application();
-        $application->add(new JobCommand());
+        ConsoleCompat::addCommand($application, new JobCommand());
         $command = $application->find('job');
         $tester = new CommandTester($command);
         $tester->execute([
