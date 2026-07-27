@@ -45,6 +45,7 @@ class ListCommand extends MultiFlexiCommand
         $format = strtolower($input->getOption('format'));
         $lister = new ScheduleLister();
         $query = $lister->listingQuery();
+        $totalCount = (clone $query)->count();
 
         $order = $input->getOption('order') ?: 'after';
         $direction = $input->getOption('direction');
@@ -218,13 +219,15 @@ class ListCommand extends MultiFlexiCommand
         }
 
         if ($format === 'json') {
-            $output->writeln(json_encode($rows, \JSON_PRETTY_PRINT));
+            $output->writeln(json_encode(['jobs' => $rows, 'total' => $totalCount], \JSON_PRETTY_PRINT));
         } else {
             if (!empty($rows)) {
                 $output->writeln(self::outputTable($rows));
             } else {
                 $output->writeln('No jobs in queue.');
             }
+
+            $output->writeln(\sprintf('Total scheduled jobs: %d', $totalCount));
         }
 
         return self::SUCCESS;
