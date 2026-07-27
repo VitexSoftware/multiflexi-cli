@@ -29,7 +29,7 @@ class FixCommand extends MultiFlexiCommand
     {
         $this
             ->setName('queue:fix')
-            ->setDescription('Fix queue by cleaning up orphaned jobs and broken records')
+            ->setDescription('Fix queue by cleaning up orphaned jobs, broken records and implausible schedules')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text');
     }
 
@@ -39,6 +39,7 @@ class FixCommand extends MultiFlexiCommand
         $scheduler = new Scheduler();
         $scheduler->cleanupOrphanedJobs();
         $scheduler->purgeBrokenQueueRecords();
+        $scheduler->purgeImplausibleSchedules();
 
         // Delete orphaned jobs (job rows with no matching schedule entry) before
         // initializeScheduling() runs, so it correctly sees their runtemplates as
