@@ -139,17 +139,20 @@ Shared::init(
 
 date_default_timezone_set(\MultiFlexi\DateTimeHelper::getConfiguredTimezoneString());
 
-$loggers = ['syslog', '\MultiFlexi\LogToSQL'];
+if(defined('EASE_LOGGER') === false){
+    $loggers = ['syslog', '\MultiFlexi\LogToSQL'];
 
-if (Shared::cfg('ZABBIX_SERVER') && Shared::cfg('ZABBIX_HOST') && class_exists('\MultiFlexi\LogToZabbix')) {
-    $loggers[] = '\MultiFlexi\LogToZabbix';
+    if (Shared::cfg('ZABBIX_SERVER') && Shared::cfg('ZABBIX_HOST') && class_exists('\MultiFlexi\LogToZabbix')) {
+        $loggers[] = '\MultiFlexi\LogToZabbix';
+    }
+
+    if (Shared::cfg('APP_DEBUG') === 'true') {
+        $loggers[] = 'console';
+    }
+
+    \define('EASE_LOGGER', implode('|', $loggers));
 }
 
-if (Shared::cfg('APP_DEBUG') === 'true') {
-    $loggers[] = 'console';
-}
-
-\define('EASE_LOGGER', implode('|', $loggers));
 \define('APP_NAME', 'MultiFlexiCLI');
 
 new \MultiFlexi\Defaults();
