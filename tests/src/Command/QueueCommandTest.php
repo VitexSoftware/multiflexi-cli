@@ -16,8 +16,8 @@ declare(strict_types=1);
 namespace Test\MultiFlexi\Cli\Command;
 
 use MultiFlexi\Cli\Command\QueueCommand;
-use Symfony\Component\Console\Application;
 use MultiFlexi\Cli\ConsoleCompat;
+use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**

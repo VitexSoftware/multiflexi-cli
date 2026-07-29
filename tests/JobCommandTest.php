@@ -14,9 +14,9 @@ declare(strict_types=1);
  */
 
 use MultiFlexi\Cli\Command\JobCommand;
+use MultiFlexi\Cli\ConsoleCompat;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
-use MultiFlexi\Cli\ConsoleCompat;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**

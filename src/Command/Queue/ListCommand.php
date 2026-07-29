@@ -118,7 +118,9 @@ class ListCommand extends MultiFlexiCommand
             $orderedRow = [
                 'id' => $row['id'] ?? '',
                 'job' => $row['job'] ?? '',
-                'schedule_type' => \MultiFlexi\CronDescriber::describe($row['interv'] ?? 'n', $row['cron'] ?? ''),
+                'schedule_type' => $format === 'json'
+                    ? \MultiFlexi\CronDescriber::describe($row['interv'] ?? 'n', $row['cron'] ?? '')
+                    : \MultiFlexi\Scheduler::codeToInterval($row['interv'] ?? 'n'),
                 'runtemplate_id' => '',
                 'runtemplate_name' => '',
                 'app_id' => '',
@@ -169,7 +171,9 @@ class ListCommand extends MultiFlexiCommand
                         $orderedRow['runtemplate_name'] = $runTemplate->getDataValue('name') ?: '';
                         $orderedRow['runtemplate_id'] = $runtimeTemplateId;
                         $intervalCode = $runTemplate->getDataValue('interv') ?: 'n';
-                        $orderedRow['schedule_type'] = \MultiFlexi\Scheduler::codeToInterval($intervalCode);
+                        $orderedRow['schedule_type'] = $format === 'json'
+                            ? \MultiFlexi\CronDescriber::describe($intervalCode, (string) ($runTemplate->getDataValue('cron') ?: ''))
+                            : \MultiFlexi\Scheduler::codeToInterval($intervalCode);
 
                         $appId = $runTemplate->getDataValue('app_id');
 
@@ -187,7 +191,7 @@ class ListCommand extends MultiFlexiCommand
                             $orderedRow['company_id'] = $companyId;
                         }
                     }
-                } catch (\Exception $e) {
+                } catch (\Exception) {
                     // Ignore errors loading related data
                 }
             }

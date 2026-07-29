@@ -108,7 +108,7 @@ class UpdateCommand extends MultiFlexiCommand
             return self::FAILURE;
         }
 
-        $data['credential_type_id'] = $data['credential_type_id'] ?? $credential->getDataValue('credential_type_id');
+        $data['credential_type_id'] ??= $credential->getDataValue('credential_type_id');
 
         try {
             $credential->updateToSQL($data, ['id' => $id]);

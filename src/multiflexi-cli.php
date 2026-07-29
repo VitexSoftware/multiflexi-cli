@@ -20,7 +20,6 @@ require_once __DIR__.'/../vendor/autoload.php';
 
 use Ease\Anonym;
 use Ease\Shared;
-use MultiFlexi\Cli\ConsoleCompat;
 use MultiFlexi\Cli\Command\Application\CreateCommand as ApplicationCreateCommand;
 use MultiFlexi\Cli\Command\Application\DeleteCommand as ApplicationDeleteCommand;
 use MultiFlexi\Cli\Command\Application\ExportJsonCommand as ApplicationExportJsonCommand;
@@ -117,7 +116,6 @@ use MultiFlexi\Cli\Command\User\ListCommand as UserListCommand;
 use MultiFlexi\Cli\Command\User\UpdateCommand as UserUpdateCommand;
 use MultiFlexi\Cli\Command\UserCompany\AssignCommand as UserCompanyAssignCommand;
 use MultiFlexi\Cli\Command\UserCompany\UnassignCommand as UserCompanyUnassignCommand;
-use MultiFlexi\Cli\Command\UserRole\SetCommand as UserRoleSetCommand;
 use MultiFlexi\Cli\Command\UserErasure\ApproveCommand as UserErasureApproveCommand;
 use MultiFlexi\Cli\Command\UserErasure\AuditCommand as UserErasureAuditCommand;
 use MultiFlexi\Cli\Command\UserErasure\CleanupCommand as UserErasureCleanupCommand;
@@ -125,6 +123,7 @@ use MultiFlexi\Cli\Command\UserErasure\CreateCommand as UserErasureCreateCommand
 use MultiFlexi\Cli\Command\UserErasure\ListCommand as UserErasureListCommand;
 use MultiFlexi\Cli\Command\UserErasure\ProcessCommand as UserErasureProcessCommand;
 use MultiFlexi\Cli\Command\UserErasure\RejectCommand as UserErasureRejectCommand;
+use MultiFlexi\Cli\Command\UserRole\SetCommand as UserRoleSetCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\CompleteCommand;
 
@@ -139,7 +138,7 @@ Shared::init(
 
 date_default_timezone_set(\MultiFlexi\DateTimeHelper::getConfiguredTimezoneString());
 
-if(defined('EASE_LOGGER') === false){
+if (\Ease\Shared::cfg('EASE_LOGGER', false) === false) {
     $loggers = ['syslog', '\MultiFlexi\LogToSQL'];
 
     if (Shared::cfg('ZABBIX_SERVER') && Shared::cfg('ZABBIX_HOST') && class_exists('\MultiFlexi\LogToZabbix')) {

@@ -2,6 +2,17 @@
 
 declare(strict_types=1);
 
+/**
+ * This file is part of the MultiFlexi package
+ *
+ * https://multiflexi.eu/
+ *
+ * (c) Vítězslav Dvořák <http://vitexsoftware.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace MultiFlexi\Cli\Command\UserCompany;
 
 use MultiFlexi\Cli\Command\MultiFlexiCommand;
@@ -38,7 +49,7 @@ class UnassignCommand extends MultiFlexiCommand
             return self::FAILURE;
         }
 
-        $userId = $this->resolveUserId($input);
+        $userId = self::resolveUserId($input);
 
         if ($userId <= 0) {
             $msg = 'Provide --user_id or --login or --email';
@@ -56,9 +67,9 @@ class UnassignCommand extends MultiFlexiCommand
             return self::FAILURE;
         }
 
-        $pdo = $this->connectPdo();
+        $pdo = self::connectPdo();
 
-        if (!$this->tableExists($pdo, 'company_user')) {
+        if (!self::tableExists($pdo, 'company_user')) {
             $msg = 'Table company_user does not exist. Run database migrations first.';
             $format === 'json' ? $this->jsonError($output, $msg) : $output->writeln("<error>{$msg}</error>");
 
@@ -84,7 +95,7 @@ class UnassignCommand extends MultiFlexiCommand
         return self::SUCCESS;
     }
 
-    private function resolveUserId(InputInterface $input): int
+    private static function resolveUserId(InputInterface $input): int
     {
         $userId = (int) $input->getOption('user_id');
 
@@ -110,7 +121,7 @@ class UnassignCommand extends MultiFlexiCommand
         return 0;
     }
 
-    private function connectPdo(): \PDO
+    private static function connectPdo(): \PDO
     {
         return new \PDO(
             \Ease\Shared::cfg('DB_CONNECTION').':host='.\Ease\Shared::cfg('DB_HOST').';port='.(string) \Ease\Shared::cfg('DB_PORT', 3306).';dbname='.\Ease\Shared::cfg('DB_DATABASE').';charset=utf8mb4',
@@ -120,7 +131,7 @@ class UnassignCommand extends MultiFlexiCommand
         );
     }
 
-    private function tableExists(\PDO $pdo, string $table): bool
+    private static function tableExists(\PDO $pdo, string $table): bool
     {
         $stmt = $pdo->prepare('SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = ? AND table_name = ?');
         $stmt->execute([\Ease\Shared::cfg('DB_DATABASE'), $table]);

@@ -21,12 +21,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class InitCommand extends BaseCommand
 {
-    protected static $defaultName = 'encryption:init';
-
     /**
      * Must match the placeholder value used by EncryptionKeysSeeder in multiflexi-database.
      */
     private const PLACEHOLDER = 'PLACEHOLDER_KEY_TO_BE_REPLACED';
+    protected static $defaultName = 'encryption:init';
 
     protected function configure(): void
     {

@@ -58,13 +58,13 @@ class EncryptExistingCommand extends BaseCommand
         // Only rows belonging to a field the CredentialType marks as
         // redactable (secret/password) need encrypting; non-secret config
         // values are left as plaintext to limit blast radius and cost.
-        $rows = $pdo->query(
-            "SELECT cd.id, cd.credential_id, cd.name, cd.value, cd.type, c.credential_type_id
+        $rows = $pdo->query(<<<'EOD'
+SELECT cd.id, cd.credential_id, cd.name, cd.value, cd.type, c.credential_type_id
              FROM credata cd
              JOIN credentials c ON c.id = cd.credential_id
              WHERE cd.is_encrypted = 0 AND cd.value IS NOT NULL AND cd.value != ''
-             ORDER BY cd.id",
-        )->fetchAll(\PDO::FETCH_ASSOC);
+             ORDER BY cd.id
+EOD,)->fetchAll(\PDO::FETCH_ASSOC);
 
         $typeFieldsCache = [];
         $toEncrypt = [];

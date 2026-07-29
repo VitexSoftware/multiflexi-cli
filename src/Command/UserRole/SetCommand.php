@@ -2,6 +2,17 @@
 
 declare(strict_types=1);
 
+/**
+ * This file is part of the MultiFlexi package
+ *
+ * https://multiflexi.eu/
+ *
+ * (c) Vítězslav Dvořák <http://vitexsoftware.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace MultiFlexi\Cli\Command\UserRole;
 
 use MultiFlexi\Cli\Command\MultiFlexiCommand;
@@ -31,7 +42,7 @@ class SetCommand extends MultiFlexiCommand
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $format = strtolower((string) $input->getOption('format'));
-        $userId = $this->resolveUserId($input);
+        $userId = self::resolveUserId($input);
 
         if ($userId <= 0) {
             $msg = 'Provide --user_id or --login or --email';
@@ -55,16 +66,16 @@ class SetCommand extends MultiFlexiCommand
         $assignedBy = $input->getOption('assigned_by');
         $assignedBy = ($assignedBy !== null && $assignedBy !== '' && is_numeric($assignedBy)) ? (int) $assignedBy : null;
 
-        $pdo = $this->connectPdo();
+        $pdo = self::connectPdo();
 
-        if (!$this->tableExists($pdo, 'rbac_roles') || !$this->tableExists($pdo, 'rbac_user_roles')) {
+        if (!self::tableExists($pdo, 'rbac_roles') || !self::tableExists($pdo, 'rbac_user_roles')) {
             $msg = 'RBAC tables are missing (rbac_roles/rbac_user_roles). Ensure RBAC is initialized first.';
             $format === 'json' ? $this->jsonError($output, $msg) : $output->writeln("<error>{$msg}</error>");
 
             return self::FAILURE;
         }
 
-        $availableRoles = $this->loadRoleMap($pdo);
+        $availableRoles = self::loadRoleMap($pdo);
         $missingRoles = array_values(array_filter($roleNames, static fn (string $r): bool => !isset($availableRoles[$r])));
 
         if (!empty($missingRoles)) {
@@ -83,7 +94,7 @@ class SetCommand extends MultiFlexiCommand
                 if (empty($targetRoleIds)) {
                     $pdo->prepare('DELETE FROM rbac_user_roles WHERE user_id = ?')->execute([$userId]);
                 } else {
-                    $placeholders = implode(',', array_fill(0, count($targetRoleIds), '?'));
+                    $placeholders = implode(',', array_fill(0, \count($targetRoleIds), '?'));
                     $params = array_merge([$userId], $targetRoleIds);
                     $pdo->prepare('DELETE FROM rbac_user_roles WHERE user_id = ? AND role_id NOT IN ('.$placeholders.')')->execute($params);
                 }
@@ -92,7 +103,7 @@ class SetCommand extends MultiFlexiCommand
             foreach ($targetRoleIds as $roleId) {
                 $pdo->prepare(
                     'INSERT INTO rbac_user_roles (user_id, role_id, assigned_by) VALUES (?, ?, ?) '
-                    .'ON DUPLICATE KEY UPDATE assigned_by = VALUES(assigned_by), assigned_at = CURRENT_TIMESTAMP'
+                    .'ON DUPLICATE KEY UPDATE assigned_by = VALUES(assigned_by), assigned_at = CURRENT_TIMESTAMP',
                 )->execute([$userId, $roleId, $assignedBy]);
             }
 
@@ -105,7 +116,7 @@ class SetCommand extends MultiFlexiCommand
             return self::FAILURE;
         }
 
-        $finalRoles = $this->loadUserRoles($pdo, $userId);
+        $finalRoles = self::loadUserRoles($pdo, $userId);
 
         if ($format === 'json') {
             $this->jsonSuccess($output, 'RBAC roles updated', [
@@ -123,9 +134,9 @@ class SetCommand extends MultiFlexiCommand
     }
 
     /**
-     * @return array<string,int>
+     * @return array<string, int>
      */
-    private function loadRoleMap(\PDO $pdo): array
+    private static function loadRoleMap(\PDO $pdo): array
     {
         $rows = $pdo->query('SELECT id, name FROM rbac_roles WHERE is_active = 1')->fetchAll(\PDO::FETCH_ASSOC);
         $map = [];
@@ -138,9 +149,9 @@ class SetCommand extends MultiFlexiCommand
     }
 
     /**
-     * @return array<int,array<string,mixed>>
+     * @return array<int, array<string, mixed>>
      */
-    private function loadUserRoles(\PDO $pdo, int $userId): array
+    private static function loadUserRoles(\PDO $pdo, int $userId): array
     {
         $stmt = $pdo->prepare('SELECT r.id, r.name, r.display_name, ur.assigned_at, ur.expires_at FROM rbac_roles r JOIN rbac_user_roles ur ON ur.role_id = r.id WHERE ur.user_id = ? AND r.is_active = 1 ORDER BY r.name');
         $stmt->execute([$userId]);
@@ -148,7 +159,7 @@ class SetCommand extends MultiFlexiCommand
         return $stmt->fetchAll(\PDO::FETCH_ASSOC) ?: [];
     }
 
-    private function resolveUserId(InputInterface $input): int
+    private static function resolveUserId(InputInterface $input): int
     {
         $userId = (int) $input->getOption('user_id');
 
@@ -174,7 +185,7 @@ class SetCommand extends MultiFlexiCommand
         return 0;
     }
 
-    private function connectPdo(): \PDO
+    private static function connectPdo(): \PDO
     {
         return new \PDO(
             \Ease\Shared::cfg('DB_CONNECTION').':host='.\Ease\Shared::cfg('DB_HOST').';port='.(string) \Ease\Shared::cfg('DB_PORT', 3306).';dbname='.\Ease\Shared::cfg('DB_DATABASE').';charset=utf8mb4',
@@ -184,7 +195,7 @@ class SetCommand extends MultiFlexiCommand
         );
     }
 
-    private function tableExists(\PDO $pdo, string $table): bool
+    private static function tableExists(\PDO $pdo, string $table): bool
     {
         $stmt = $pdo->prepare('SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = ? AND table_name = ?');
         $stmt->execute([\Ease\Shared::cfg('DB_DATABASE'), $table]);
