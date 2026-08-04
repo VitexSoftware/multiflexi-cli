@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace MultiFlexi\Cli\Command\Queue;
 
 use MultiFlexi\Cli\Command\MultiFlexiCommand;
-use MultiFlexi\ScheduleLister;
+use MultiFlexi\Cli\ScheduleQuery;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -43,7 +43,7 @@ class ListCommand extends MultiFlexiCommand
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $format = strtolower($input->getOption('format'));
-        $lister = new ScheduleLister();
+        $lister = new ScheduleQuery();
         $query = $lister->listingQuery()
             ->select(['runtemplate.interv AS interv', 'runtemplate.cron AS cron']);
         $totalCount = (clone $query)->count();

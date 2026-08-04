@@ -15,7 +15,7 @@ declare(strict_types=1);
 
 namespace MultiFlexi\Cli\Command;
 
-use MultiFlexi\ScheduleLister;
+use MultiFlexi\Cli\ScheduleQuery;
 use MultiFlexi\Scheduler;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -54,7 +54,7 @@ class QueueCommand extends MultiFlexiCommand
 
         switch ($action) {
             case 'overview':
-                $lister = new ScheduleLister();
+                $lister = new ScheduleQuery();
                 $query = $lister->listingQuery();
 
                 // Get queue statistics
@@ -156,7 +156,7 @@ class QueueCommand extends MultiFlexiCommand
 
                 return self::SUCCESS;
             case 'list':
-                $lister = new ScheduleLister();
+                $lister = new ScheduleQuery();
                 $query = $lister->listingQuery();
 
                 // Handle order option
