@@ -1,9 +1,11 @@
-multiflexi-cli (2.5.9) UNRELEASED; urgency=medium
+multiflexi-cli (2.5.10) UNRELEASED; urgency=medium
 
   * Add run-template:stale command listing active run-templates whose
     next_schedule is stuck in the past (used as a Zabbix watchdog input).
+  * Fix queue:list/queue:overview fatal error: ScheduleLister class was
+    removed but two call sites still referenced it.
 
- -- Vítězslav Dvořák <info@vitexsoftware.cz>  Mon, 20 Jul 2026 15:45:00 +0200
+ -- Vítězslav Dvořák <info@vitexsoftware.cz>  Fri, 07 Aug 2026 18:53:43 +0200
 
 multiflexi-cli (2.5.8) UNRELEASED; urgency=medium
 
