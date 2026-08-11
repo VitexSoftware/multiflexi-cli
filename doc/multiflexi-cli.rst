@@ -379,6 +379,12 @@ Manage run templates (list, get, create, update, delete, schedule, and credentia
     multiflexi-cli run-template:unassign-credential --runtemplate_id=<id> --credential_id=<id> [options]
     multiflexi-cli run-template:list-credentials --runtemplate_id=<id> [options]
 
+``run-template:delete`` cascades the removal of every record tied to the
+RunTemplate: its jobs (and each job's queue entries, output logs, and
+artifacts), action config, assigned credentials, saved config values, and any
+job-chaining event rules that reference it. Deleting a RunTemplate with no
+matching id reports an error instead of silently succeeding.
+
 Common options:
   --id           RunTemplate ID
   --name         Name

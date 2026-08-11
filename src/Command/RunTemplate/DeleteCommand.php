@@ -44,7 +44,31 @@ class DeleteCommand extends BaseCommand
             return self::FAILURE;
         }
 
-        (new RunTemplate((int) $id))->deleteFromSQL();
+        try {
+            $deleted = (new RunTemplate((int) $id))->deleteFromSQL();
+        } catch (\Throwable $e) {
+            $message = sprintf('Failed to delete RunTemplate (ID: %s): %s', $id, $e->getMessage());
+
+            if ($format === 'json') {
+                $this->jsonError($output, $message);
+            } else {
+                $output->writeln("<error>{$message}</error>");
+            }
+
+            return self::FAILURE;
+        }
+
+        if ($deleted === 0) {
+            $message = "RunTemplate not found (ID: {$id})";
+
+            if ($format === 'json') {
+                $this->jsonError($output, $message, 'not_found');
+            } else {
+                $output->writeln("<error>{$message}</error>");
+            }
+
+            return self::FAILURE;
+        }
 
         if ($format === 'json') {
             $output->writeln(json_encode(['runtemplate_id' => $id, 'deleted' => true], \JSON_PRETTY_PRINT));

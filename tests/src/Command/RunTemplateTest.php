@@ -16,6 +16,7 @@ declare(strict_types=1);
 namespace Test\MultiFlexi\Cli\Command;
 
 use MultiFlexi\Cli\Command\RunTemplate\AssignCredentialCommand;
+use MultiFlexi\Cli\Command\RunTemplate\DeleteCommand;
 use MultiFlexi\Cli\Command\RunTemplate\GetCommand;
 use MultiFlexi\Cli\Command\RunTemplate\ListCredentialsCommand;
 use MultiFlexi\Cli\Command\RunTemplate\ScheduleCommand;
@@ -28,6 +29,7 @@ class RunTemplateTest extends \PHPUnit\Framework\TestCase
     protected AssignCredentialCommand $assignCredential;
     protected UnassignCredentialCommand $unassignCredential;
     protected ListCredentialsCommand $listCredentials;
+    protected DeleteCommand $delete;
 
     protected function setUp(): void
     {
@@ -36,6 +38,7 @@ class RunTemplateTest extends \PHPUnit\Framework\TestCase
         $this->assignCredential = new AssignCredentialCommand();
         $this->unassignCredential = new UnassignCredentialCommand();
         $this->listCredentials = new ListCredentialsCommand();
+        $this->delete = new DeleteCommand();
     }
 
     public function testScheduleCommandHasEnvOption(): void
@@ -137,5 +140,29 @@ class RunTemplateTest extends \PHPUnit\Framework\TestCase
     {
         $definition = $this->listCredentials->getDefinition();
         $this->assertTrue($definition->hasOption('format'), '--format option must be defined on run-template:list-credentials');
+    }
+
+    public function testDeleteCommandName(): void
+    {
+        $this->assertSame('run-template:delete', $this->delete->getName());
+    }
+
+    public function testDeleteCommandHasIdOption(): void
+    {
+        $definition = $this->delete->getDefinition();
+        $this->assertTrue($definition->hasOption('id'), '--id option must be defined on run-template:delete');
+    }
+
+    public function testDeleteCommandHasFormatOption(): void
+    {
+        $definition = $this->delete->getDefinition();
+        $this->assertTrue($definition->hasOption('format'), '--format option must be defined on run-template:delete');
+    }
+
+    public function testDeleteCommandRequiresId(): void
+    {
+        $tester = new \Symfony\Component\Console\Tester\CommandTester($this->delete);
+        $tester->execute(['--format' => 'json']);
+        $this->assertSame(DeleteCommand::FAILURE, $tester->getStatusCode(), 'run-template:delete must fail without --id');
     }
 }

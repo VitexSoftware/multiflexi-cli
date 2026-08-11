@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- `run-template:delete` no longer reports success when the given `--id` doesn't
+  exist, and now reports a clean error (instead of an uncaught stack trace) if
+  deletion fails for any other reason. The underlying cascade-delete fix lives
+  in `vitexsoftware/multiflexi-core`.
+
 ## [2.5.6] - 2026-06-06
 
 ### Added

@@ -157,6 +157,41 @@ $CLI_CMD run-template:list --limit 2
 $CLI_CMD run-template:list --limit 1 --order D
 $CLI_CMD run-template:list --limit 1 --order A --format json
 
+echo "--- create/delete round trip ---"
+RT_TESTCO_ID=$($CLI_CMD company:get --slug testco --format json | jq -r '.id // empty')
+RT_TEST_APP_ID=$($CLI_CMD application:list --format json --limit 1 | jq -r '.[0].id // empty')
+
+if [ -n "$RT_TESTCO_ID" ] && [ -n "$RT_TEST_APP_ID" ]; then
+    RT_CREATE_RESULT=$($CLI_CMD run-template:create --name "test-delete-runtemplate" --app_id "$RT_TEST_APP_ID" --company_id "$RT_TESTCO_ID" --format json)
+    echo "$RT_CREATE_RESULT"
+    RT_TEST_ID=$(echo "$RT_CREATE_RESULT" | jq -r '.runtemplate_id // empty')
+
+    if [ -n "$RT_TEST_ID" ]; then
+        RT_DELETE_RESULT=$($CLI_CMD run-template:delete --id "$RT_TEST_ID" --format json)
+        echo "$RT_DELETE_RESULT"
+        if echo "$RT_DELETE_RESULT" | jq -e '.deleted == true' >/dev/null 2>&1; then
+            echo "✓ RunTemplate create/delete round trip passed"
+        else
+            echo "ERROR: run-template:delete did not report success!"
+            exit 1
+        fi
+
+        # Deleting an already-deleted id must fail cleanly, not report success
+        RT_REDELETE_RESULT=$($CLI_CMD run-template:delete --id "$RT_TEST_ID" --format json || true)
+        echo "$RT_REDELETE_RESULT"
+        if echo "$RT_REDELETE_RESULT" | jq -e '.status == "not_found"' >/dev/null 2>&1; then
+            echo "✓ Re-deleting a removed RunTemplate correctly reports not_found"
+        else
+            echo "ERROR: re-deleting a removed RunTemplate did not report not_found!"
+            exit 1
+        fi
+    else
+        echo "⚠ Skipping run-template:delete test: run-template:create did not return an id"
+    fi
+else
+    echo "⚠ Skipping run-template create/delete test: no test company or application found"
+fi
+
 ###############################################################################
 # Job command
 ###############################################################################
