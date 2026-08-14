@@ -7,7 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.5.10] - 2026-08-14
+
+### Added
+- `run-template:stale` command listing active run-templates whose `next_schedule`
+  is stuck in the past (used as a Zabbix watchdog input).
+- `task:list` command (filter by state, runtemplate, from/to, limit).
+- `task:get` command (shows task details with embedded job history).
+- `open-telemetry/sdk` and `open-telemetry/exporter-otlp` dependencies so
+  `telemetry:test` works standalone (was reporting "SDK not installed").
+
 ### Fixed
+- `queue:list`/`queue:overview` fatal error: the `ScheduleLister` class was
+  removed but two call sites still referenced it.
 - `run-template:delete` no longer reports success when the given `--id` doesn't
   exist, and now reports a clean error (instead of an uncaught stack trace) if
   deletion fails for any other reason. The underlying cascade-delete fix lives

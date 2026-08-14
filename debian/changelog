@@ -1,23 +1,17 @@
-multiflexi-cli (2.5.10) UNRELEASED; urgency=medium
+multiflexi-cli (2.5.10) unstable; urgency=medium
 
   * Add run-template:stale command listing active run-templates whose
     next_schedule is stuck in the past (used as a Zabbix watchdog input).
   * Fix queue:list/queue:overview fatal error: ScheduleLister class was
     removed but two call sites still referenced it.
-
- -- Vítězslav Dvořák <info@vitexsoftware.cz>  Fri, 07 Aug 2026 18:53:43 +0200
-
-multiflexi-cli (2.5.8) UNRELEASED; urgency=medium
-
+  * Fix: run-template:delete no longer reports success when the given --id
+    doesn't exist, and now reports a clean error (instead of an uncaught
+    stack trace) if deletion fails for any other reason. The underlying
+    cascade-delete fix lives in vitexsoftware/multiflexi-core.
   * Add task:list command (filter by state, runtemplate, from/to, limit)
   * Add task:get command (shows task details with embedded job history)
   * Add open-telemetry/sdk and open-telemetry/exporter-otlp so
     telemetry:test works standalone (was reporting "SDK not installed")
-
- -- vitex <info@vitexsoftware.cz>  Sat, 14 Jun 2026 10:00:00 +0200
-
-multiflexi-cli (2.5.7) UNRELEASED; urgency=medium
-
   * Add user-company:assign command
   * Add user-company:unassign command
   * Add user-role:set command for RBAC role assignment
@@ -27,28 +21,18 @@ multiflexi-cli (2.5.7) UNRELEASED; urgency=medium
     debian/conf/composer.json, dropping deprecated deb/* composer-debian
     package names so composer-global-update deb/multiflexi-core no
     longer fails during apt upgrade.
-
- -- Vítězslav Dvořák <info@vitexsoftware.cz>  Mon, 08 Jun 2026 14:57:53 +0200
-
-multiflexi-cli (2.5.5) UNRELEASED; urgency=medium
-
   * Fix: rename --runtemplate_id to --id on run-template:assign-credential,
     run-template:unassign-credential, and run-template:list-credentials
     to be consistent with all other run-template:* commands
   * Update tests: replace --runtemplate_id assertions with --id
   * Update documentation with corrected option names
-
- -- Vítězslav Dvořák <info@vitexsoftware.cz>  Wed, 28 May 2026 00:00:00 +0200
-
-multiflexi-cli (2.5.4) UNRELEASED; urgency=medium
-
   * Add run-template:assign-credential command
   * Add run-template:unassign-credential command
   * Add run-template:list-credentials command
   * Update tests for credential assignment commands
   * Update documentation for credential assignment commands
 
- -- Vítězslav Dvořák <info@vitexsoftware.cz>  Mon, 26 May 2026 00:00:00 +0200
+ -- Vítězslav Dvořák <info@vitexsoftware.cz>  Fri, 14 Aug 2026 12:00:00 +0200
 
 multiflexi-cli (2.5.3) stable; urgency=medium
 
