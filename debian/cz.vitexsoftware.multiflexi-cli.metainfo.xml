@@ -6,9 +6,16 @@
   <project_license>MIT</project_license>
   <name>MultiFlexi CLI</name>
   <summary>Command-line interface for MultiFlexi system management</summary>
+  <summary xml:lang="cs">Rozhraní příkazové řádky pro správu systému MultiFlexi</summary>
   <description>
     <p>
       MultiFlexi CLI is a powerful command-line interface tool for managing and interacting with the MultiFlexi system. It allows administrators and users to list, create, get, and delete MultiFlexi resources directly from the terminal. </p> <p> The CLI supports JSON output for easy integration with other tools and scripts, and provides internationalization support. This package is intended for users who prefer or require command-line access to MultiFlexi's features.
+    </p>
+    <p xml:lang="cs">
+      MultiFlexi CLI je výkonný nástroj s rozhraním příkazové řádky pro správu systému MultiFlexi a interakci s ním. Umožňuje administrátorům a uživatelům vypisovat, vytvářet, získávat a mazat zdroje MultiFlexi přímo z terminálu.
+    </p>
+    <p xml:lang="cs">
+      CLI podporuje výstup ve formátu JSON pro snadnou integraci s dalšími nástroji a skripty a nabízí podporu internacionalizace. Tento balíček je určen uživatelům, kteří preferují nebo vyžadují přístup k funkcím MultiFlexi z příkazové řádky.
     </p>
   </description>
   <icon type="stock">multiflexi-cli</icon>
