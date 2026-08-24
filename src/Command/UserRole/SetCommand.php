@@ -16,6 +16,7 @@ declare(strict_types=1);
 namespace MultiFlexi\Cli\Command\UserRole;
 
 use MultiFlexi\Cli\Command\MultiFlexiCommand;
+use MultiFlexi\Rbac;
 use MultiFlexi\User;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -75,48 +76,18 @@ class SetCommand extends MultiFlexiCommand
             return self::FAILURE;
         }
 
-        $availableRoles = self::loadRoleMap($pdo);
-        $missingRoles = array_values(array_filter($roleNames, static fn (string $r): bool => !isset($availableRoles[$r])));
-
-        if (!empty($missingRoles)) {
-            $msg = 'Unknown role(s): '.implode(', ', $missingRoles);
-            $format === 'json' ? $this->jsonError($output, $msg, 'invalid_roles') : $output->writeln("<error>{$msg}</error>");
+        try {
+            $finalRoles = (new Rbac())->setUserRoles($userId, $roleNames, $replace, $assignedBy);
+        } catch (\InvalidArgumentException $e) {
+            $format === 'json' ? $this->jsonError($output, $e->getMessage(), 'invalid_roles') : $output->writeln("<error>{$e->getMessage()}</error>");
 
             return self::FAILURE;
-        }
-
-        $targetRoleIds = array_values(array_map(static fn (string $r): int => (int) $availableRoles[$r], $roleNames));
-
-        $pdo->beginTransaction();
-
-        try {
-            if ($replace) {
-                if (empty($targetRoleIds)) {
-                    $pdo->prepare('DELETE FROM rbac_user_roles WHERE user_id = ?')->execute([$userId]);
-                } else {
-                    $placeholders = implode(',', array_fill(0, \count($targetRoleIds), '?'));
-                    $params = array_merge([$userId], $targetRoleIds);
-                    $pdo->prepare('DELETE FROM rbac_user_roles WHERE user_id = ? AND role_id NOT IN ('.$placeholders.')')->execute($params);
-                }
-            }
-
-            foreach ($targetRoleIds as $roleId) {
-                $pdo->prepare(
-                    'INSERT INTO rbac_user_roles (user_id, role_id, assigned_by) VALUES (?, ?, ?) '
-                    .'ON DUPLICATE KEY UPDATE assigned_by = VALUES(assigned_by), assigned_at = CURRENT_TIMESTAMP',
-                )->execute([$userId, $roleId, $assignedBy]);
-            }
-
-            $pdo->commit();
         } catch (\Throwable $e) {
-            $pdo->rollBack();
             $msg = 'Failed to set user roles: '.$e->getMessage();
             $format === 'json' ? $this->jsonError($output, $msg) : $output->writeln("<error>{$msg}</error>");
 
             return self::FAILURE;
         }
-
-        $finalRoles = self::loadUserRoles($pdo, $userId);
 
         if ($format === 'json') {
             $this->jsonSuccess($output, 'RBAC roles updated', [
@@ -131,32 +102,6 @@ class SetCommand extends MultiFlexiCommand
         }
 
         return self::SUCCESS;
-    }
-
-    /**
-     * @return array<string, int>
-     */
-    private static function loadRoleMap(\PDO $pdo): array
-    {
-        $rows = $pdo->query('SELECT id, name FROM rbac_roles WHERE is_active = 1')->fetchAll(\PDO::FETCH_ASSOC);
-        $map = [];
-
-        foreach ($rows as $row) {
-            $map[(string) $row['name']] = (int) $row['id'];
-        }
-
-        return $map;
-    }
-
-    /**
-     * @return array<int, array<string, mixed>>
-     */
-    private static function loadUserRoles(\PDO $pdo, int $userId): array
-    {
-        $stmt = $pdo->prepare('SELECT r.id, r.name, r.display_name, ur.assigned_at, ur.expires_at FROM rbac_roles r JOIN rbac_user_roles ur ON ur.role_id = r.id WHERE ur.user_id = ? AND r.is_active = 1 ORDER BY r.name');
-        $stmt->execute([$userId]);
-
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC) ?: [];
     }
 
     private static function resolveUserId(InputInterface $input): int
