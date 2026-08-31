@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9e7392d3d850a365b45311f5102e0389",
+    "content-hash": "929923b55a4455dca6d7c4ecdffd4ea8",
     "packages": [
         {
             "name": "brick/math",
@@ -1688,16 +1688,16 @@
         },
         {
             "name": "phplucidframe/console-table",
-            "version": "v1.4.0",
+            "version": "v1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phplucidframe/console-table.git",
-                "reference": "8a3a571f6523e323f28d3a31d9991394c9db75f8"
+                "reference": "9712c29e868573dbf912c90bde40b99631cedd5c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phplucidframe/console-table/zipball/8a3a571f6523e323f28d3a31d9991394c9db75f8",
-                "reference": "8a3a571f6523e323f28d3a31d9991394c9db75f8",
+                "url": "https://api.github.com/repos/phplucidframe/console-table/zipball/9712c29e868573dbf912c90bde40b99631cedd5c",
+                "reference": "9712c29e868573dbf912c90bde40b99631cedd5c",
                 "shasum": ""
             },
             "require": {
@@ -1727,9 +1727,9 @@
             "description": "Console Table",
             "support": {
                 "issues": "https://github.com/phplucidframe/console-table/issues",
-                "source": "https://github.com/phplucidframe/console-table/tree/v1.4.0"
+                "source": "https://github.com/phplucidframe/console-table/tree/v1.5.0"
             },
-            "time": "2025-05-27T14:28:44+00:00"
+            "time": "2026-08-25T14:49:47+00:00"
         },
         {
             "name": "psr/cache",
@@ -8056,5 +8056,5 @@
         "ext-simplexml": "*"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
