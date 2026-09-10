@@ -88,8 +88,11 @@ class AssignCommand extends MultiFlexiCommand
             return self::FAILURE;
         }
 
-        $sql = 'INSERT INTO company_user (company_id, user_id, role) VALUES (?, ?, ?) '
-            .'ON DUPLICATE KEY UPDATE role = VALUES(role)';
+        $sql = $pdo->getAttribute(\PDO::ATTR_DRIVER_NAME) === 'sqlite'
+            ? 'INSERT INTO company_user (company_id, user_id, role) VALUES (?, ?, ?) '
+                .'ON CONFLICT(company_id, user_id) DO UPDATE SET role = excluded.role'
+            : 'INSERT INTO company_user (company_id, user_id, role) VALUES (?, ?, ?) '
+                .'ON DUPLICATE KEY UPDATE role = VALUES(role)';
         $ok = $pdo->prepare($sql)->execute([$companyId, $userId, $role]);
 
         if (!$ok) {
@@ -136,23 +139,5 @@ class AssignCommand extends MultiFlexiCommand
         }
 
         return 0;
-    }
-
-    private static function connectPdo(): \PDO
-    {
-        return new \PDO(
-            \Ease\Shared::cfg('DB_CONNECTION').':host='.\Ease\Shared::cfg('DB_HOST').';port='.(string) \Ease\Shared::cfg('DB_PORT', 3306).';dbname='.\Ease\Shared::cfg('DB_DATABASE').';charset=utf8mb4',
-            \Ease\Shared::cfg('DB_USERNAME'),
-            \Ease\Shared::cfg('DB_PASSWORD'),
-            [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION],
-        );
-    }
-
-    private static function tableExists(\PDO $pdo, string $table): bool
-    {
-        $stmt = $pdo->prepare('SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = ? AND table_name = ?');
-        $stmt->execute([\Ease\Shared::cfg('DB_DATABASE'), $table]);
-
-        return (int) $stmt->fetchColumn() > 0;
     }
 }

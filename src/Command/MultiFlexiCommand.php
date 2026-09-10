@@ -296,6 +296,32 @@ abstract class MultiFlexiCommand extends \Symfony\Component\Console\Command\Comm
     }
 
     /**
+     * Backend-agnostic PDO connection, built the same way as the rest of the
+     * codebase (via MultiFlexi\Engine / Ease\SQL\Orm::pdoConnect()), so it
+     * works for mysql, pgsql and sqlite alike depending on DB_CONNECTION.
+     */
+    protected static function connectPdo(): \PDO
+    {
+        return (new \MultiFlexi\Engine())->getPdo();
+    }
+
+    /**
+     * Backend-agnostic "does this table exist" check.
+     */
+    protected static function tableExists(\PDO $pdo, string $table): bool
+    {
+        if ($pdo->getAttribute(\PDO::ATTR_DRIVER_NAME) === 'sqlite') {
+            $stmt = $pdo->prepare('SELECT COUNT(*) FROM sqlite_master WHERE type = ? AND name = ?');
+            $stmt->execute(['table', $table]);
+        } else {
+            $stmt = $pdo->prepare('SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = ? AND table_name = ?');
+            $stmt->execute([\Ease\Shared::cfg('DB_DATABASE'), $table]);
+        }
+
+        return (int) $stmt->fetchColumn() > 0;
+    }
+
+    /**
      * Convert string option to boolean if needed.
      *
      * @param mixed $val
