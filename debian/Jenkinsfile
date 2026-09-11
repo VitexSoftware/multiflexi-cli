@@ -5,10 +5,7 @@
 String[] distributions = [
     'debian:bookworm',
     'debian:trixie',
-    // 'debian:forky', // Disabled: Forky is still unstable/research-only. multiflexi-common is not yet
-    //                 // available for Forky, causing cascading unmet dependencies (php-symfony-dependency-injection,
-    //                 // php-phplucidframe-console-table etc. not installable). Re-enable once the full
-    //                 // multiflexi package stack is available for Forky.
+    'debian:forky',
     'ubuntu:jammy',
     'ubuntu:noble',
     'ubuntu:resolute',
@@ -29,6 +26,7 @@ properties([
 node() {
     ansiColor('xterm') {
         stage('SCM Checkout') {
+            sh 'sudo chown -R jenkins:jenkins . 2>/dev/null || true'
             checkout scm
         }
     }
@@ -50,6 +48,7 @@ distributions.each { distro ->
         node {
             ansiColor('xterm') {
                 stage('Checkout ' + distroName) {
+                    sh 'sudo chown -R jenkins:jenkins . 2>/dev/null || true'
                     checkout scm
                     def imageName = vendor + '/' + distro
                     buildImage = docker.image(imageName)
