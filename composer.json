@@ -16,7 +16,7 @@
     "vitexsoftware/ease-fluentpdo": "dev-main",
     "symfony/process": "^8.1",
     "vitexsoftware/multiflexi-core": "dev-main",
-    "phplucidframe/console-table": "^1.4",
+    "phplucidframe/console-table": "^1.5",
     "confirm-it-solutions/php-zabbix-api": "^3.0",
     "vitexsoftware/ease-html": "^1.40",
     "symfony/console": "^8.1",
