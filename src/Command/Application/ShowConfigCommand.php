@@ -17,6 +17,7 @@ namespace MultiFlexi\Cli\Command\Application;
 
 use MultiFlexi\Application;
 use MultiFlexi\Cli\Command\MultiFlexiCommand;
+use MultiFlexi\Conffield;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -37,12 +38,13 @@ class ShowConfigCommand extends MultiFlexiCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $format = strtolower($input->getOption('format'));
+        $format = strtolower((string) $input->getOption('format'));
         $id = $input->getOption('id');
         $uuid = $input->getOption('uuid');
 
         if (empty($id) && empty($uuid)) {
-            $output->writeln('<error>Missing --id or --uuid</error>');
+            $msg = 'Missing --id or --uuid';
+            $format === 'json' ? $this->jsonError($output, $msg) : $output->writeln("<error>{$msg}</error>");
 
             return self::FAILURE;
         }
@@ -51,7 +53,8 @@ class ShowConfigCommand extends MultiFlexiCommand
             $found = (new Application())->listingQuery()->where(['uuid' => $uuid])->fetch();
 
             if (!$found) {
-                $output->writeln('<error>No application found with given UUID</error>');
+                $msg = 'No application found with given UUID';
+                $format === 'json' ? $this->jsonError($output, $msg) : $output->writeln("<error>{$msg}</error>");
 
                 return self::FAILURE;
             }
@@ -59,16 +62,23 @@ class ShowConfigCommand extends MultiFlexiCommand
             $id = $found['id'];
         }
 
-        $result = [];
+        $app = new Application((int) $id);
+
+        if (empty($app->getData())) {
+            $msg = "Application #{$id} not found";
+            $format === 'json' ? $this->jsonError($output, $msg) : $output->writeln("<error>{$msg}</error>");
+
+            return self::FAILURE;
+        }
+
+        $result = array_values((new Conffield())->appConfigs((int) $id));
 
         if ($format === 'json') {
             $output->writeln(json_encode($result, \JSON_PRETTY_PRINT));
+        } elseif (empty($result)) {
+            $output->writeln('<info>No configuration fields defined for this application.</info>');
         } else {
-            if (empty($result)) {
-                $output->writeln('<info>No configuration fields defined for this application.</info>');
-            } else {
-                $this->outputTable($result);
-            }
+            $output->writeln(self::outputTable($result));
         }
 
         return self::SUCCESS;

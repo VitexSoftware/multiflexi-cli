@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- `user-role:list` — list RBAC roles assigned to a user (includes available role catalog).
+- `conffield:list|get|create|update|delete` — manage application configuration field
+  definitions (same data as web UI ``conffield.php``).
+- `application:show-config` now returns real ``conffield`` rows for the application.
+- `token:list` joins ``user.login`` as ``user`` for readable listings.
+
 ## [2.5.10] - 2026-08-14
 
 ### Added

@@ -28,6 +28,12 @@ Show defined configuration fields for an application.
 Options: --id, --uuid, --format
 .RE
 .TP
+.B conffield:list / conffield:get / conffield:create / conffield:update / conffield:delete
+Manage application configuration field definitions (same data as web UI conffield.php).
+.RS
+Options: --app_id, --id, --keyname, --type, --description, --hint, --note, --defval, --required, --secret, --multiline, --expiring, --limit, --offset, --order, --fields, --format
+.RE
+.TP
 .B run-template:list / run-template:get / run-template:create / run-template:update / run-template:delete
 Manage run templates.
 .RS
@@ -106,10 +112,10 @@ Assign and unassign users to/from companies.
 Options: --company_id, --user_id, --login, --email, --role (assign only), --format
 .RE
 .TP
-.B user-role:set
-Set RBAC roles for a user.
+.B user-role:list / user-role:set
+List and set RBAC roles for a user.
 .RS
-Options: --user_id, --login, --email, --roles, --replace, --assigned_by, --format
+Options: --user_id, --login, --email, --roles (set only), --replace (set only), --assigned_by (set only), --format
 .RE
 .TP
 .B user-erasure:list / user-erasure:create / user-erasure:approve / user-erasure:reject / user-erasure:process / user-erasure:audit / user-erasure:cleanup
@@ -307,6 +313,7 @@ Unassign user from company:
 .B multiflexi-cli user-company:unassign --company_id=2 --login=jsmith
 .TP
 Set RBAC roles for user:
+.B multiflexi-cli user-role:list --login=jsmith
 .B multiflexi-cli user-role:set --login=jsmith --roles=admin,viewer --replace=true
 .TP
 Import credential type from JSON:

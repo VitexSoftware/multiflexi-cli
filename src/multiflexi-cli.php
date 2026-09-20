@@ -41,6 +41,11 @@ use MultiFlexi\Cli\Command\Company\UpdateCommand as CompanyUpdateCommand;
 use MultiFlexi\Cli\Command\CompanyApp\AssignCommand as CompanyAppAssignCommand;
 use MultiFlexi\Cli\Command\CompanyApp\ListCommand as CompanyAppListCommand;
 use MultiFlexi\Cli\Command\CompanyApp\UnassignCommand as CompanyAppUnassignCommand;
+use MultiFlexi\Cli\Command\ConfField\CreateCommand as ConfFieldCreateCommand;
+use MultiFlexi\Cli\Command\ConfField\DeleteCommand as ConfFieldDeleteCommand;
+use MultiFlexi\Cli\Command\ConfField\GetCommand as ConfFieldGetCommand;
+use MultiFlexi\Cli\Command\ConfField\ListCommand as ConfFieldListCommand;
+use MultiFlexi\Cli\Command\ConfField\UpdateCommand as ConfFieldUpdateCommand;
 use MultiFlexi\Cli\Command\Credential\CreateCommand as CredentialCreateCommand;
 use MultiFlexi\Cli\Command\Credential\GetCommand as CredentialGetCommand;
 use MultiFlexi\Cli\Command\Credential\ListCommand as CredentialListCommand;
@@ -124,6 +129,7 @@ use MultiFlexi\Cli\Command\UserErasure\CreateCommand as UserErasureCreateCommand
 use MultiFlexi\Cli\Command\UserErasure\ListCommand as UserErasureListCommand;
 use MultiFlexi\Cli\Command\UserErasure\ProcessCommand as UserErasureProcessCommand;
 use MultiFlexi\Cli\Command\UserErasure\RejectCommand as UserErasureRejectCommand;
+use MultiFlexi\Cli\Command\UserRole\ListCommand as UserRoleListCommand;
 use MultiFlexi\Cli\Command\UserRole\SetCommand as UserRoleSetCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\CompleteCommand;
@@ -172,6 +178,13 @@ ConsoleCompat::addCommand($application, new ApplicationExportJsonCommand());
 ConsoleCompat::addCommand($application, new ApplicationRemoveJsonCommand());
 ConsoleCompat::addCommand($application, new ApplicationValidateJsonCommand());
 ConsoleCompat::addCommand($application, new ApplicationShowConfigCommand());
+
+// Application configuration fields (conffield)
+ConsoleCompat::addCommand($application, new ConfFieldListCommand());
+ConsoleCompat::addCommand($application, new ConfFieldGetCommand());
+ConsoleCompat::addCommand($application, new ConfFieldCreateCommand());
+ConsoleCompat::addCommand($application, new ConfFieldUpdateCommand());
+ConsoleCompat::addCommand($application, new ConfFieldDeleteCommand());
 
 // Artifact
 ConsoleCompat::addCommand($application, new ArtifactListCommand());
@@ -289,6 +302,7 @@ ConsoleCompat::addCommand($application, new UserCompanyAssignCommand());
 ConsoleCompat::addCommand($application, new UserCompanyUnassignCommand());
 
 // User RBAC Roles
+ConsoleCompat::addCommand($application, new UserRoleListCommand());
 ConsoleCompat::addCommand($application, new UserRoleSetCommand());
 
 // User Erasure (GDPR)

@@ -50,6 +50,7 @@ multiflexi-cli <command> [options]
 | `company-app:list` | List company–application assignments |
 | `user-company:assign --company_id <id> --user_id <id>` | Assign user to company |
 | `user-company:unassign --company_id <id> --user_id <id>` | Unassign user from company |
+| `user-role:list --user_id <id>` | List RBAC roles assigned to a user |
 | `user-role:set --user_id <id> --roles <r1,r2>` | Set RBAC roles for user |
 | `credential-type:list` | List credential types |
 | `credential-type:import-json --file <file>` | Import credential type from JSON |
@@ -103,6 +104,7 @@ multiflexi-cli user-company:assign --company_id 2 --login "jsmith" --role viewer
 multiflexi-cli user-company:unassign --company_id 2 --login "jsmith"
 
 # User RBAC roles
+multiflexi-cli user-role:list --login "jsmith" --format json
 multiflexi-cli user-role:set --login "jsmith" --roles admin,viewer --replace=true
 multiflexi-cli user-role:set --login "jsmith" --roles editor --replace=false
 

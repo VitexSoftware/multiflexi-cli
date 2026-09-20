@@ -40,12 +40,14 @@ class ListCommand extends MultiFlexiCommand
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $format = strtolower($input->getOption('format'));
-        $query = (new Token())->listingQuery();
+        $query = (new Token())->listingQuery()
+            ->select(['token.id', 'token.token', 'token.start', 'token.until', 'token.user_id', 'user.login AS user'], true)
+            ->leftJoin('user ON user.id = token.user_id');
 
         $order = $input->getOption('order');
 
         if (!empty($order)) {
-            $query = $query->orderBy('id '.(strtoupper($order) === 'D' ? 'DESC' : 'ASC'));
+            $query = $query->orderBy('token.id '.(strtoupper($order) === 'D' ? 'DESC' : 'ASC'));
         }
 
         $limit = $input->getOption('limit');
