@@ -106,6 +106,8 @@ class StatusCommand extends MultiFlexiCommand
             'telemetry' => $otelStatus,
             'executor' => \MultiFlexi\Runner::getServiceStatus('multiflexi-executor.service'),
             'scheduler' => \MultiFlexi\Runner::getServiceStatus('multiflexi-scheduler.service'),
+            // Timer is the long-lived unit; the oneshot .service only runs on demand.
+            'housekeeper' => \MultiFlexi\Runner::getServiceStatus('multiflexi-housekeeper.timer'),
             'timestamp' => date('c'),
         ];
 

@@ -28,9 +28,9 @@ class ListCommand extends BaseCommand
     {
         $this
             ->setName('conffield:list')
-            ->setDescription('List configuration fields for an application')
+            ->setDescription('List configuration fields (optionally filtered by application)')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
-            ->addOption('app_id', null, InputOption::VALUE_REQUIRED, 'Application ID')
+            ->addOption('app_id', null, InputOption::VALUE_REQUIRED, 'Application ID (optional; omit to list all)')
             ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit number of results')
             ->addOption('offset', null, InputOption::VALUE_REQUIRED, 'Offset for pagination')
             ->addOption('order', null, InputOption::VALUE_REQUIRED, 'Sort order: A (ascending) or D (descending)')
@@ -40,23 +40,30 @@ class ListCommand extends BaseCommand
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $format = strtolower((string) $input->getOption('format'));
-        $appId = (int) $input->getOption('app_id');
+        $appIdRaw = $input->getOption('app_id');
+        $appId = $appIdRaw === null || $appIdRaw === '' ? 0 : (int) $appIdRaw;
 
-        if ($appId <= 0) {
+        if ($appIdRaw !== null && $appIdRaw !== '' && $appId <= 0) {
             $msg = 'Missing or invalid --app_id';
             $format === 'json' ? $this->jsonError($output, $msg) : $output->writeln("<error>{$msg}</error>");
 
             return self::FAILURE;
         }
 
-        $query = (new Conffield())->listingQuery()->where('app_id', $appId);
+        $query = (new Conffield())->listingQuery();
+
+        if ($appId > 0) {
+            $query = $query->where('app_id', $appId);
+        }
 
         $order = $input->getOption('order');
 
         if (!empty($order)) {
             $query = $query->orderBy('id '.(strtoupper((string) $order) === 'D' ? 'DESC' : 'ASC'));
-        } else {
+        } elseif ($appId > 0) {
             $query = $query->orderBy('keyname ASC');
+        } else {
+            $query = $query->orderBy('app_id ASC, keyname ASC');
         }
 
         $limit = $input->getOption('limit');
@@ -84,7 +91,9 @@ class ListCommand extends BaseCommand
             $output->writeln(json_encode(array_values($rows), \JSON_PRETTY_PRINT));
         } else {
             if (empty($rows)) {
-                $output->writeln('<info>No configuration fields for this application.</info>');
+                $output->writeln($appId > 0
+                    ? '<info>No configuration fields for this application.</info>'
+                    : '<info>No configuration fields found.</info>');
             } else {
                 $output->writeln(self::outputTable($rows));
             }

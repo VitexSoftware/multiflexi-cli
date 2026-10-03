@@ -58,4 +58,13 @@ class PruneCommandTest extends \PHPUnit\Framework\TestCase
         \MultiFlexi\Cli\ConsoleCompat::addCommand($application, $this->object);
         $this->assertSame('prune', $application->find('prune')->getName());
     }
+
+    public function testFormatOptionExists(): void
+    {
+        $definition = $this->object->getDefinition();
+        $this->assertTrue($definition->hasOption('format'));
+        $this->assertTrue($definition->hasOption('logs'));
+        $this->assertTrue($definition->hasOption('jobs'));
+        $this->assertTrue($definition->hasOption('keep'));
+    }
 }

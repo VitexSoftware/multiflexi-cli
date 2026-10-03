@@ -8,7 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- `prune --format=json` — machine-readable prune results for TUI/automation.
+- `service:start` / `service:stop --name=scheduler|executor|housekeeper` —
+  start/stop MultiFlexi systemd units (housekeeper controls its timer).
+- `status` now reports `housekeeper` (``multiflexi-housekeeper.timer``).
+- Passwordless `systemctl` start/stop for those units via `%multiflexi` sudoers.
 - `user-role:list` — list RBAC roles assigned to a user (includes available role catalog).
+
+### Fixed
+- `conffield:list` no longer requires `--app_id`; omit it to list all fields
+  (optional `--app_id` still filters to one application). Needed by multiflexi-tui.
 - `conffield:list|get|create|update|delete` — manage application configuration field
   definitions (same data as web UI ``conffield.php``).
 - `application:show-config` now returns real ``conffield`` rows for the application.

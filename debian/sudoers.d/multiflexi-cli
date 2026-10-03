@@ -1,1 +1,2 @@
 %multiflexi ALL=(multiflexi) NOPASSWD: /usr/bin/multiflexi-cli
+%multiflexi ALL=(root) NOPASSWD: /usr/bin/systemctl start multiflexi-scheduler.service, /usr/bin/systemctl stop multiflexi-scheduler.service, /usr/bin/systemctl start multiflexi-executor.service, /usr/bin/systemctl stop multiflexi-executor.service, /usr/bin/systemctl start multiflexi-housekeeper.timer, /usr/bin/systemctl stop multiflexi-housekeeper.timer, /usr/bin/systemctl start multiflexi-housekeeper.service, /usr/bin/systemctl stop multiflexi-housekeeper.service

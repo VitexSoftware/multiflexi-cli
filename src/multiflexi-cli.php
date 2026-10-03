@@ -89,6 +89,8 @@ use MultiFlexi\Cli\Command\Job\ListCommand as JobListCommand;
 use MultiFlexi\Cli\Command\Job\StatusCommand as JobStatusCommand;
 use MultiFlexi\Cli\Command\Job\UpdateCommand as JobUpdateCommand;
 use MultiFlexi\Cli\Command\PruneCommand;
+use MultiFlexi\Cli\Command\Service\StartCommand as ServiceStartCommand;
+use MultiFlexi\Cli\Command\Service\StopCommand as ServiceStopCommand;
 use MultiFlexi\Cli\Command\Queue\FixCommand as QueueFixCommand;
 use MultiFlexi\Cli\Command\Queue\ListCommand as QueueListCommand;
 use MultiFlexi\Cli\Command\Queue\OverviewCommand as QueueOverviewCommand;
@@ -318,6 +320,8 @@ ConsoleCompat::addCommand($application, new UserErasureCleanupCommand());
 ConsoleCompat::addCommand($application, new DescribeCommand());
 ConsoleCompat::addCommand($application, new StatusCommand());
 ConsoleCompat::addCommand($application, new PruneCommand());
+ConsoleCompat::addCommand($application, new ServiceStartCommand());
+ConsoleCompat::addCommand($application, new ServiceStopCommand());
 ConsoleCompat::addCommand($application, new TelemetryTestCommand());
 ConsoleCompat::addCommand($application, new CompleteCommand());
 
