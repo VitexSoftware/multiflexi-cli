@@ -99,6 +99,9 @@ class ListCommand extends MultiFlexiCommand
 
         unset($jobData);
 
+        // Attach localized exit code meanings from the application definitions
+        $jobs = $this->attachExitCodeDescriptions($jobs);
+
         $fields = $input->getOption('fields');
         $fieldList = !empty($fields) ? array_map('trim', explode(',', $fields)) : [];
 

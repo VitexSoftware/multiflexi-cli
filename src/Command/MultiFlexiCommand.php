@@ -274,6 +274,37 @@ abstract class MultiFlexiCommand extends \Symfony\Component\Console\Command\Comm
     }
 
     /**
+     * Attach a localized `exitcode_description` field (from the application's
+     * exitCodes definition, app_exit_codes table) to each job row.
+     *
+     * @param array<int, array<string, mixed>> $jobs Job rows containing at least app_id and exitcode
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    protected function attachExitCodeDescriptions(array $jobs): array
+    {
+        $appCache = [];
+
+        foreach ($jobs as &$jobRow) {
+            $jobRow['exitcode_description'] = null;
+
+            if (null !== ($jobRow['exitcode'] ?? null) && !empty($jobRow['app_id'])) {
+                $appId = (int) $jobRow['app_id'];
+
+                if (!isset($appCache[$appId])) {
+                    $appCache[$appId] = new \MultiFlexi\Application($appId);
+                }
+
+                $jobRow['exitcode_description'] = $appCache[$appId]->exitCodeDescription((int) $jobRow['exitcode']);
+            }
+        }
+
+        unset($jobRow);
+
+        return $jobs;
+    }
+
+    /**
      * Output a JSON error response with status and message fields.
      */
     protected function jsonError(OutputInterface $output, string $message, string $status = 'error'): void

@@ -179,6 +179,9 @@ EOD;
 
                 unset($jobData); // Break reference
 
+                // Attach localized exit code meanings from the application definitions
+                $jobs = $this->attachExitCodeDescriptions($jobs);
+
                 // Handle fields option
                 $fields = $input->getOption('fields');
 
@@ -227,6 +230,9 @@ EOD;
                 if (isset($jobData['env']) && \Ease\Functions::isSerialized($jobData['env'])) {
                     $jobData['env'] = $this->redactSerializedEnv($jobData['env']);
                 }
+
+                // Attach localized exit code meaning from the application definition
+                $jobData['exitcode_description'] = $job->getDataValue('exitcode') !== null ? $job->getExitCodeDescription() : null;
 
                 if ($fields) {
                     $fieldsArray = explode(',', $fields);

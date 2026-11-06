@@ -57,6 +57,9 @@ class GetCommand extends MultiFlexiCommand
         // Base data from the DB row (no longer contains stdout/stderr columns)
         $data = $job->getData();
 
+        // Attach localized exit code meaning from the application definition
+        $data['exitcode_description'] = $job->getDataValue('exitcode') !== null ? $job->getExitCodeDescription() : null;
+
         // Always inject stdout/stderr from job_output_lines so callers get the full picture
         if (empty($fieldsArray) || \in_array('stdout', $fieldsArray, true)) {
             $data['stdout'] = $job->getOutput();
