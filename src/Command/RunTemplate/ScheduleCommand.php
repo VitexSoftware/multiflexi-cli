@@ -35,7 +35,8 @@ class ScheduleCommand extends BaseCommand
             ->addOption('schedule_time', null, InputOption::VALUE_OPTIONAL, 'Schedule time (Y-m-d H:i:s or "now")', 'now')
             ->addOption('executor', null, InputOption::VALUE_OPTIONAL, 'Executor')
             ->addOption('config', null, InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Config key=value (repeatable)')
-            ->addOption('env', null, InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'One-time environment override key=value (not saved to run-template, repeatable)');
+            ->addOption('env', null, InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'One-time environment override key=value (not saved to run-template, repeatable)')
+            ->addOption('task_id', null, InputOption::VALUE_OPTIONAL, 'Link the job to an existing Task (its outcome fulfils or retries the Task)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -78,6 +79,12 @@ class ScheduleCommand extends BaseCommand
             $now = new \DateTime();
             $isImmediate = ($scheduleDateTime->getTimestamp() <= $now->getTimestamp() + 5);
             $scheduleType = $isImmediate ? Job::SCHEDULE_TYPE_ADHOC_CLI : Job::SCHEDULE_TYPE_COMMAND_LINE;
+
+            $taskId = (int) $input->getOption('task_id');
+
+            if ($taskId > 0) {
+                $jobber->setDataValue('task_id', $taskId);
+            }
 
             $jobber->prepareJob($rt, $overridedEnv, $scheduleDateTime, $executor, $scheduleType);
 
