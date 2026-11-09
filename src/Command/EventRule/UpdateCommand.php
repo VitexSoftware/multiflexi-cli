@@ -34,7 +34,7 @@ class UpdateCommand extends MultiFlexiCommand
             ->addOption('id', null, InputOption::VALUE_REQUIRED, 'Event Rule ID')
             ->addOption('event_source_id', null, InputOption::VALUE_REQUIRED, 'Event Source ID')
             ->addOption('evidence', null, InputOption::VALUE_REQUIRED, 'Evidence pattern')
-            ->addOption('operation', null, InputOption::VALUE_REQUIRED, 'Operation: any|create|update|delete')
+            ->addOption('operation', null, InputOption::VALUE_REQUIRED, 'Operation: any|create|update|delete or invoice metastate: settled|remind1|remind2|remind3|penalised|storno|inventory')
             ->addOption('runtemplate_id', null, InputOption::VALUE_REQUIRED, 'RunTemplate ID')
             ->addOption('priority', null, InputOption::VALUE_REQUIRED, 'Priority')
             ->addOption('enabled', null, InputOption::VALUE_REQUIRED, 'Enabled (1|0)')

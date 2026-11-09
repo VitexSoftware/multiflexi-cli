@@ -33,7 +33,7 @@ class CreateCommand extends MultiFlexiCommand
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format: text or json', 'text')
             ->addOption('event_source_id', null, InputOption::VALUE_REQUIRED, 'Event Source ID')
             ->addOption('evidence', null, InputOption::VALUE_REQUIRED, 'Evidence pattern')
-            ->addOption('operation', null, InputOption::VALUE_REQUIRED, 'Operation: any|create|update|delete', 'any')
+            ->addOption('operation', null, InputOption::VALUE_REQUIRED, 'Operation: any|create|update|delete or invoice metastate: settled|remind1|remind2|remind3|penalised|storno|inventory', 'any')
             ->addOption('runtemplate_id', null, InputOption::VALUE_REQUIRED, 'RunTemplate ID to trigger')
             ->addOption('priority', null, InputOption::VALUE_REQUIRED, 'Priority', '0')
             ->addOption('enabled', null, InputOption::VALUE_REQUIRED, 'Enabled (1|0)', '1')
