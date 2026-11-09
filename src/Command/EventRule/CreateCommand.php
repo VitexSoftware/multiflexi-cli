@@ -37,7 +37,9 @@ class CreateCommand extends MultiFlexiCommand
             ->addOption('runtemplate_id', null, InputOption::VALUE_REQUIRED, 'RunTemplate ID to trigger')
             ->addOption('priority', null, InputOption::VALUE_REQUIRED, 'Priority', '0')
             ->addOption('enabled', null, InputOption::VALUE_REQUIRED, 'Enabled (1|0)', '1')
-            ->addOption('env_mapping', null, InputOption::VALUE_REQUIRED, 'JSON env variable mapping');
+            ->addOption('env_mapping', null, InputOption::VALUE_REQUIRED, 'JSON env variable mapping')
+            ->addOption('item_filter', null, InputOption::VALUE_REQUIRED, 'JSON predicate on one document item, e.g. {"cenik":"code:MULTIFLEXI"}')
+            ->addOption('fanout', null, InputOption::VALUE_REQUIRED, 'none|item - item: one work item per document item matching --item_filter', 'none');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -60,6 +62,22 @@ class CreateCommand extends MultiFlexiCommand
             return self::FAILURE;
         }
 
+        $itemFilter = $input->getOption('item_filter');
+
+        if (!empty($itemFilter) && !\is_array(json_decode($itemFilter, true))) {
+            $output->writeln('<error>Invalid JSON object in --item_filter</error>');
+
+            return self::FAILURE;
+        }
+
+        $fanout = (string) $input->getOption('fanout');
+
+        if (!\in_array($fanout, ['none', 'item'], true)) {
+            $output->writeln('<error>--fanout must be none or item</error>');
+
+            return self::FAILURE;
+        }
+
         $rule = new EventRule();
         $rule->takeData([
             'event_source_id' => (int) $sourceId,
@@ -69,6 +87,8 @@ class CreateCommand extends MultiFlexiCommand
             'priority' => (int) $input->getOption('priority'),
             'enabled' => (int) $input->getOption('enabled'),
             'env_mapping' => $envMapping ?? '{}',
+            'item_filter' => empty($itemFilter) ? null : $itemFilter,
+            'fanout' => $fanout,
         ]);
 
         $id = $rule->insertToSQL();

@@ -40,6 +40,7 @@ class CreateCommand extends MultiFlexiCommand
             ->addOption('db_username', null, InputOption::VALUE_REQUIRED, 'DB username')
             ->addOption('db_password', null, InputOption::VALUE_REQUIRED, 'DB password')
             ->addOption('poll_interval', null, InputOption::VALUE_REQUIRED, 'Poll interval in seconds', '60')
+            ->addOption('server_url', null, InputOption::VALUE_REQUIRED, 'Only changes of this AbraFlexi company, e.g. https://host:5434/c/firma (tenant scope)')
             ->addOption('enabled', null, InputOption::VALUE_REQUIRED, 'Enabled (1|0)', '1');
     }
 
@@ -65,6 +66,7 @@ class CreateCommand extends MultiFlexiCommand
             'db_username' => $input->getOption('db_username') ?? '',
             'db_password' => $input->getOption('db_password') ?? '',
             'poll_interval' => (int) $input->getOption('poll_interval'),
+            'server_url' => $input->getOption('server_url') ?: null,
             'enabled' => (int) $input->getOption('enabled'),
         ]);
 

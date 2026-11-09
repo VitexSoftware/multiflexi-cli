@@ -38,7 +38,9 @@ class UpdateCommand extends MultiFlexiCommand
             ->addOption('runtemplate_id', null, InputOption::VALUE_REQUIRED, 'RunTemplate ID')
             ->addOption('priority', null, InputOption::VALUE_REQUIRED, 'Priority')
             ->addOption('enabled', null, InputOption::VALUE_REQUIRED, 'Enabled (1|0)')
-            ->addOption('env_mapping', null, InputOption::VALUE_REQUIRED, 'JSON env variable mapping');
+            ->addOption('env_mapping', null, InputOption::VALUE_REQUIRED, 'JSON env variable mapping')
+            ->addOption('item_filter', null, InputOption::VALUE_REQUIRED, 'JSON predicate on one document item (empty string clears it)')
+            ->addOption('fanout', null, InputOption::VALUE_REQUIRED, 'none|item');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -54,11 +56,27 @@ class UpdateCommand extends MultiFlexiCommand
 
         $data = [];
 
-        foreach (['event_source_id', 'evidence', 'operation', 'runtemplate_id', 'priority', 'enabled', 'env_mapping'] as $field) {
+        foreach (['event_source_id', 'evidence', 'operation', 'runtemplate_id', 'priority', 'enabled', 'env_mapping', 'item_filter', 'fanout'] as $field) {
             $val = $input->getOption($field);
 
             if ($val !== null) {
                 $data[$field] = $val;
+            }
+        }
+
+        if (isset($data['fanout']) && !\in_array($data['fanout'], ['none', 'item'], true)) {
+            $output->writeln('<error>--fanout must be none or item</error>');
+
+            return self::FAILURE;
+        }
+
+        if (isset($data['item_filter'])) {
+            if ($data['item_filter'] === '') {
+                $data['item_filter'] = null;
+            } elseif (!\is_array(json_decode($data['item_filter'], true))) {
+                $output->writeln('<error>Invalid JSON object in --item_filter</error>');
+
+                return self::FAILURE;
             }
         }
 

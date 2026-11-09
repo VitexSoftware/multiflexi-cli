@@ -41,6 +41,7 @@ class UpdateCommand extends MultiFlexiCommand
             ->addOption('db_username', null, InputOption::VALUE_REQUIRED, 'DB username')
             ->addOption('db_password', null, InputOption::VALUE_REQUIRED, 'DB password')
             ->addOption('poll_interval', null, InputOption::VALUE_REQUIRED, 'Poll interval in seconds')
+            ->addOption('server_url', null, InputOption::VALUE_REQUIRED, 'Tenant scope: only changes of this AbraFlexi company (empty string = all)')
             ->addOption('enabled', null, InputOption::VALUE_REQUIRED, 'Enabled (1|0)');
     }
 
@@ -57,7 +58,7 @@ class UpdateCommand extends MultiFlexiCommand
 
         $data = [];
 
-        foreach (['name', 'adapter_type', 'db_connection', 'db_host', 'db_port', 'db_database', 'db_username', 'db_password', 'poll_interval', 'enabled'] as $field) {
+        foreach (['name', 'adapter_type', 'db_connection', 'db_host', 'db_port', 'db_database', 'db_username', 'db_password', 'poll_interval', 'server_url', 'enabled'] as $field) {
             $val = $input->getOption($field);
 
             if ($val !== null) {
